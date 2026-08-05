@@ -8,6 +8,6 @@ import { defineConfig } from 'astro/config';
 //   base: '/teaching-site',
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://your-account.github.io',
-  base: '/teaching-site/',
+  site: 'https://Lolalayaya.github.io',
+  base: '/Teaching/',
 });
