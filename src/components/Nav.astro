@@ -1,0 +1,34 @@
+---
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: `${base}`, label: '首頁' },
+  { href: `${base}lectures/`, label: '課程講義' },
+  { href: `${base}announcements/`, label: '公告' },
+  { href: `${base}showcase/`, label: '學生作品' },
+  { href: `${base}grades/`, label: '評分標準' },
+];
+
+function isActive(href: string) {
+  if (href === base) return currentPath === base;
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <nav class="site-nav">
+    <a class="brand" href={base}>
+      <span class="brand-mark">&lt;/&gt;</span> Lola 的資訊柑仔店
+    </a>
+    {links.map((link) => (
+      <a href={link.href} class={isActive(link.href) ? 'active' : ''}>{link.label}</a>
+    ))}
+    <span class="nav-class-badge" data-nav-class-badge></span>
+  </nav>
+</header>
+
+<script>
+  import { renderNavBadge } from '../scripts/classSelection.js';
+  renderNavBadge(import.meta.env.BASE_URL);
+</script>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL;
+const announcements = (await getCollection('announcements')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="公告">
+  <h1>公告</h1>
+  <p class="filter-notice" data-filter-notice hidden></p>
+  <ul class="card-list">
+    {announcements.map((post) => (
+      <li
+        class="card"
+        data-audience
+        data-grades={(post.data.grades ?? []).join(',')}
+        data-classes={(post.data.classes ?? []).join(',')}
+      >
+        <a href={`${base}announcements/${post.id}/`}>{post.data.title}</a>
+        <p class="meta">
+          <span class="tag">{post.data.category}</span>
+          {post.data.semester && <span class="tag">{post.data.semester}</span>}
+          {post.data.date.toLocaleDateString('zh-TW')}
+          {post.data.dueDate && ` · 截止日: ${post.data.dueDate.toLocaleDateString('zh-TW')}`}
+        </p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<script>
+  import { applyClassFilter } from '../../scripts/classSelection.js';
+  applyClassFilter();
+</script>

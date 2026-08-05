@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Embed from '../../components/Embed.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const lectures = await getCollection('lectures');
+  return lectures.map((lecture) => ({
+    params: { slug: lecture.id },
+    props: { lecture },
+  }));
+}
+
+interface Props {
+  lecture: CollectionEntry<'lectures'>;
+}
+
+const { lecture } = Astro.props;
+const { Content } = await render(lecture);
+---
+
+<BaseLayout title={lecture.data.title} description={lecture.data.summary}>
+  <p class="meta">{lecture.data.unit}</p>
+  <h1>{lecture.data.title}</h1>
+  <Content />
+
+  {lecture.data.embeds?.map((embed) => (
+    <Embed type={embed.type} title={embed.title} url={embed.url} />
+  ))}
+</BaseLayout>

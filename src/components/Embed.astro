@@ -1,0 +1,37 @@
+---
+interface Props {
+  type: 'scratch' | 'google-doc' | 'google-sheet' | 'google-form' | 'canva';
+  title: string;
+  url: string;
+}
+
+const { type, title, url } = Astro.props;
+
+const aspectRatio: Record<Props['type'], string> = {
+  scratch: '4 / 3',
+  'google-doc': '3 / 4',
+  'google-sheet': '4 / 3',
+  'google-form': '3 / 4',
+  canva: '16 / 9',
+};
+
+const label: Record<Props['type'], string> = {
+  scratch: 'Scratch 專案',
+  'google-doc': 'Google 文件',
+  'google-sheet': 'Google 試算表',
+  'google-form': 'Google 表單',
+  canva: 'Canva 作品',
+};
+---
+
+<figure class="embed" data-embed-type={type}>
+  <figcaption>
+    <span class="tag">{label[type]}</span> {title}
+  </figcaption>
+  <div class="embed-frame" style={`aspect-ratio: ${aspectRatio[type]}`}>
+    <iframe src={url} title={title} loading="lazy" allowfullscreen></iframe>
+  </div>
+  <p class="embed-fallback">
+    嵌入畫面無法顯示?<a href={url} target="_blank" rel="noopener">在新視窗開啟 →</a>
+  </p>
+</figure>
