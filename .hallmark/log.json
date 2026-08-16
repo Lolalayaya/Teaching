@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-08-17",
+    "scope": "app",
+    "macrostructure": "Content pages (card-list → detail), no per-page variation",
+    "theme": "custom (Kraft + Mulberry, modern-minimal)",
+    "enrichment": "signature: price-tag eyebrow on 本堂課 block",
+    "brief": "Lola 的資訊柑仔店 · v3 palette after ui-ux-pro-max cliché-check + frontend-design AI-look calibration; owner's #6e009a proposal (near-identical to default violet-700) toned into Mulberry #6B245F; paper moved from generic cream to Deep Kraft #E3CFA8, grounded in the 柑仔店 subject",
+    "theme_axes": "light / geometric-sans-rounded / warm-neutral-magenta",
+    "vibe": "grounded-in-subject warmth, deliberately off the common LMS/SaaS palette defaults"
+  },
+  {
+    "date": "2026-08-16",
+    "scope": "app",
+    "macrostructure": "Content pages (card-list → detail), no per-page variation",
+    "theme": "custom (Deep Plum, modern-minimal)",
+    "enrichment": "none",
+    "brief": "Lola 的資訊柑仔店 · pivot from v1 Hum (playful multi-accent) to a restrained single-accent register after a full grilling session; added the 本堂課/今日重點 homepage feature",
+    "theme_axes": "light / geometric-sans-rounded / warm-neutral-magenta",
+    "vibe": "Stripe-docs professional with a little teacher-blog warmth"
+  },
+  {
     "date": "2026-08-05",
     "scope": "app",
     "macrostructure": "Content pages (card-list → detail), no per-page variation",

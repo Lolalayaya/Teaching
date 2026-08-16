@@ -24,11 +24,14 @@ function isActive(href: string) {
     {links.map((link) => (
       <a href={link.href} class={isActive(link.href) ? 'active' : ''}>{link.label}</a>
     ))}
+    <button type="button" class="theme-toggle" data-theme-toggle></button>
     <span class="nav-class-badge" data-nav-class-badge></span>
   </nav>
 </header>
 
 <script>
   import { renderNavBadge } from '../scripts/classSelection.js';
+  import { initThemeToggle } from '../scripts/theme.js';
   renderNavBadge(import.meta.env.BASE_URL);
+  initThemeToggle();
 </script>

@@ -30,7 +30,7 @@ export function applyClassFilter() {
   const notice = document.querySelector('[data-filter-notice]');
 
   if (!selection) {
-    items.forEach((item) => item.removeAttribute('hidden'));
+    items.forEach((item) => item.classList.remove('is-filtered-out'));
     if (notice) notice.hidden = true;
     return;
   }
@@ -44,11 +44,7 @@ export function applyClassFilter() {
     const gradeMatches = grades.length === 0 || grades.includes(selection.grade);
     const classMatches = classes.length === 0 || classes.includes(code);
 
-    if (gradeMatches && classMatches) {
-      item.removeAttribute('hidden');
-    } else {
-      item.setAttribute('hidden', '');
-    }
+    item.classList.toggle('is-filtered-out', !(gradeMatches && classMatches));
   });
 
   if (notice) {

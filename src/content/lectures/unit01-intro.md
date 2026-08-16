@@ -5,6 +5,7 @@ order: 1
 date: 2026-08-24
 semester: 上學期
 grades: ['7']
+current: true
 tags: ["硬體", "作業系統"]
 summary: 認識電腦的基本組成、輸入輸出裝置,以及作業系統的功能。
 embeds:

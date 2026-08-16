@@ -15,6 +15,7 @@ const audienceFields = {
   classes: z.array(z.string()).optional(),
   semester: semesterEnum.optional(),
   embeds: z.array(embedSchema).optional(),
+  current: z.boolean().optional(),
 };
 
 const lectures = defineCollection({

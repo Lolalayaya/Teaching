@@ -15,6 +15,27 @@ const showcaseItems = (await getCollection('showcase')).sort(
 const latestLectures = lectures.slice(0, 6);
 const latestAnnouncements = announcements.slice(0, 6);
 const latestShowcase = showcaseItems.slice(0, 3);
+
+const currentItems = [
+  ...lectures
+    .filter((lecture) => lecture.data.current)
+    .map((lecture) => ({
+      href: `${base}lectures/${lecture.id}/`,
+      title: `${lecture.data.unit} · ${lecture.data.title}`,
+      summary: lecture.data.summary,
+      grades: lecture.data.grades,
+      classes: lecture.data.classes,
+    })),
+  ...announcements
+    .filter((post) => post.data.current)
+    .map((post) => ({
+      href: `${base}announcements/${post.id}/`,
+      title: post.data.title,
+      summary: undefined,
+      grades: post.data.grades,
+      classes: post.data.classes,
+    })),
+];
 ---
 
 <BaseLayout title="首頁">
@@ -22,6 +43,25 @@ const latestShowcase = showcaseItems.slice(0, 3);
   <p class="tagline">這裡收錄本學期資訊科技課程的講義、課程公告與學生作品,歡迎隨時晃進來逛逛、複習功課!</p>
 
   <p class="filter-notice" data-filter-notice hidden></p>
+
+  {currentItems.length > 0 && (
+    <div class="current-focus">
+      <p class="eyebrow">本堂課 · 今日重點</p>
+      <ul class="card-list">
+        {currentItems.map((item) => (
+          <li
+            class="card"
+            data-audience
+            data-grades={(item.grades ?? []).join(',')}
+            data-classes={(item.classes ?? []).join(',')}
+          >
+            <a href={item.href}>{item.title}</a>
+            {item.summary && <p class="meta">{item.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
 
   <h2>最新公告</h2>
   <ul class="card-list">

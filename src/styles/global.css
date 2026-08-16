@@ -1,63 +1,72 @@
-/* Hallmark · genre: playful · theme: Hum (adapted, light+dark) · design-system: design.md */
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+/* Hallmark · genre: modern-minimal · theme: custom (Kraft + Mulberry) · design-system: design.md */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
 
 :root {
   color-scheme: light dark;
-  --color-paper: oklch(97% 0.012 95);
-  --color-paper-2: oklch(94% 0.016 95);
-  --color-paper-3: oklch(91% 0.02 95);
-  --color-ink: oklch(20% 0.012 250);
+  --color-paper: oklch(87% 0.05 75); /* Deep Kraft #E3CFA8 */
+  --color-paper-2: oklch(85% 0.048 75);
+  --color-ink: oklch(20% 0.012 335);
   --color-muted: color-mix(in oklch, var(--color-ink) 60%, var(--color-paper) 40%);
-  --color-border: oklch(88% 0.016 95);
+  --color-border: oklch(78% 0.05 75);
 
-  --color-accent: oklch(86% 0.18 95); /* pear — primary/character */
-  --color-accent-deep: oklch(72% 0.19 95);
-  --color-accent-2: oklch(66% 0.18 235); /* cyan — decorative tint */
-  --color-link: oklch(48% 0.16 235); /* cyan, deepened for text contrast */
-  --color-link-hover: oklch(40% 0.17 235);
-  --color-accent-3: oklch(68% 0.24 18); /* coral — single pop moment */
-  --color-mint: oklch(80% 0.16 150);
-  --color-lavender: oklch(74% 0.16 305);
+  --color-accent: oklch(33% 0.11 335); /* Mulberry #6B245F */
+  --color-accent-hover: oklch(26% 0.11 335);
+  --color-accent-tint: oklch(91% 0.04 335);
 
   --color-correct: #15803d;
   --color-correct-bg: #f0fdf4;
   --color-wrong: #b91c1c;
   --color-wrong-bg: #fef2f2;
 
-  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-  --radius-card: 16px;
+  --font-sans: "Manrope", system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --radius-card: 10px;
   --radius-pill: 999px;
-  --radius-input: 12px;
-  --shadow-contact: 0 1px 2px oklch(20% 0.012 250 / 0.06);
-  --shadow-ambient: 0 12px 28px -14px oklch(20% 0.012 250 / 0.16);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius-input: 8px;
+  --shadow-card: 0 1px 2px oklch(20% 0.012 335 / 0.08), 0 4px 12px oklch(20% 0.012 335 / 0.1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Three-state theme: bare :root above is the light default. prefers-color-scheme
+   switches system dark, but yields to an explicit choice via data-theme (set by
+   the toggle in Nav.astro). :root[data-theme="dark"] below always wins, so the
+   toggle works regardless of system setting in either direction. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-paper: oklch(16% 0.014 95);
-    --color-paper-2: oklch(20% 0.016 95);
-    --color-paper-3: oklch(24% 0.018 95);
-    --color-ink: oklch(94% 0.008 250);
-    --color-border: oklch(30% 0.018 95);
+  :root:not([data-theme="light"]) {
+    /* Radix Colors Sand-dark (neutral, barely-warm) + Plum-dark (accent) —
+       a true dark neutral rather than a low-lightness version of the kraft
+       hue, which read as muddy coffee-brown instead of a considered dark UI. */
+    --color-paper: #191918; /* Radix sand-2 */
+    --color-paper-2: #2a2a28; /* sand-4 — elevated surfaces go lighter in dark mode */
+    --color-ink: #eeeeec; /* sand-12 */
+    --color-border: #494844; /* sand-7 */
 
-    --color-accent: oklch(88% 0.16 95);
-    --color-accent-deep: oklch(76% 0.17 95);
-    --color-accent-2: oklch(74% 0.15 235);
-    --color-link: oklch(78% 0.14 235);
-    --color-link-hover: oklch(84% 0.13 235);
-    --color-accent-3: oklch(74% 0.2 18);
-    --color-mint: oklch(84% 0.14 150);
-    --color-lavender: oklch(80% 0.14 305);
+    --color-accent: #e796f3; /* Radix plum-11 */
+    --color-accent-hover: #f4d4f4; /* plum-12 */
+    --color-accent-tint: #451d47; /* plum-4 */
 
     --color-correct: #4ade80;
     --color-correct-bg: #052e1a;
     --color-wrong: #f87171;
     --color-wrong-bg: #2e0a0a;
-    --shadow-contact: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-ambient: 0 14px 30px -14px rgba(0, 0, 0, 0.55);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
   }
+}
+
+:root[data-theme="dark"] {
+  --color-paper: #191918;
+  --color-paper-2: #2a2a28;
+  --color-ink: #eeeeec;
+  --color-border: #494844;
+
+  --color-accent: #e796f3;
+  --color-accent-hover: #f4d4f4;
+  --color-accent-tint: #451d47;
+
+  --color-correct: #4ade80;
+  --color-correct-bg: #052e1a;
+  --color-wrong: #f87171;
+  --color-wrong-bg: #2e0a0a;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -73,27 +82,27 @@ body {
 }
 
 a {
-  color: var(--color-link);
+  color: var(--color-accent);
 }
 
 a:hover {
-  color: var(--color-link-hover);
+  color: var(--color-accent-hover);
 }
 
 h1 {
   font-size: 1.9rem;
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   margin-bottom: 0.5rem;
 }
 
 h2 {
   font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   margin-top: 2.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 3px solid var(--color-paper-3);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .tagline {
@@ -133,7 +142,7 @@ h2 {
 }
 
 .brand-mark {
-  color: var(--color-link);
+  color: var(--color-accent);
   font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
   font-weight: 700;
 }
@@ -145,7 +154,7 @@ h2 {
   font-weight: 500;
   padding: 0.3rem 0;
   border-bottom: 2px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
 }
 
 .site-nav a:hover {
@@ -153,8 +162,8 @@ h2 {
 }
 
 .site-nav a.active {
-  color: var(--color-accent-3);
-  border-bottom-color: var(--color-accent-3);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 main {
@@ -181,16 +190,43 @@ main {
 .card {
   background: var(--color-paper);
   border: 1px solid var(--color-border);
-  border-left: 3px solid transparent;
   border-radius: var(--radius-card);
   padding: 1.25rem;
-  box-shadow: var(--shadow-contact), var(--shadow-ambient);
-  transition: transform 220ms var(--ease-spring), box-shadow 220ms, border-left-color 0.15s ease;
+  box-shadow: var(--shadow-card);
+  transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  border-left-color: var(--color-accent-3);
+  transform: translateY(-2px);
+}
+
+/* Class-filter show/hide: was an instant `hidden` toggle (a visible flash on
+   slower script execution); fades + collapses instead so the change reads as
+   a transition, not a jump. Occasional (only fires when a class filter is
+   active); purpose: preventing a jarring change. */
+[data-audience] {
+  transition: opacity 200ms var(--ease-out), max-height 200ms var(--ease-out);
+  max-height: 1000px;
+  overflow: hidden;
+}
+
+[data-audience].is-filtered-out {
+  transition: opacity 200ms var(--ease-out), max-height 200ms var(--ease-out), visibility 0s linear 200ms;
+  opacity: 0;
+  max-height: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-audience] {
+    transition: opacity 150ms ease, visibility 0s linear 150ms;
+  }
+
+  [data-audience].is-filtered-out {
+    transition: opacity 150ms ease, visibility 0s linear 150ms;
+    max-height: 0;
+  }
 }
 
 .card a {
@@ -211,18 +247,82 @@ main {
   font-size: 0.75rem;
   font-weight: 600;
   margin-right: 0.35rem;
-  background: color-mix(in oklch, var(--color-accent-2) 18%, var(--color-paper));
-  color: var(--color-link);
+  background: var(--color-accent-tint);
+  color: var(--color-accent);
 }
 
-.tag:nth-of-type(2) {
-  background: color-mix(in oklch, var(--color-mint) 22%, var(--color-paper));
-  color: color-mix(in oklch, var(--color-mint) 55%, var(--color-ink));
+/* 本堂課 / 今日重點 — the accent marks this block via border + the price-tag
+   label only. The surface itself stays in the neutral kraft family (paper-2,
+   one step deeper than the page) so it reads as "the same paper, emphasised"
+   rather than a differently-hued sticker dropped on top. */
+.current-focus {
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--color-paper-2);
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
 }
 
-.tag:nth-of-type(3) {
-  background: color-mix(in oklch, var(--color-lavender) 22%, var(--color-paper));
-  color: color-mix(in oklch, var(--color-lavender) 55%, var(--color-ink));
+/* One-time entrance on first paint (state indication: this block outranks
+   the rest of the homepage). No JS — @starting-style plays once per
+   navigation. */
+@starting-style {
+  .current-focus {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .current-focus {
+    transition: opacity 200ms ease;
+  }
+
+  @starting-style {
+    .current-focus {
+      opacity: 0;
+      transform: none;
+    }
+  }
+}
+
+/* The one signature element on the page: a price-tag shape, grounded in the
+   site's own "corner store" (柑仔店) subject matter rather than a generic
+   badge. Used exactly once — this block only. */
+.current-focus .eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-paper);
+  background: var(--color-accent);
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.75rem 0.35rem 1.1rem;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+
+.current-focus .eyebrow::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-paper-2);
+}
+
+.current-focus .card-list {
+  gap: 0.75rem;
+}
+
+.current-focus .card {
+  box-shadow: none;
+  border-color: var(--color-border);
 }
 
 .embed {
@@ -284,34 +384,75 @@ main {
 }
 
 .class-picker button {
-  --btn-edge: var(--color-accent-deep);
-  --btn-cast: oklch(76% 0.2 95 / 0.45);
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.7rem 1.4rem;
+  padding: 0.6rem 1.25rem;
   border: 0;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-input);
   background: var(--color-accent);
-  color: var(--color-ink);
+  color: var(--color-paper);
   cursor: pointer;
-  box-shadow: 0 4px 0 0 var(--btn-edge), 0 6px 12px -3px var(--btn-cast);
-  transform: translateY(0);
-  transition: transform 140ms cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 140ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  transition: background-color 140ms var(--ease-out), transform 100ms var(--ease-out);
 }
 
 .class-picker button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast);
-}
-
-.class-picker button:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 0 var(--btn-edge), 0 2px 6px -2px var(--btn-cast);
+  background: var(--color-accent-hover);
 }
 
 .class-picker button:focus-visible {
-  outline: 3px solid var(--color-link);
-  outline-offset: 3px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+[data-clear-selection] {
+  transition: transform 100ms var(--ease-out);
+}
+
+/* Press feedback: neither button had an :active state. Occasional (this page
+   is rarely visited); purpose: feedback. */
+.class-picker button:active,
+[data-clear-selection]:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .class-picker button:active,
+  [data-clear-selection]:active {
+    transform: none;
+  }
+}
+
+.theme-toggle {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  transition: color 140ms var(--ease-out), border-color 140ms var(--ease-out), transform 100ms var(--ease-out);
+}
+
+.theme-toggle:hover {
+  color: var(--color-ink);
+  border-color: var(--color-accent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.97);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle:active {
+    transform: none;
+  }
 }
 
 .nav-class-badge {
@@ -326,7 +467,7 @@ main {
 
 .filter-notice {
   border: 1px solid var(--color-border);
-  background: color-mix(in oklch, var(--color-accent) 25%, var(--color-paper));
+  background: var(--color-paper-2);
   border-radius: var(--radius-card);
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
