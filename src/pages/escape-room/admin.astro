@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="密室逃脫．教師設定" description="密室逃脫活動的教師設定頁（密碼保護，非公開內容）">
+  <h1>密室逃脫．教師設定</h1>
+
+  <section data-gate class="admin-gate">
+    <label>
+      密碼
+      <input type="password" data-password-input autocomplete="off" />
+    </label>
+    <button type="button" data-unlock-btn>解鎖</button>
+    <p data-gate-error hidden class="gate-error">密碼不對，請再試一次。</p>
+  </section>
+
+  <section data-admin-panel hidden class="admin-panel">
+    <p class="notice">
+      這個頁面沒有真正的伺服器驗證，只是輕量的「請勿進入」門，任何看得懂原始碼的人都能繞過。GitHub Token
+      才是真正的憑證，只存在這台裝置的瀏覽器裡——換一台電腦要重新輸入一次，也請不要把Token貼到別的地方。
+    </p>
+
+    <h2>1. GitHub 連線設定</h2>
+    <p>
+      到 GitHub 的 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">
+        Fine-grained personal access tokens
+      </a> 建立一組新token：Repository access 選「Only select repositories」→ 選這個repo（Teaching），
+      Permissions 只給 <strong>Contents: Read and write</strong> 這一項就好，不要給其他權限。
+    </p>
+    <label>
+      Personal Access Token
+      <input type="password" data-pat-input autocomplete="off" placeholder="github_pat_..." />
+    </label>
+    <button type="button" data-save-pat-btn>儲存 Token（只存在這台電腦）</button>
+
+    <h2>2. 目前狀態</h2>
+    <button type="button" data-load-btn>讀取目前內容</button>
+    <p data-status class="status"></p>
+    <p>目前版本號：<strong data-version-display>—</strong></p>
+
+    <h2>3. 快速重置所有學生進度</h2>
+    <p>版本號 +1 並發布，網站重新部署完成後，所有學生下次打開密室逃脫頁面時，進度會自動清空重新開始。</p>
+    <button type="button" data-bump-version-btn>版本號 +1 並發布</button>
+
+    <h2>4. 完整內容編輯</h2>
+    <p>直接編輯下面的JSON（題目、答案、線索片段都在裡面），改完按「儲存並發布」會直接提交到repo並觸發網站重新部署，大約1-3分鐘後正式上線。</p>
+    <textarea data-content-editor rows="28" class="content-editor" spellcheck="false"></textarea>
+    <button type="button" data-save-content-btn>儲存並發布</button>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initAdmin } from '../../scripts/escapeRoomAdmin.js';
+  initAdmin();
+</script>
+
+<style>
+  .admin-gate[hidden],
+  .admin-panel[hidden] {
+    display: none;
+  }
+
+  .admin-gate,
+  .admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 42rem;
+  }
+
+  .gate-error {
+    color: var(--color-wrong);
+  }
+
+  .notice {
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  input[type='password'] {
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: inherit;
+  }
+
+  .content-editor {
+    width: 100%;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .status {
+    min-height: 1.4em;
+    color: var(--color-correct);
+  }
+
+  .status.error {
+    color: var(--color-wrong);
+  }
+
+  button {
+    align-self: flex-start;
+    background: var(--color-accent);
+    color: var(--color-paper);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.4rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 140ms var(--ease-out);
+  }
+
+  button:hover {
+    background: var(--color-accent-hover);
+  }
+</style>

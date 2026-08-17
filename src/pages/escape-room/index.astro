@@ -1,0 +1,569 @@
+---
+import '../../styles/global.css';
+import config from '../../content/escape-room.config.json';
+
+const STEPS = config.levels;
+const TOTAL_CIPHER_LENGTH = STEPS.reduce((sum, l) => sum + (l.fragment ? l.fragment.length : 0), 0);
+const base = import.meta.env.BASE_URL;
+
+const ASCII_ROWS = 'pqrstuvwxyz'.split('').map((ch) => {
+  const dec = ch.charCodeAt(0);
+  return { bin: dec.toString(2).padStart(8, '0'), dec, ch };
+});
+
+const MORSE_MAP = {
+  A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....',
+  I: '..', J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.',
+  Q: '--.-', R: '.-.', S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-',
+  Y: '-.--', Z: '--..',
+};
+const MORSE_ROWS = Object.entries(MORSE_MAP);
+---
+
+<!doctype html>
+<html lang="zh-Hant" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>資訊教室 · 密室逃脫</title>
+  </head>
+  <body class="escape-room">
+    <div class="stage" data-stage>
+      <button type="button" class="reset-btn" data-reset-btn title="重新開始" aria-label="重新開始這個挑戰">⟲</button>
+
+      <div class="progress-banner" data-progress-banner aria-live="polite" aria-label="解密進度">
+        {Array.from({ length: TOTAL_CIPHER_LENGTH }).map((_, i) => (
+          <span class="cipher-char" data-idx={i}>_</span>
+        ))}
+        <span class="cursor" aria-hidden="true">▍</span>
+      </div>
+
+      <section class="panel intro-panel" data-intro-screen>
+        <h1>資訊教室 · 密室逃脫</h1>
+        <p>你被鎖進了資訊教室的虛擬空間，必須通過老師設下的關卡，湊齊線索、解開最後一道鎖，才能真正開始這學期的冒險。</p>
+        <button type="button" class="primary-btn" data-start-btn>開始挑戰</button>
+      </section>
+
+      {STEPS.map((level, i) => (
+        <section class="panel level-card" data-level-index={i} hidden>
+          <p class="level-index">第 {i + 1} 關／共 {STEPS.length} 關</p>
+          <h2>{level.title}</h2>
+          <p class="prompt">{level.prompt}</p>
+
+          <div class="answer-area" data-answer-area>
+            {level.type === 'letters' && (
+              <div class="letters-row">
+                {level.answers.map((_, ai) => (
+                  <input type="text" maxlength="1" class="letter-input" data-letter-input aria-label={`字母 ${ai + 1}`} />
+                ))}
+              </div>
+            )}
+
+            {level.type === 'match' && (
+              <div class="match-list">
+                {level.pairs.map((pair) => (
+                  <label class="match-row">
+                    <span>{pair.left}</span>
+                    <select data-match-left={pair.left}>
+                      <option value="">請選擇</option>
+                      {pair.options.map((opt) => (
+                        <option value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {(level.type === 'choice' || level.type === 'choice-multi') && (
+              <div class="choice-list" data-choice-group>
+                {level.options.map((opt) => (
+                  <button type="button" class="choice-btn" data-choice-option data-value={opt}>{opt}</button>
+                ))}
+              </div>
+            )}
+
+            {(level.type === 'text' || level.type === 'number' || level.type === 'text-nopunct-casesensitive' || level.type === 'text-exact-strict') && (
+              <input type="text" class="text-input" data-text-input autocomplete="off" />
+            )}
+
+            {level.type === 'hex-color' && (
+              <div class="hex-row">
+                <input type="text" class="text-input" data-hex-input placeholder="請找出 Hex 碼" autocomplete="off" />
+                <input type="color" class="color-input" data-color-input aria-label="用滴管挑選顏色" />
+              </div>
+            )}
+
+            {level.referenceTable === 'ascii' && (
+              <table class="ref-table">
+                <thead><tr><th>二進位</th><th>十進位</th><th>字元</th></tr></thead>
+                <tbody>
+                  {ASCII_ROWS.map((row) => (
+                    <tr><td>{row.bin}</td><td>{row.dec}</td><td>{row.ch}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {level.referenceTable === 'morse' && (
+              <table class="ref-table morse-table">
+                <tbody>
+                  {Array.from({ length: 7 }).map((_, r) => (
+                    <tr>
+                      {MORSE_ROWS.slice(r * 4, r * 4 + 4).map(([letter, code]) => (
+                        <>
+                          <td class="morse-letter">{letter}</td>
+                          <td class="morse-code">{code}</td>
+                        </>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          <p class="feedback" data-feedback aria-live="polite"></p>
+          <button type="button" class="primary-btn" data-submit-btn>確認答案</button>
+        </section>
+      ))}
+
+      <section class="panel door-screen" data-door-screen hidden>
+        <div class="door-frame">
+          <div class="door-panel left"></div>
+          <div class="door-panel right"></div>
+          <div class="door-glow"></div>
+        </div>
+        <div class="finale-text" data-finale-text hidden>
+          <p class="motto-en">{config.finalSentenceEn}</p>
+          <p class="motto-zh">{config.finalMottoZh}</p>
+        </div>
+        <button type="button" class="primary-btn celebrate-btn" data-play-audio-btn hidden>播放慶祝音樂 🎉</button>
+      </section>
+    </div>
+
+    <script>
+      import '../../scripts/escapeRoomPage.js';
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(html[data-theme='dark']) {
+    color-scheme: dark;
+  }
+
+  .escape-room {
+    margin: 0;
+    min-height: 100dvh;
+    background:
+      radial-gradient(circle at 50% -10%, color-mix(in oklch, var(--color-accent) 18%, transparent) 0%, transparent 60%),
+      var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  .stage {
+    position: relative;
+    width: min(640px, 92vw);
+    padding: 2.5rem 0;
+  }
+
+  .reset-btn {
+    position: fixed;
+    left: 14px;
+    bottom: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: color-mix(in oklch, var(--color-paper-2) 70%, transparent);
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    opacity: 0.35;
+    cursor: pointer;
+    transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+  }
+
+  .reset-btn:hover,
+  .reset-btn:focus-visible {
+    opacity: 1;
+  }
+
+  .reset-btn:active {
+    transform: scale(0.94);
+  }
+
+  .progress-banner {
+    text-align: center;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+    letter-spacing: 0.04em;
+    color: var(--color-accent-hover);
+    margin-bottom: 1.75rem;
+    word-break: break-all;
+  }
+
+  .cipher-char {
+    display: inline-block;
+    opacity: 0.3;
+    transform: scale(0.85);
+    transition: opacity 140ms var(--ease-out), transform 140ms var(--escape-ease-bounce);
+  }
+
+  .cipher-char.revealed {
+    opacity: 1;
+    transform: scale(1);
+    color: var(--color-accent-hover);
+  }
+
+  .cursor {
+    display: inline-block;
+    margin-left: 2px;
+    animation: cursor-blink 1s steps(2, jump-none) infinite;
+  }
+
+  .panel {
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .panel h1,
+  .panel h2 {
+    margin-top: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .level-index {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .prompt {
+    line-height: 1.7;
+  }
+
+  .level-card {
+    /* entrance handled via @starting-style so it applies whenever `hidden` is removed */
+    transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out), filter 450ms var(--ease-out);
+  }
+
+  @starting-style {
+    .level-card:not([hidden]) {
+      opacity: 0;
+      transform: translateY(12px) scale(0.96);
+      filter: blur(6px);
+    }
+  }
+
+  .level-card:not([hidden]) {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+
+  .answer-area {
+    margin: 1.5rem 0;
+  }
+
+  .letters-row,
+  .hex-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .letter-input {
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+  }
+
+  .text-input,
+  .letter-input,
+  select {
+    background: var(--color-paper);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    color: var(--color-ink);
+    padding: 0.6rem 0.8rem;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  .text-input {
+    width: 100%;
+    max-width: 22rem;
+  }
+
+  .ref-table {
+    margin: 0 auto 1rem;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+
+  .ref-table th,
+  .ref-table td {
+    border: 1px solid var(--color-border);
+    padding: 0.3rem 0.6rem;
+    text-align: center;
+  }
+
+  .ref-table th {
+    color: var(--color-muted);
+    font-weight: 600;
+  }
+
+  .morse-table .morse-letter {
+    color: var(--color-muted);
+  }
+
+  .color-input {
+    width: 3.5rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    background: none;
+  }
+
+  .match-list {
+    display: grid;
+    gap: 0.75rem;
+    text-align: left;
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+
+  .match-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .choice-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .choice-btn {
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border-radius: var(--radius-pill);
+    padding: 0.55rem 1.1rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), transform 140ms var(--ease-out);
+  }
+
+  .choice-btn:active {
+    transform: scale(0.96);
+  }
+
+  .choice-btn.selected {
+    background: var(--color-accent-tint);
+    border-color: var(--color-accent);
+    color: var(--color-accent-hover);
+  }
+
+  .primary-btn {
+    background: var(--color-accent);
+    color: var(--color-paper);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 0.75rem 1.75rem;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 140ms var(--ease-out), transform 140ms var(--ease-out);
+  }
+
+  .primary-btn:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .primary-btn:active {
+    transform: scale(0.97);
+  }
+
+  .feedback {
+    min-height: 1.4em;
+    font-size: 0.95rem;
+  }
+
+  .feedback.correct {
+    color: var(--color-correct);
+  }
+
+  .feedback.wrong {
+    color: var(--color-wrong);
+  }
+
+  .level-card.flash-correct {
+    background: var(--color-correct-bg);
+    transition: background-color 200ms var(--ease-out);
+  }
+
+  .level-card.shake {
+    animation: shake-x 320ms var(--ease-in-out);
+    background: var(--color-wrong-bg);
+  }
+
+  @keyframes shake-x {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* Door / finale ------------------------------------------------------ */
+
+  .door-screen[hidden] {
+    display: none;
+  }
+
+  .door-screen {
+    position: relative;
+    overflow: hidden;
+    min-height: 22rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .door-frame {
+    position: relative;
+    width: 220px;
+    height: 300px;
+    perspective: 1200px;
+  }
+
+  .door-panel {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-paper) 0%, var(--color-paper-2) 100%);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 24px oklch(0% 0 0 / 0.4);
+  }
+
+  .door-panel.left {
+    left: 0;
+    border-radius: var(--radius-input) 0 0 var(--radius-input);
+    transform-origin: left center;
+  }
+
+  .door-panel.right {
+    right: 0;
+    border-radius: 0 var(--radius-input) var(--radius-input) 0;
+    transform-origin: right center;
+  }
+
+  .door-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-input);
+    background: radial-gradient(circle, color-mix(in oklch, var(--color-accent) 55%, transparent) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out);
+  }
+
+  .door-screen.opening .door-panel.left {
+    transition: transform 1000ms var(--escape-ease-bounce);
+    transform: rotateY(-100deg);
+  }
+
+  .door-screen.opening .door-panel.right {
+    transition: transform 1000ms var(--escape-ease-bounce);
+    transform: rotateY(100deg);
+  }
+
+  .door-screen.opening .door-glow {
+    opacity: 1;
+  }
+
+  .finale-text {
+    text-align: center;
+  }
+
+  .finale-text .motto-en {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .finale-text .motto-zh {
+    color: var(--color-muted);
+  }
+
+  :global(.confetti-piece) {
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 14px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .level-card,
+    .cipher-char,
+    .choice-btn,
+    .primary-btn,
+    .reset-btn {
+      transition-duration: 60ms !important;
+    }
+
+    .level-card.shake {
+      animation: none;
+    }
+
+    .door-screen.opening .door-panel.left,
+    .door-screen.opening .door-panel.right {
+      transition-duration: 300ms;
+      transform: rotateY(0deg);
+    }
+
+    :global(.confetti-piece) {
+      display: none;
+    }
+  }
+
+  /* Page-scoped easing exception: this is the one page on the site allowed
+     a bounce curve (see design.md's "delight budget" carve-out for rare,
+     first-time, celebration moments) — deliberately not added to tokens.css. */
+  .stage {
+    --escape-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  @keyframes cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+</style>
