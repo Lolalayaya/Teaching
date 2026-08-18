@@ -82,12 +82,15 @@ export function checkText(input, answer) {
   return normalize(input) === normalize(answer);
 }
 
-/** Case-SENSITIVE, but punctuation is ignored (level 4-3's retyped sentence). */
+// Punctuation AND whitespace both dropped entirely (not just collapsed) —
+// only the sequence of letters/case has to match.
+function stripPunctuationAndSpace(input) {
+  return stripPunctuation(input).replace(/\s+/g, '');
+}
+
+/** Case-SENSITIVE, but punctuation and spacing are both ignored (level 4-3's retyped sentence). */
 export function checkTextNoPunctCaseSensitive(input, answer) {
-  const stripSpacesOnly = (s) => stripPunctuation(s);
-  const got = stripSpacesOnly(input);
-  const want = stripSpacesOnly(answer);
-  return got === want;
+  return stripPunctuationAndSpace(input) === stripPunctuationAndSpace(answer);
 }
 
 /** Fully strict: case, punctuation, and spacing must match exactly (level 10's final sentence). */

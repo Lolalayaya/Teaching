@@ -35,6 +35,8 @@ function render(index) {
 function setBannerChar(i, ch, animate) {
   const span = bannerChars[i];
   if (!span) return;
+  // A plain space collapses to zero width as the sole content of an
+  // inline-block span — use a non-breaking space so it still reads as a gap.
   span.textContent = ch === ' ' ? ' ' : ch;
   if (animate) {
     requestAnimationFrame(() => span.classList.add('revealed'));

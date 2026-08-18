@@ -18,6 +18,11 @@ const MORSE_MAP = {
   Y: '-.--', Z: '--..',
 };
 const MORSE_ROWS = Object.entries(MORSE_MAP);
+
+const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
+  letter: String.fromCharCode(65 + i),
+  num: i + 1,
+}));
 ---
 
 <!doctype html>
@@ -51,6 +56,14 @@ const MORSE_ROWS = Object.entries(MORSE_MAP);
           <p class="level-index">第 {i + 1} 關／共 {STEPS.length} 關</p>
           <h2>{level.title}</h2>
           <p class="prompt">{level.prompt}</p>
+
+          {level.morseMessage && (
+            <div class="morse-message">
+              {level.morseMessage.split(' ').map((group) => (
+                <span class="morse-group">{group}</span>
+              ))}
+            </div>
+          )}
 
           <div class="answer-area" data-answer-area>
             {level.type === 'letters' && (
@@ -97,31 +110,77 @@ const MORSE_ROWS = Object.entries(MORSE_MAP);
             )}
 
             {level.referenceTable === 'ascii' && (
-              <table class="ref-table">
-                <thead><tr><th>二進位</th><th>十進位</th><th>字元</th></tr></thead>
-                <tbody>
-                  {ASCII_ROWS.map((row) => (
-                    <tr><td>{row.bin}</td><td>{row.dec}</td><td>{row.ch}</td></tr>
-                  ))}
-                </tbody>
-              </table>
+              <div class="ref-table-wrap">
+                <table class="ref-table">
+                  <thead><tr><th>二進位</th><th>十進位</th><th>字元</th></tr></thead>
+                  <tbody>
+                    {ASCII_ROWS.map((row) => (
+                      <tr><td>{row.bin}</td><td>{row.dec}</td><td>{row.ch}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
 
             {level.referenceTable === 'morse' && (
-              <table class="ref-table morse-table">
-                <tbody>
-                  {Array.from({ length: 7 }).map((_, r) => (
+              <div class="ref-table-wrap">
+                <table class="ref-table morse-table">
+                  <tbody>
+                    {Array.from({ length: 7 }).map((_, r) => (
+                      <tr>
+                        {MORSE_ROWS.slice(r * 4, r * 4 + 4).map(([letter, code]) => (
+                          <>
+                            <td class="morse-letter">{letter}</td>
+                            <td class="morse-code">{code}</td>
+                          </>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {level.referenceTable === 'alphabet' && (
+              <div class="ref-table-wrap">
+                <table class="ref-table alphabet-table">
+                  <tbody>
+                    {Array.from({ length: 2 }).map((_, r) => (
+                      <tr>
+                        {ALPHABET_ROWS.slice(r * 13, r * 13 + 13).map((row) => (
+                          <>
+                            <td class="alpha-letter">{row.letter}</td>
+                            <td class="alpha-num">{row.num}</td>
+                          </>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {level.referenceTable === 'bitvalues' && (
+              <div class="ref-table-wrap">
+                <table class="ref-table bitvalue-table">
+                  <thead>
                     <tr>
-                      {MORSE_ROWS.slice(r * 4, r * 4 + 4).map(([letter, code]) => (
-                        <>
-                          <td class="morse-letter">{letter}</td>
-                          <td class="morse-code">{code}</td>
-                        </>
+                      {[128, 64, 32, 16, 8, 4, 2, 1].map((v) => (
+                        <th>{v}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  {level.bitvalueExample && (
+                    <tbody>
+                      <tr>
+                        {level.bitvalueExample.split('').map((bit) => (
+                          <td class={bit === '1' ? 'bit-on' : 'bit-off'}>{bit}</td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
+              </div>
             )}
           </div>
 
@@ -253,6 +312,29 @@ const MORSE_ROWS = Object.entries(MORSE_MAP);
 
   .prompt {
     line-height: 1.7;
+    white-space: pre-line;
+    text-align: left;
+  }
+
+  .morse-message {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin: 1rem 0;
+  }
+
+  .morse-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    background: var(--color-paper-2);
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
   }
 
   .level-card {
@@ -310,8 +392,14 @@ const MORSE_ROWS = Object.entries(MORSE_MAP);
     max-width: 22rem;
   }
 
-  .ref-table {
+  .ref-table-wrap {
+    overflow-x: auto;
     margin: 0 auto 1rem;
+    max-width: 100%;
+  }
+
+  .ref-table {
+    margin: 0 auto;
     border-collapse: collapse;
     font-size: 0.85rem;
     font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
@@ -329,7 +417,21 @@ const MORSE_ROWS = Object.entries(MORSE_MAP);
     font-weight: 600;
   }
 
-  .morse-table .morse-letter {
+  .morse-table .morse-letter,
+  .alphabet-table .alpha-num {
+    color: var(--color-muted);
+  }
+
+  .alphabet-table .alpha-letter {
+    font-weight: 600;
+  }
+
+  .bitvalue-table .bit-on {
+    color: var(--color-accent-hover);
+    font-weight: 700;
+  }
+
+  .bitvalue-table .bit-off {
     color: var(--color-muted);
   }
 
