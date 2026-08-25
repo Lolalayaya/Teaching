@@ -40,7 +40,7 @@ const currentItems = [
 
 <BaseLayout title="首頁">
   <h1>Lola 的資訊柑仔店</h1>
-  <p class="tagline">這裡收錄本學期資訊科技課程的講義、課程公告與學生作品,歡迎隨時晃進來逛逛、複習功課!</p>
+  <p class="tagline">這裡收錄本學期資訊科技課程的講義、課程公告與學生作品，歡迎隨時晃進來逛逛、複習功課！</p>
 
   <p class="filter-notice" data-filter-notice hidden></p>
 
@@ -99,14 +99,18 @@ const currentItems = [
   <p><a href={`${base}lectures/`}>查看所有講義 →</a></p>
 
   <h2>學生作品展示</h2>
-  <ul class="card-list">
-    {latestShowcase.map((item) => (
-      <li class="card">
-        <a href={`${base}showcase/${item.id}/`}>{item.data.title}</a>
-        {item.data.description && <p class="meta">{item.data.description}</p>}
-      </li>
-    ))}
-  </ul>
+  {latestShowcase.length === 0 ? (
+    <p class="meta">目前還沒有作品上榜，等你來當第一個。</p>
+  ) : (
+    <ul class="card-list">
+      {latestShowcase.map((item) => (
+        <li class="card">
+          <a href={`${base}showcase/${item.id}/`}>{item.data.title}</a>
+          {item.data.description && <p class="meta">{item.data.description}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
 
   <p><a href={`${base}showcase/`}>查看所有學生作品 →</a></p>
 </BaseLayout>

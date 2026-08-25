@@ -23,7 +23,7 @@ const { Content } = await render(post);
   <p class="meta">
     <span class="tag">{post.data.category}</span>
     {post.data.date.toLocaleDateString('zh-TW')}
-    {post.data.dueDate && ` · 截止日: ${post.data.dueDate.toLocaleDateString('zh-TW')}`}
+    {post.data.dueDate && ` · 截止日：${post.data.dueDate.toLocaleDateString('zh-TW')}`}
   </p>
   <h1>{post.data.title}</h1>
   <Content />

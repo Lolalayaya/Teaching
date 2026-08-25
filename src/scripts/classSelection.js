@@ -49,7 +49,7 @@ export function applyClassFilter() {
 
   if (notice) {
     notice.hidden = false;
-    notice.textContent = `目前只顯示 ${selection.grade} 年級 ${Number(selection.cls)} 班的內容(篩選功能,不是存取限制,任何人都能看到全部內容)。`;
+    notice.textContent = `目前只顯示 ${selection.grade} 年級 ${Number(selection.cls)} 班的內容（篩選功能，不是存取限制，任何人都能看到全部內容）。`;
   }
 }
 
@@ -58,7 +58,7 @@ export function renderNavBadge(base) {
   if (!badge) return;
   const selection = readSelection();
   if (selection) {
-    badge.innerHTML = `你的班級:${selection.grade} 年 ${Number(selection.cls)} 班 · <a href="${base}select-class/">更改</a>`;
+    badge.innerHTML = `你的班級：${selection.grade} 年 ${Number(selection.cls)} 班 · <a href="${base}select-class/">更改</a>`;
   } else {
     badge.innerHTML = `<a href="${base}select-class/">尚未選擇班級</a>`;
   }

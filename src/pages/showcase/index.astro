@@ -10,18 +10,22 @@ const items = (await getCollection('showcase')).sort(
 
 <BaseLayout title="學生作品展示">
   <h1>學生作品展示</h1>
-  <p>這裡展示班上同學做的作品,提供大家互相參考、觀摩學習。</p>
-  <ul class="card-list">
-    {items.map((item) => (
-      <li class="card">
-        <a href={`${base}showcase/${item.id}/`}>{item.data.title}</a>
-        <p class="meta">
-          {item.data.grade && <span class="tag">{item.data.grade} 年級</span>}
-          {item.data.creditLabel && <span class="tag">{item.data.creditLabel}</span>}
-          {item.data.date.toLocaleDateString('zh-TW')}
-        </p>
-        {item.data.description && <p class="meta">{item.data.description}</p>}
-      </li>
-    ))}
-  </ul>
+  <p>這裡展示班上同學做的作品，提供大家互相參考、觀摩學習。</p>
+  {items.length === 0 ? (
+    <p class="meta">這裡目前還空著。等哪次作業做得夠好、夠有特色，老師就會把作品搬到這裡展示給全班看——說不定第一個上榜的就是你。</p>
+  ) : (
+    <ul class="card-list">
+      {items.map((item) => (
+        <li class="card">
+          <a href={`${base}showcase/${item.id}/`}>{item.data.title}</a>
+          <p class="meta">
+            {item.data.grade && <span class="tag">{item.data.grade} 年級</span>}
+            {item.data.creditLabel && <span class="tag">{item.data.creditLabel}</span>}
+            {item.data.date.toLocaleDateString('zh-TW')}
+          </p>
+          {item.data.description && <p class="meta">{item.data.description}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
 </BaseLayout>

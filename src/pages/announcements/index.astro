@@ -24,7 +24,7 @@ const announcements = (await getCollection('announcements')).sort(
           <span class="tag">{post.data.category}</span>
           {post.data.semester && <span class="tag">{post.data.semester}</span>}
           {post.data.date.toLocaleDateString('zh-TW')}
-          {post.data.dueDate && ` · 截止日: ${post.data.dueDate.toLocaleDateString('zh-TW')}`}
+          {post.data.dueDate && ` · 截止日：${post.data.dueDate.toLocaleDateString('zh-TW')}`}
         </p>
       </li>
     ))}
