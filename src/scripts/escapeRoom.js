@@ -1,4 +1,14 @@
 const STORAGE_KEY = 'teaching-site:escape-room';
+const COMPLETED_KEY = 'teaching-site:escape-room-completed';
+
+/** Marked the moment the door is reached — read by the recap lecture page to unlock itself. */
+export function markCompleted() {
+  localStorage.setItem(COMPLETED_KEY, '1');
+}
+
+function clearCompleted() {
+  localStorage.removeItem(COMPLETED_KEY);
+}
 
 export function readProgress() {
   try {
@@ -20,6 +30,7 @@ export function saveProgress(version, currentLevel, fragments) {
 
 export function clearProgress() {
   localStorage.removeItem(STORAGE_KEY);
+  clearCompleted();
 }
 
 /**
@@ -33,6 +44,7 @@ export function loadOrResetProgress(currentVersion) {
   if (!stored || stored.version !== currentVersion) {
     const fresh = { version: currentVersion, currentLevel: 0, fragments: [] };
     saveProgress(fresh.version, fresh.currentLevel, fresh.fragments);
+    clearCompleted();
     return fresh;
   }
   return stored;

@@ -4,6 +4,7 @@ import {
   saveProgress,
   clearProgress,
   loadOrResetProgress,
+  markCompleted,
   checkLetters,
   checkChoice,
   checkChoiceMulti,
@@ -29,7 +30,10 @@ function render(index) {
   });
   const showDoor = index === STEPS.length;
   doorScreen.hidden = !showDoor;
-  if (showDoor) revealDoor();
+  if (showDoor) {
+    markCompleted();
+    revealDoor();
+  }
 }
 
 function setBannerChar(i, ch, animate) {
@@ -240,6 +244,7 @@ function revealDoor() {
     setTimeout(() => {
       document.querySelector('[data-finale-text]').hidden = false;
       document.querySelector('[data-play-audio-btn]').hidden = false;
+      document.querySelector('[data-recap-link]').hidden = false;
     }, 300);
     return;
   }
@@ -254,6 +259,7 @@ function revealDoor() {
     setTimeout(() => {
       document.querySelector('[data-finale-text]').hidden = false;
       document.querySelector('[data-play-audio-btn]').hidden = false;
+      document.querySelector('[data-recap-link]').hidden = false;
       spawnConfetti();
     }, 1000);
   }, 380);

@@ -17,14 +17,65 @@ interface Props {
 
 const { lecture } = Astro.props;
 const { Content } = await render(lecture);
+const unlock = lecture.data.unlock;
 ---
 
 <BaseLayout title={lecture.data.title} description={lecture.data.summary}>
   <p class="meta">{lecture.data.unit}</p>
   <h1>{lecture.data.title}</h1>
-  <Content />
 
-  {lecture.data.embeds?.map((embed) => (
-    <Embed type={embed.type} title={embed.title} url={embed.url} />
-  ))}
+  {unlock ? (
+    <div
+      class="unlock-wrapper"
+      data-unlock-wrapper
+      data-unlock-after={unlock.after?.toISOString() ?? ''}
+      data-unlock-key={unlock.storageKey ?? ''}
+    >
+      <div class="locked-notice" data-locked-notice>
+        <p>{unlock.message ?? '🔒 這份內容會在你完成對應的挑戰後解鎖。'}</p>
+      </div>
+      <div data-locked-content hidden>
+        <Content />
+        {lecture.data.embeds?.map((embed) => (
+          <Embed type={embed.type} title={embed.title} url={embed.url} />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <>
+      <Content />
+      {lecture.data.embeds?.map((embed) => (
+        <Embed type={embed.type} title={embed.title} url={embed.url} />
+      ))}
+    </>
+  )}
 </BaseLayout>
+
+<script>
+  document.querySelectorAll('[data-unlock-wrapper]').forEach((wrapper) => {
+    const el = wrapper as HTMLElement;
+    const afterStr = el.dataset.unlockAfter;
+    const key = el.dataset.unlockKey;
+
+    const dateOk = Boolean(afterStr) && new Date() >= new Date(afterStr as string);
+    const keyOk = Boolean(key) && Boolean(localStorage.getItem(key as string));
+
+    if (dateOk || keyOk) {
+      const notice = el.querySelector('[data-locked-notice]');
+      const content = el.querySelector('[data-locked-content]');
+      if (notice) (notice as HTMLElement).hidden = true;
+      if (content) (content as HTMLElement).hidden = false;
+    }
+  });
+</script>
+
+<style>
+  .locked-notice {
+    background: var(--color-paper-2);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--color-muted);
+  }
+</style>

@@ -32,7 +32,7 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <title>資訊教室 · 密室逃脫</title>
+    <title>電腦教室 · 密室逃脫</title>
   </head>
   <body class="escape-room">
     <div class="stage" data-stage>
@@ -46,8 +46,8 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
       </div>
 
       <section class="panel intro-panel" data-intro-screen>
-        <h1>資訊教室 · 密室逃脫</h1>
-        <p>你被鎖進了資訊教室的虛擬空間，必須通過老師設下的關卡，湊齊線索、解開最後一道鎖，才能真正開始這學期的冒險。</p>
+        <h1>電腦教室 · 密室逃脫</h1>
+        <p>你被鎖進了電腦教室的虛擬空間，必須通過老師設下的關卡，湊齊線索、解開最後一道鎖，才能真正開始這學期的冒險。</p>
         <button type="button" class="primary-btn" data-start-btn>開始挑戰</button>
       </section>
 
@@ -200,6 +200,7 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
           <p class="motto-zh">{config.finalMottoZh}</p>
         </div>
         <button type="button" class="primary-btn celebrate-btn" data-play-audio-btn hidden>播放慶祝音樂 🎉</button>
+        <a class="recap-link" data-recap-link hidden href={`${base}lectures/unit01-recap/`}>查看今日複習 →</a>
       </section>
     </div>
 
@@ -621,6 +622,12 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
 
   .finale-text .motto-zh {
     color: var(--color-muted);
+  }
+
+  .recap-link {
+    color: var(--color-accent-hover);
+    font-size: 0.9rem;
+    text-decoration: underline;
   }
 
   :global(.confetti-piece) {
