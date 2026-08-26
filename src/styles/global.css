@@ -167,8 +167,9 @@ tbody tr:nth-child(even) {
 
 .brand-mark {
   color: var(--color-accent);
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
-  font-weight: 700;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
 }
 
 .site-nav a {

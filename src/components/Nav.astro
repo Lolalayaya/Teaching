@@ -19,7 +19,15 @@ function isActive(href: string) {
 <header class="site-header">
   <nav class="site-nav">
     <a class="brand" href={base}>
-      <span class="brand-mark">&lt;/&gt;</span> Lola 的資訊柑仔店
+      <svg class="brand-mark" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="18" y="22" width="74" height="62" rx="13" />
+          <line x1="18" y1="42" x2="92" y2="42" />
+          <line x1="30" y1="32" x2="58" y2="32" />
+          <path d="M58 68 77.1 113.9 83.9 93.9 103.9 87.1Z" />
+        </g>
+      </svg>
+      Lola 的資訊柑仔店
     </a>
     {links.map((link) => (
       <a href={link.href} class={isActive(link.href) ? 'active' : ''}>{link.label}</a>
