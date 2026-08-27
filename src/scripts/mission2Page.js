@@ -243,17 +243,41 @@ document.querySelector('[data-reset-btn]').addEventListener('click', () => {
 
 // --- Finale --------------------------------------------------------------
 
+function playCelebrationChime() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  const ctx = new AudioContextClass();
+  const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    const start = ctx.currentTime + i * 0.12;
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(0.2, start + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.5);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + 0.55);
+  });
+}
+
+document.querySelector('[data-play-audio-btn]').addEventListener('click', playCelebrationChime);
+
 function revealFinale() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finaleTextEl = document.querySelector('[data-finale-text]');
   const bridgeCard = document.querySelector('[data-bridge-card]');
   const recapLink = document.querySelector('[data-recap-link]');
+  const audioBtn = document.querySelector('[data-play-audio-btn]');
 
   if (reduceMotion) {
     finaleScreen.classList.add('stamped');
     finaleTextEl.hidden = false;
     bridgeCard.hidden = false;
     recapLink.hidden = false;
+    audioBtn.hidden = false;
     return;
   }
 
@@ -261,6 +285,7 @@ function revealFinale() {
   setTimeout(() => {
     finaleTextEl.hidden = false;
     recapLink.hidden = false;
+    audioBtn.hidden = false;
   }, 550);
   setTimeout(() => {
     bridgeCard.hidden = false;

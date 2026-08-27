@@ -161,10 +161,12 @@ const FILENAME_FORMAT_ROWS = [
             <span>完成</span>
           </div>
           <div class="stamp-glow"></div>
+          <div class="stamp-impact"></div>
         </div>
         <div class="finale-text" data-finale-text hidden>
           <p class="finale-line">{config.finaleLine}</p>
         </div>
+        <button type="button" class="primary-btn celebrate-btn" data-play-audio-btn hidden>播放慶祝音樂 🎉</button>
         <div class="bridge-card" data-bridge-card hidden>
           <span class="bridge-icon" aria-hidden="true">🚀</span>
           <p>下一個基地，準備出發。</p>
@@ -521,12 +523,18 @@ const FILENAME_FORMAT_ROWS = [
   }
 
   .finale-screen {
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1.25rem;
     min-height: 20rem;
     justify-content: center;
+  }
+
+  .celebrate-btn {
+    font-size: 0.95rem;
   }
 
   .stamp-wrap {
@@ -552,13 +560,54 @@ const FILENAME_FORMAT_ROWS = [
     font-size: 1.3rem;
     letter-spacing: 0.1em;
     opacity: 0;
-    transform: scale(0.85) rotate(-8deg);
-    transition: transform 600ms var(--mission-ease-bounce), opacity 500ms var(--ease-out);
+    transform-origin: 50% 50%;
+    transform: rotate(-2deg) scale(5);
   }
 
+  /* The classic "stamp effect" trick: appear already huge and half-visible
+     (like the block is right up against the page), hold briefly, then slam
+     down to its flat resting size/angle. Scale doing the work, not position —
+     that's what actually reads as an impact rather than a drop-and-bounce. */
   .finale-screen.stamped .stamp {
-    opacity: 1;
-    transform: scale(1) rotate(-8deg);
+    animation: stamp-slam 480ms cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
+  }
+
+  @keyframes stamp-slam {
+    0% { opacity: 0; transform: rotate(-2deg) scale(5); }
+    10% { opacity: 0.6; transform: rotate(-2deg) scale(5); }
+    100% { opacity: 1; transform: rotate(-8deg) scale(1); }
+  }
+
+  /* A brief expanding ring right as the stamp lands, timed to the animation
+     duration above — the "ink hitting paper" beat. */
+  .stamp-impact {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid var(--color-accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .finale-screen.stamped .stamp-impact {
+    animation: stamp-ring 460ms var(--ease-out) 480ms both;
+  }
+
+  @keyframes stamp-ring {
+    0% { opacity: 0; transform: scale(0.8); }
+    15% { opacity: 0.9; transform: scale(0.95); }
+    100% { opacity: 0; transform: scale(1.6); }
+  }
+
+  /* A tiny 2px thud on the whole stamp, same delay as the ring. */
+  .finale-screen.stamped .stamp-wrap {
+    animation: stamp-thud 220ms var(--ease-in-out) 480ms;
+  }
+
+  @keyframes stamp-thud {
+    0%, 100% { transform: translate(0, 0); }
+    30% { transform: translate(-2px, 1px); }
+    60% { transform: translate(2px, -1px); }
   }
 
   .stamp-glow {
@@ -647,9 +696,19 @@ const FILENAME_FORMAT_ROWS = [
       animation: none;
     }
 
-    .stamp {
-      transition-duration: 200ms;
-      transform: scale(1) rotate(-8deg);
+    .finale-screen.stamped .stamp {
+      animation: none;
+      opacity: 1;
+      transform: rotate(-8deg) scale(1);
+      transition: opacity 200ms ease;
+    }
+
+    .stamp-wrap {
+      animation: none;
+    }
+
+    .stamp-impact {
+      display: none;
     }
   }
 
