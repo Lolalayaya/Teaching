@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { GRADES as grades } from '../scripts/classOptions.js';
 
 const base = import.meta.env.BASE_URL;
-const grades = ['7', '8', '9'];
-const classNumbers = Array.from({ length: 10 }, (_, i) => String(i + 1).padStart(2, '0'));
 ---
 
 <BaseLayout title="選擇班級">
@@ -15,16 +14,15 @@ const classNumbers = Array.from({ length: 10 }, (_, i) => String(i + 1).padStart
   <form class="class-picker" data-class-form>
     <label>
       年級
-      <select name="grade" required>
+      <select name="grade" data-grade-select required>
         <option value="" disabled selected>請選擇</option>
         {grades.map((g) => <option value={g}>{g} 年級</option>)}
       </select>
     </label>
     <label>
       班級
-      <select name="cls" required>
-        <option value="" disabled selected>請選擇</option>
-        {classNumbers.map((c) => <option value={c}>{Number(c)} 班</option>)}
+      <select name="cls" data-class-select required disabled>
+        <option value="" disabled selected>請先選年級</option>
       </select>
     </label>
     <button type="submit">儲存並回首頁</button>
@@ -35,9 +33,20 @@ const classNumbers = Array.from({ length: 10 }, (_, i) => String(i + 1).padStart
 
 <script>
   import { writeSelection, clearSelection } from '../scripts/classSelection.js';
+  import { TAUGHT_CLASSES } from '../scripts/classOptions.js';
 
   const base = import.meta.env.BASE_URL;
   const form = document.querySelector('[data-class-form]');
+  const gradeSelect = document.querySelector('[data-grade-select]');
+  const classSelect = document.querySelector('[data-class-select]');
+
+  gradeSelect?.addEventListener('change', () => {
+    const classNumbers = TAUGHT_CLASSES[gradeSelect.value] ?? [];
+    classSelect.innerHTML =
+      '<option value="" disabled selected>請選擇</option>' +
+      classNumbers.map((c) => `<option value="${c}">${Number(c)} 班</option>`).join('');
+    classSelect.disabled = classNumbers.length === 0;
+  });
 
   form?.addEventListener('submit', (event) => {
     event.preventDefault();

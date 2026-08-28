@@ -67,6 +67,13 @@ const showcase = defineCollection({
     creditLabel: z.string().optional(),
     description: z.string().optional(),
     embeds: z.array(embedSchema).optional(),
+    // Visibility filtering (who sees this) — reuses the same fields as
+    // lectures/announcements, but deliberately WITHOUT `current`: showcase
+    // items never belong in the homepage 本堂課/今日重點 box, that stays
+    // scoped to lectures + announcements only.
+    grades: z.array(gradeEnum).optional(),
+    classes: z.array(z.string()).optional(),
+    semester: semesterEnum.optional(),
   }),
 });
 

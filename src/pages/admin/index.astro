@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="後台管理" description="教學網站後台（密碼保護，非公開內容）">
+  <h1>後台管理</h1>
+
+  <section data-gate class="admin-gate">
+    <label>
+      密碼
+      <input type="password" data-password-input autocomplete="off" />
+    </label>
+    <button type="button" data-unlock-btn>解鎖</button>
+    <p data-gate-error hidden class="gate-error">密碼不對，請再試一次。</p>
+  </section>
+
+  <section data-admin-shell hidden class="admin-shell">
+    <p class="notice">
+      這個頁面沒有真正的伺服器驗證，只是輕量的「請勿進入」門，任何看得懂原始碼的人都能繞過。GitHub Token
+      才是真正的憑證，只存在這台裝置的瀏覽器裡——換一台電腦要重新輸入一次，也請不要把Token貼到別的地方。
+    </p>
+
+    <h2>GitHub 連線設定</h2>
+    <p>
+      到 GitHub 的 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">
+        Fine-grained personal access tokens
+      </a> 建立一組新token：Repository access 選「Only select repositories」→ 選這個repo（Teaching），
+      Permissions 只給 <strong>Contents: Read and write</strong> 這一項就好，不要給其他權限。
+    </p>
+    <label>
+      Personal Access Token
+      <input type="password" data-pat-input autocomplete="off" placeholder="github_pat_..." />
+    </label>
+    <button type="button" data-save-pat-btn>儲存 Token（只存在這台電腦，所有分頁共用）</button>
+    <p data-pat-status class="status"></p>
+
+    <nav class="admin-tabs">
+      <button type="button" data-tab-btn data-tab="escape-room" class="active">密室逃脫</button>
+      <button type="button" data-tab-btn data-tab="mission-2">mission-2</button>
+      <button type="button" data-tab-btn data-tab="announcements">公告</button>
+      <button type="button" data-tab-btn data-tab="lectures">講義</button>
+      <button type="button" data-tab-btn data-tab="showcase">作品集</button>
+    </nav>
+
+    <section data-tab-panel data-tab="escape-room"></section>
+    <section data-tab-panel data-tab="mission-2" hidden></section>
+    <section data-tab-panel data-tab="announcements" hidden></section>
+    <section data-tab-panel data-tab="lectures" hidden></section>
+    <section data-tab-panel data-tab="showcase" hidden></section>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initGate } from '../../scripts/admin/gate.js';
+  import { initEscapeRoomTab } from '../../scripts/admin/escapeRoomTab.js';
+  import { initMission2Tab } from '../../scripts/admin/mission2Tab.js';
+  import { initAnnouncementsTab } from '../../scripts/admin/announcementsTab.js';
+  import { initLecturesTab } from '../../scripts/admin/lecturesTab.js';
+  import { initShowcaseTab } from '../../scripts/admin/showcaseTab.js';
+
+  document.querySelectorAll('[data-tab-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tab = (btn as HTMLElement).dataset.tab;
+      document.querySelectorAll('[data-tab-btn]').forEach((b) => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('[data-tab-panel]').forEach((p) => {
+        (p as HTMLElement).hidden = (p as HTMLElement).dataset.tab !== tab;
+      });
+    });
+  });
+
+  initGate({
+    password: 'teacherlola',
+    onUnlock: () => {
+      initEscapeRoomTab();
+      initMission2Tab();
+      initAnnouncementsTab();
+      initLecturesTab();
+      initShowcaseTab();
+    },
+  });
+</script>
+
+<style is:global>
+  .admin-gate[hidden],
+  .admin-shell[hidden] {
+    display: none;
+  }
+
+  .admin-gate,
+  .admin-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 48rem;
+  }
+
+  .gate-error {
+    color: var(--color-wrong);
+  }
+
+  .notice {
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .admin-shell label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .admin-shell input[type='password'],
+  .admin-shell input[type='text'],
+  .admin-shell input[type='url'],
+  .admin-shell input[type='date'],
+  .admin-shell input[type='number'],
+  .admin-shell select,
+  .admin-shell textarea {
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: inherit;
+  }
+
+  .content-editor {
+    width: 100%;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .status {
+    min-height: 1.4em;
+    color: var(--color-correct);
+  }
+
+  .status.error {
+    color: var(--color-wrong);
+  }
+
+  .admin-shell button {
+    align-self: flex-start;
+    background: var(--color-accent);
+    color: var(--color-paper);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.4rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 140ms var(--ease-out);
+  }
+
+  .admin-shell button:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-tabs button {
+    background: transparent;
+    color: var(--color-ink);
+    border: 1px solid var(--color-border);
+  }
+
+  .admin-tabs button.active {
+    background: var(--color-accent);
+    color: var(--color-paper);
+    border-color: var(--color-accent);
+  }
+
+  [data-tab-panel] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  [data-tab-panel][hidden] {
+    display: none;
+  }
+
+  [data-tab-panel] fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  [data-tab-panel] fieldset > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+  }
+
+  [data-tab-panel] fieldset label {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .admin-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .admin-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 0.6rem 0.9rem;
+  }
+
+  .admin-list button {
+    padding: 0.35rem 0.9rem;
+  }
+
+  .embed-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .preview-body {
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1rem;
+    background: var(--color-paper-2);
+  }
+
+  [data-tab-panel] details {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 0.75rem;
+  }
+
+  [data-tab-panel] details[open] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+</style>

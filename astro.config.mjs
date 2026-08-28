@@ -10,4 +10,9 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://Lolalayaya.github.io',
   base: '/Teaching/',
+  // 老師後台合併進單一 /admin 入口（見 src/pages/admin/index.astro），
+  // 舊的 /escape-room/admin 網址保留一個靜態轉址，避免書籤失效。
+  redirects: {
+    '/escape-room/admin': '/Teaching/admin',
+  },
 });
