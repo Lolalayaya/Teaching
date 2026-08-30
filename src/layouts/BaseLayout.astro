@@ -8,7 +8,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Lola 的資訊柑仔店 · 國中資訊科技課程教材網站' } = Astro.props;
+const { title, description = '柔雅老師的資訊柑仔店 · 國中資訊科技課程教材網站' } = Astro.props;
 
 // /admin 有自己的密碼門（見 src/pages/admin/index.astro），不需要再套一層全站門。
 const skipGate = Astro.url.pathname.includes('/admin');
@@ -21,7 +21,7 @@ const skipGate = Astro.url.pathname.includes('/admin');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <title>{title} | Lola 的資訊柑仔店</title>
+    <title>{title} | 柔雅老師的資訊柑仔店</title>
     <script is:inline>
       (function () {
         try {
@@ -51,7 +51,7 @@ const skipGate = Astro.url.pathname.includes('/admin');
           <slot />
         </main>
         <footer class="site-footer">
-          <p>Lola 的資訊柑仔店 · 僅供本班學生課程學習使用</p>
+          <p>柔雅老師的資訊柑仔店 · 僅供本班學生課程學習使用</p>
         </footer>
       </Fragment>
     ) : (
@@ -93,7 +93,7 @@ const skipGate = Astro.url.pathname.includes('/admin');
             <slot />
           </main>
           <footer class="site-footer">
-            <p>Lola 的資訊柑仔店 · 僅供本班學生課程學習使用</p>
+            <p>柔雅老師的資訊柑仔店 · 僅供本班學生課程學習使用</p>
           </footer>
         </div>
 

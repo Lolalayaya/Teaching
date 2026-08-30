@@ -1,4 +1,4 @@
-# Design — Lola 的資訊柑仔店
+# Design — 柔雅老師的資訊柑仔店
 
 A locked design system for this site. Supersedes the earlier Hum-based
 version — kept here for history: v1 was Hallmark's playful **Hum** theme
