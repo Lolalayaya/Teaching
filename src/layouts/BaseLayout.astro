@@ -57,9 +57,9 @@ const skipGate = Astro.url.pathname.includes('/admin');
     ) : (
       <Fragment>
         <section data-site-gate class="site-gate">
-          <h1>請先確認班級</h1>
+          <h1>請先選擇班級</h1>
           <p>
-            選擇你的年級／班級並輸入班級密碼才能進入網站；老師／管理者請直接輸入老師密碼，不用選班級。
+            從下拉式選單中找到你的年級與班級，並輸入班級密碼才能進入網站。
           </p>
           <form class="class-picker" data-gate-form>
             <label>

@@ -50,11 +50,11 @@ export function renderNavBadge(base) {
   if (unlock?.mode === 'teacher') {
     badge.innerHTML = `老師模式（顯示全部內容） · <button type="button" data-lock-btn>登出</button>`;
   } else if (unlock?.mode === 'class') {
-    badge.innerHTML = `你的班級：${unlock.grade} 年 ${Number(unlock.cls)} 班 · <button type="button" data-lock-btn>登出／換班級</button>`;
+    badge.innerHTML = `你的班級：${unlock.grade} 0 ${Number(unlock.cls)}  · <button type="button" data-lock-btn>登出／換班級</button>`;
   } else {
     const selection = readSelection();
     badge.innerHTML = selection
-      ? `你的班級：${selection.grade} 年 ${Number(selection.cls)} 班`
+      ? `你的班級：${selection.grade} 0 ${Number(selection.cls)} `
       : '尚未選擇班級';
     return;
   }

@@ -45,7 +45,7 @@ const isUnpublished = lecture.data.published === false;
       data-unlock-key={unlock.storageKey ?? ''}
     >
       <div class="locked-notice" data-locked-notice>
-        <p>{unlock.message ?? '🔒 這份內容會在你完成對應的挑戰後解鎖。'}</p>
+        <p>{unlock.message ?? '🔒 這份內容會在你完成挑戰後自動解鎖。'}</p>
       </div>
       <div data-locked-content hidden>
         <Content />

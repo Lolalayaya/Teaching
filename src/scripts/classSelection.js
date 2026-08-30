@@ -64,6 +64,6 @@ export function applyClassFilter() {
 
   if (notice) {
     notice.hidden = false;
-    notice.textContent = `目前只顯示 ${selection.grade} 年級 ${Number(selection.cls)} 班的內容。`;
+    notice.textContent = `目前只登入的班級為 ${selection.grade} 0 ${Number(selection.cls)} 。`;
   }
 }
