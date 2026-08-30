@@ -1,5 +1,6 @@
 import { readSelection, writeSelection, clearSelection, classCode } from './classSelection.js';
 import { CLASS_PASSWORDS, TEACHER_PASSWORD } from './classPasswords.js';
+import { TAUGHT_CLASSES } from './classOptions.js';
 
 // 必須跟 BaseLayout.astro 裡 <head> 那段 is:inline 的檢查用同一把 key，
 // 否則畫面一開始會先閃一下沒鎖定的內容。
@@ -77,8 +78,7 @@ export function initSiteGate() {
   const passwordInput = gate.querySelector('[data-gate-password]');
   const error = gate.querySelector('[data-gate-error]');
 
-  gradeSelect?.addEventListener('change', async () => {
-    const { TAUGHT_CLASSES } = await import('./classOptions.js');
+  gradeSelect?.addEventListener('change', () => {
     const classNumbers = TAUGHT_CLASSES[gradeSelect.value] ?? [];
     classSelect.innerHTML =
       '<option value="" disabled selected>請選擇</option>' +
