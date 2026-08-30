@@ -18,13 +18,26 @@ interface Props {
 const { lecture } = Astro.props;
 const { Content } = await render(lecture);
 const unlock = lecture.data.unlock;
+const isUnpublished = lecture.data.published === false;
 ---
 
 <BaseLayout title={lecture.data.title} description={lecture.data.summary}>
   <p class="meta">{lecture.data.unit}</p>
   <h1>{lecture.data.title}</h1>
 
-  {unlock ? (
+  {isUnpublished ? (
+    <div data-publish-gate>
+      <div class="locked-notice" data-publish-locked>
+        <p>🔒 這份內容還沒公開，請等老師公告後再回來查看。</p>
+      </div>
+      <div data-publish-content hidden>
+        <Content />
+        {lecture.data.embeds?.map((embed) => (
+          <Embed type={embed.type} title={embed.title} url={embed.url} />
+        ))}
+      </div>
+    </div>
+  ) : unlock ? (
     <div
       class="unlock-wrapper"
       data-unlock-wrapper
@@ -52,6 +65,9 @@ const unlock = lecture.data.unlock;
 </BaseLayout>
 
 <script>
+  import { initPublishGate } from '../../scripts/publishGate.js';
+  initPublishGate();
+
   document.querySelectorAll('[data-unlock-wrapper]').forEach((wrapper) => {
     const el = wrapper as HTMLElement;
     const afterStr = el.dataset.unlockAfter;

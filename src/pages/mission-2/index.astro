@@ -44,7 +44,7 @@ const FILENAME_FORMAT_ROWS = [
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <title>特務闖關 · 蒐證任務</title>
   </head>
-  <body class="mission">
+  <body class:list={['mission', { 'paste-allowed': config.allowPaste }]}>
     <div class="stage" data-stage>
       <button type="button" class="reset-btn" data-reset-btn title="重新開始" aria-label="重新開始這個任務">⟲</button>
 
@@ -65,7 +65,7 @@ const FILENAME_FORMAT_ROWS = [
         <section class="panel level-card" data-level-index={i} hidden>
           <p class="level-index">第 {i + 1} 關／共 {STEPS.length} 關</p>
           <h2>{level.title}</h2>
-          <p class="prompt">{level.prompt}</p>
+          <p class={`prompt ${level.type === 'text-exact-strict' ? 'no-copy' : ''}`}>{level.prompt}</p>
 
           <div class="answer-area" data-answer-area>
             {level.type === 'quote-exact' && (
@@ -116,6 +116,16 @@ const FILENAME_FORMAT_ROWS = [
 
             {(level.type === 'text-exact-strict' || level.type === 'quote-exact') && (
               <input type="text" class="text-input" data-text-input autocomplete="off" />
+            )}
+
+            {level.type === 'search-query' && (
+              <input
+                type="text"
+                class="text-input search-input"
+                data-text-input
+                autocomplete="off"
+                placeholder="輸入你的搜尋語法…"
+              />
             )}
 
             {level.type === 'qr-paste' && (
@@ -288,6 +298,10 @@ const FILENAME_FORMAT_ROWS = [
     text-align: left;
   }
 
+  .prompt.no-copy {
+    user-select: none;
+  }
+
   .level-card {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out), filter 450ms var(--ease-out);
   }
@@ -322,6 +336,10 @@ const FILENAME_FORMAT_ROWS = [
     max-width: 26rem;
   }
 
+  .search-input {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+
   .assigned-quote {
     max-width: 26rem;
     margin: 0 auto 1rem;
@@ -331,6 +349,11 @@ const FILENAME_FORMAT_ROWS = [
     border-radius: var(--radius-input);
     font-size: 1.05rem;
     line-height: 1.8;
+    user-select: none;
+  }
+
+  .paste-allowed .assigned-quote {
+    user-select: text;
   }
 
   .ref-table-wrap {

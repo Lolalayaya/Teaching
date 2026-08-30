@@ -8,7 +8,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <section data-gate class="admin-gate">
     <label>
       密碼
-      <input type="password" data-password-input autocomplete="off" />
+      <span class="password-field">
+        <input type="password" data-password-input autocomplete="off" />
+        <button type="button" class="password-toggle" data-toggle-password></button>
+      </span>
     </label>
     <button type="button" data-unlock-btn>解鎖</button>
     <p data-gate-error hidden class="gate-error">密碼不對，請再試一次。</p>
@@ -29,7 +32,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </p>
     <label>
       Personal Access Token
-      <input type="password" data-pat-input autocomplete="off" placeholder="github_pat_..." />
+      <span class="password-field">
+        <input type="password" data-pat-input autocomplete="off" placeholder="github_pat_..." />
+        <button type="button" class="password-toggle" data-toggle-password></button>
+      </span>
     </label>
     <button type="button" data-save-pat-btn>儲存 Token（只存在這台電腦，所有分頁共用）</button>
     <p data-pat-status class="status"></p>
@@ -57,6 +63,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   import { initAnnouncementsTab } from '../../scripts/admin/announcementsTab.js';
   import { initLecturesTab } from '../../scripts/admin/lecturesTab.js';
   import { initShowcaseTab } from '../../scripts/admin/showcaseTab.js';
+  import { TEACHER_PASSWORD } from '../../scripts/classPasswords.js';
+  import { readUnlock, unlockAsTeacher } from '../../scripts/siteGate.js';
+  import { initPasswordToggles } from '../../scripts/passwordToggle.js';
+
+  initPasswordToggles();
 
   document.querySelectorAll('[data-tab-btn]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -69,8 +80,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   });
 
   initGate({
-    password: 'teacherlola',
+    password: TEACHER_PASSWORD,
+    autoUnlock: readUnlock()?.mode === 'teacher',
     onUnlock: () => {
+      unlockAsTeacher();
       initEscapeRoomTab();
       initMission2Tab();
       initAnnouncementsTab();

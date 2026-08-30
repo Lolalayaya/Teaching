@@ -1,6 +1,6 @@
 import { setToken, getToken } from './githubApi.js';
 
-export function initGate({ password, onUnlock }) {
+export function initGate({ password, onUnlock, autoUnlock = false }) {
   const gate = document.querySelector('[data-gate]');
   const shell = document.querySelector('[data-admin-shell]');
   const gateError = document.querySelector('[data-gate-error]');
@@ -13,6 +13,12 @@ export function initGate({ password, onUnlock }) {
     const patInput = document.querySelector('[data-pat-input]');
     if (patInput) patInput.value = getToken();
     onUnlock();
+  }
+
+  // 已經在全站門用老師密碼解鎖過了，這裡就不用再問一次密碼。
+  if (autoUnlock) {
+    unlock();
+    return;
   }
 
   unlockBtn.addEventListener('click', () => {

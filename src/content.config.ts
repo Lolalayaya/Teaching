@@ -17,6 +17,9 @@ const audienceFields = {
   semester: semesterEnum.optional(),
   embeds: z.array(embedSchema).optional(),
   current: z.boolean().optional(),
+  // 學生端進度控管:預設(不寫或 true)是公開的;設 false 就整篇隱藏,學生看不到
+  // 列表項目也打不開內文,老師/管理者(全站解鎖成老師模式)則永遠看得到全部內容。
+  published: z.boolean().optional(),
 };
 
 const lectures = defineCollection({

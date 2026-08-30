@@ -16,6 +16,9 @@ const lectures = (await getCollection('lectures')).sort((a, b) => a.data.order -
         data-audience
         data-grades={(lecture.data.grades ?? []).join(',')}
         data-classes={(lecture.data.classes ?? []).join(',')}
+        data-published={lecture.data.published === false ? 'false' : 'true'}
+        data-unlock-after={lecture.data.unlock?.after?.toISOString() ?? ''}
+        data-unlock-key={lecture.data.unlock?.storageKey ?? ''}
       >
         <a href={`${base}lectures/${lecture.id}/`}>{lecture.data.unit} · {lecture.data.title}</a>
         {lecture.data.summary && <p class="meta">{lecture.data.summary}</p>}

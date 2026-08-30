@@ -17,6 +17,7 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const isUnpublished = post.data.published === false;
 ---
 
 <BaseLayout title={post.data.title}>
@@ -26,9 +27,41 @@ const { Content } = await render(post);
     {post.data.dueDate && ` · 截止日：${post.data.dueDate.toLocaleDateString('zh-TW')}`}
   </p>
   <h1>{post.data.title}</h1>
-  <Content />
 
-  {post.data.embeds?.map((embed) => (
-    <Embed type={embed.type} title={embed.title} url={embed.url} />
-  ))}
+  {isUnpublished ? (
+    <div data-publish-gate>
+      <div class="locked-notice" data-publish-locked>
+        <p>🔒 這份內容還沒公開，請等老師公告後再回來查看。</p>
+      </div>
+      <div data-publish-content hidden>
+        <Content />
+        {post.data.embeds?.map((embed) => (
+          <Embed type={embed.type} title={embed.title} url={embed.url} />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <>
+      <Content />
+      {post.data.embeds?.map((embed) => (
+        <Embed type={embed.type} title={embed.title} url={embed.url} />
+      ))}
+    </>
+  )}
 </BaseLayout>
+
+<script>
+  import { initPublishGate } from '../../scripts/publishGate.js';
+  initPublishGate();
+</script>
+
+<style>
+  .locked-notice {
+    background: var(--color-paper-2);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--color-muted);
+  }
+</style>

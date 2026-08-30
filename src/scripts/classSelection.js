@@ -24,11 +24,24 @@ export function classCode(selection) {
   return `${selection.grade}${selection.cls}`;
 }
 
+// 跟 src/pages/lectures/[...slug].astro 內頁的解鎖判斷邏輯一致：
+// 沒有設定解鎖條件 = 一直都看得到；有設定的話，日期到了或 localStorage 有對應 key 才算解鎖。
+function isUnlocked(item) {
+  const after = item.dataset.unlockAfter;
+  const key = item.dataset.unlockKey;
+  if (!after && !key) return true;
+  const dateOk = Boolean(after) && new Date() >= new Date(after);
+  const keyOk = Boolean(key) && Boolean(localStorage.getItem(key));
+  return dateOk || keyOk;
+}
+
 export function applyClassFilter() {
   const selection = readSelection();
   const items = document.querySelectorAll('[data-audience]');
   const notice = document.querySelector('[data-filter-notice]');
 
+  // 沒有班級選擇代表是老師模式(見 siteGate.js)，全部內容都看得到，
+  // 包含還沒發布(data-published="false")的項目。
   if (!selection) {
     items.forEach((item) => item.classList.remove('is-filtered-out'));
     if (notice) notice.hidden = true;
@@ -43,23 +56,14 @@ export function applyClassFilter() {
 
     const gradeMatches = grades.length === 0 || grades.includes(selection.grade);
     const classMatches = classes.length === 0 || classes.includes(code);
+    const published = item.dataset.published !== 'false';
+    const unlocked = isUnlocked(item);
 
-    item.classList.toggle('is-filtered-out', !(gradeMatches && classMatches));
+    item.classList.toggle('is-filtered-out', !(gradeMatches && classMatches && published && unlocked));
   });
 
   if (notice) {
     notice.hidden = false;
-    notice.textContent = `目前只顯示 ${selection.grade} 年級 ${Number(selection.cls)} 班的內容（篩選功能，不是存取限制，任何人都能看到全部內容）。`;
-  }
-}
-
-export function renderNavBadge(base) {
-  const badge = document.querySelector('[data-nav-class-badge]');
-  if (!badge) return;
-  const selection = readSelection();
-  if (selection) {
-    badge.innerHTML = `你的班級：${selection.grade} 年 ${Number(selection.cls)} 班 · <a href="${base}select-class/">更改</a>`;
-  } else {
-    badge.innerHTML = `<a href="${base}select-class/">尚未選擇班級</a>`;
+    notice.textContent = `目前只顯示 ${selection.grade} 年級 ${Number(selection.cls)} 班的內容。`;
   }
 }

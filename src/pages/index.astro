@@ -25,6 +25,8 @@ const currentItems = [
       summary: lecture.data.summary,
       grades: lecture.data.grades,
       classes: lecture.data.classes,
+      published: lecture.data.published,
+      unlock: lecture.data.unlock,
     })),
   ...announcements
     .filter((post) => post.data.current)
@@ -34,6 +36,7 @@ const currentItems = [
       summary: undefined,
       grades: post.data.grades,
       classes: post.data.classes,
+      published: post.data.published,
     })),
 ];
 ---
@@ -54,6 +57,9 @@ const currentItems = [
             data-audience
             data-grades={(item.grades ?? []).join(',')}
             data-classes={(item.classes ?? []).join(',')}
+            data-published={item.published === false ? 'false' : 'true'}
+            data-unlock-after={item.unlock?.after?.toISOString() ?? ''}
+            data-unlock-key={item.unlock?.storageKey ?? ''}
           >
             <a href={item.href}>{item.title}</a>
             {item.summary && <p class="meta">{item.summary}</p>}
@@ -71,6 +77,7 @@ const currentItems = [
         data-audience
         data-grades={(post.data.grades ?? []).join(',')}
         data-classes={(post.data.classes ?? []).join(',')}
+        data-published={post.data.published === false ? 'false' : 'true'}
       >
         <a href={`${base}announcements/${post.id}/`}>{post.data.title}</a>
         <p class="meta">
@@ -89,6 +96,9 @@ const currentItems = [
         data-audience
         data-grades={(lecture.data.grades ?? []).join(',')}
         data-classes={(lecture.data.classes ?? []).join(',')}
+        data-published={lecture.data.published === false ? 'false' : 'true'}
+        data-unlock-after={lecture.data.unlock?.after?.toISOString() ?? ''}
+        data-unlock-key={lecture.data.unlock?.storageKey ?? ''}
       >
         <a href={`${base}lectures/${lecture.id}/`}>{lecture.data.unit} · {lecture.data.title}</a>
         {lecture.data.summary && <p class="meta">{lecture.data.summary}</p>}

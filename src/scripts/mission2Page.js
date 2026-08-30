@@ -105,6 +105,8 @@ function validateLevel(level, index) {
       return checkTextExactStrict(section.querySelector('[data-text-input]').value, level.answer);
     case 'quote-exact':
       return checkTextExactStrict(section.querySelector('[data-text-input]').value, getAssignedQuoteText(level.id));
+    case 'search-query':
+      return new RegExp(level.pattern).test(section.querySelector('[data-text-input]').value.trim());
     case 'qr-paste': {
       const zone = section.querySelector('[data-paste-zone]');
       const decoded = zone?.dataset.decoded || '';
@@ -177,6 +179,24 @@ levelSections.forEach((section, index) => {
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleSubmit(index);
     });
+
+    // These levels test whether you can actually produce the punctuation/emoji
+    // yourself — pasting it in would skip the whole point of the exercise.
+    // The emoji level (text-exact-strict) is always locked — there's no
+    // legitimate reason to paste a single emoji. The punctuation levels
+    // (quote-exact) respect `allowPaste`, a teacher-side escape hatch (admin
+    // panel) for when a student is genuinely stuck and needs the block lifted.
+    const isEmojiLevel = STEPS[index].type === 'text-exact-strict';
+    const isPunctuationLevel = STEPS[index].type === 'quote-exact';
+    if (isEmojiLevel || (isPunctuationLevel && !config.allowPaste)) {
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const feedback = section.querySelector('[data-feedback]');
+        feedback.textContent = '這一關要自己打出來，這裡沒辦法貼上喔！';
+        feedback.classList.remove('correct');
+        feedback.classList.add('wrong');
+      });
+    }
   });
 
   section.querySelectorAll('[data-paste-zone]').forEach((zone) => {

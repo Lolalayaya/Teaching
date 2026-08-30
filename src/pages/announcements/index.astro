@@ -18,6 +18,7 @@ const announcements = (await getCollection('announcements')).sort(
         data-audience
         data-grades={(post.data.grades ?? []).join(',')}
         data-classes={(post.data.classes ?? []).join(',')}
+        data-published={post.data.published === false ? 'false' : 'true'}
       >
         <a href={`${base}announcements/${post.id}/`}>{post.data.title}</a>
         <p class="meta">

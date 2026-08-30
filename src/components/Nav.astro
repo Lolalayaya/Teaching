@@ -6,8 +6,9 @@ const links = [
   { href: `${base}`, label: '首頁' },
   { href: `${base}lectures/`, label: '課程講義' },
   { href: `${base}announcements/`, label: '公告' },
-  { href: `${base}showcase/`, label: '學生作品' },
+  { href: `${base}rules/`, label: '課堂規則' },
   { href: `${base}grades/`, label: '評分標準' },
+  { href: `${base}showcase/`, label: '學生作品' },
 ];
 
 function isActive(href: string) {
@@ -38,7 +39,7 @@ function isActive(href: string) {
 </header>
 
 <script>
-  import { renderNavBadge } from '../scripts/classSelection.js';
+  import { renderNavBadge } from '../scripts/siteGate.js';
   import { initThemeToggle } from '../scripts/theme.js';
   renderNavBadge(import.meta.env.BASE_URL);
   initThemeToggle();

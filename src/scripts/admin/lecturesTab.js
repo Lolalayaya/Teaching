@@ -52,6 +52,9 @@ export function initLecturesTab() {
       <label style="flex-direction:row;align-items:center;gap:0.5rem;">
         <input type="checkbox" data-current /> 顯示在首頁「本堂課」提示框
       </label>
+      <label style="flex-direction:row;align-items:center;gap:0.5rem;">
+        <input type="checkbox" data-published checked /> 已公開（取消勾選 = 學生完全看不到，標題也不會出現在列表；老師模式一律看得到）
+      </label>
       <fieldset><legend>適用年級（不勾 = 全年級可見）</legend><div data-grade-checkboxes></div></fieldset>
       <fieldset><legend>適用班級（不勾 = 全班可見）</legend><div data-class-grid></div></fieldset>
       <fieldset><legend>嵌入連結</legend><div data-embeds-container></div></fieldset>
@@ -174,7 +177,7 @@ export function initLecturesTab() {
       .map(
         (it) => `
         <li>
-          <strong>${it.unit} · ${it.title}</strong> — order ${it.order}${it.current ? ' · <em>本堂課</em>' : ''}
+          <strong>${it.unit} · ${it.title}</strong> — order ${it.order}${it.current ? ' · <em>本堂課</em>' : ''}${it.published === false ? ' · <em>未公開</em>' : ''}
           <button type="button" data-edit="${it.path}">編輯</button>
           <button type="button" data-delete="${it.path}">刪除</button>
         </li>`
@@ -203,6 +206,7 @@ export function initLecturesTab() {
     form.querySelector('[data-summary]').value = data.summary || '';
     form.querySelector('[data-semester]').value = data.semester || '';
     form.querySelector('[data-current]').checked = Boolean(data.current);
+    form.querySelector('[data-published]').checked = data.published !== false;
     form.querySelector(`input[data-variant][value="${(data.unit || '').includes('複習') ? 'recap' : 'intro'}"]`).checked = true;
     renderGradeCheckboxes(gradeContainer, data.grades || []);
     renderClassGrid(classContainer, data.classes || []);
@@ -280,6 +284,7 @@ export function initLecturesTab() {
     const embeds = embedsApi.getValue();
     if (embeds.length) data.embeds = embeds;
     if (form.querySelector('[data-current]').checked) data.current = true;
+    if (!form.querySelector('[data-published]').checked) data.published = false;
 
     const after = form.querySelector('[data-unlock-after]').value;
     const storageKey = unlockKeySelect.value === '__custom__' ? unlockKeyCustom.value.trim() : unlockKeySelect.value;

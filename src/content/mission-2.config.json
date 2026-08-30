@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "allowPaste": true,
   "finaleLine": "情報已經封存，準備送往下一個基地待命。",
   "quoteBank": {
     "id": "analects",
@@ -12,30 +13,70 @@
   },
   "levels": [
     {
+      "id": "search-1",
+      "title": "搜尋特訓：同時搜尋",
+      "prompt": "如果想同時搜尋「全形」和「半形」的相關網頁，你會怎麼下搜尋指令？請直接打出你的搜尋語法（不用真的去搜尋，這裡只考語法對不對）。",
+      "type": "search-query",
+      "pattern": "^(?=.*全形)(?=.*半形)(?!.*\\bOR\\b)(?!.*\")(?!.*site:)(?!.*-).+$",
+      "fragment": "任"
+    },
+    {
+      "id": "search-2",
+      "title": "搜尋特訓：任一搜尋",
+      "prompt": "如果想搜尋「Windows」或「Mac」任一個作業系統的教學（只要出現其中一個就好），你會怎麼下搜尋指令？",
+      "type": "search-query",
+      "pattern": "^\\S+\\s+OR\\s+\\S+$",
+      "fragment": "務"
+    },
+    {
+      "id": "search-3",
+      "title": "搜尋特訓：排除關鍵字",
+      "prompt": "如果想搜尋「截圖」教學，但不想看到「手機」相關的結果，你會怎麼下搜尋指令，把「手機」排除掉？",
+      "type": "search-query",
+      "pattern": "^\\S+(\\s+\\S+)*\\s+-\\S+$",
+      "fragment": "完"
+    },
+    {
+      "id": "search-4",
+      "title": "搜尋特訓：精確詞組",
+      "prompt": "如果想搜尋完全符合「Win Shift S」這個詞組的網頁（不想被拆開來搜），你會怎麼下搜尋指令？",
+      "type": "search-query",
+      "pattern": "\"[^\"]+\"",
+      "fragment": "成"
+    },
+    {
+      "id": "search-5",
+      "title": "搜尋特訓：限定網站",
+      "prompt": "如果只想在 support.microsoft.com 這個網站裡搜尋「螢幕截圖」，你會怎麼下搜尋指令？",
+      "type": "search-query",
+      "pattern": "^(?=.*site:\\S+\\.\\S+)\\S+(\\s+\\S+)+$",
+      "fragment": "，"
+    },
+    {
       "id": 1,
       "title": "標點大不同",
-      "prompt": "下面四個符號長得很像，但其實一半是「全形」、一半是「半形」。中文打字習慣用全形標點，這樣字距才會跟中文字對齊好看。\n\n請選出裡面兩個「全形」的標點符號。",
+      "prompt": "下面四個符號長得很像，但其實一半是「全形」、一半是「半形」。中文打字習慣用全形標點，這樣字距才會跟中文字對齊好看。\n\n請選出裡面兩個「全形」的標點符號。不確定的話，可以搜尋「全形 半形 標點 差異」看看。",
       "type": "choice-multi",
       "options": ["；", ";", "，", ","],
       "answers": ["；", "，"],
-      "fragment": "任務"
+      "fragment": "前"
     },
     {
       "id": 2,
       "title": "字距爆炸警報",
-      "prompt": "情境：小明打英文作業的時候，忽然發現每個字母、每個字之間的空隙變得超級寬，看起來很奇怪。這是怎麼回事？該怎麼修正？",
+      "prompt": "情境：小明打英文作業的時候，忽然發現每個字母、數字之間的空隙變得超級寬，看起來很奇怪。\n\n原本應該是 Excellent 卻變成 Ｅｘｃｅｌｌｅｎｔ，這是怎麼回事？該怎麼修正？\n\n想不出來的話，可以自己動手試試看，或搜尋「打字 字距 變寬」之類的關鍵字。",
       "type": "choice",
-      "options": ["按 Caps Lock", "按 Shift+空白鍵 切回半形", "重新開機", "按 Ctrl+Alt+Delete"],
-      "answer": "按 Shift+空白鍵 切回半形",
-      "fragment": "完成"
+      "options": ["按 Caps Lock", "按 Shift+空白鍵", "重新開機", "按 Ctrl+Alt+Delete"],
+      "answer": "按 Shift+空白鍵",
+      "fragment": "進"
     },
     {
       "id": "3-1",
       "title": "呼叫小鍵盤",
-      "prompt": "中文標點不在鍵盤上，要另外叫出來才能打。第一種方法：按下 Ctrl+Alt+ㄝ（也就是逗號鍵）可以叫出輸入法內建的「符號輸入板」，裡面有各種中文標點可以直接點選輸入。\n\n請用這個方法，把下面系統分配給你的句子，完整打出來（標點請用全形，大小寫與空格都要一模一樣）：",
+      "prompt": "中文的標點符號（也就是全形標點符號）沒有直接畫在鍵盤上，要另外呼叫才能打出來。第一種方法：按下 Ctrl+Alt+ㄝ（也就是逗號鍵「,」）可以叫出輸入法內建的「符號輸入板」，裡面有各種中文標點符號可以直接點選輸入。\n\n請用這個方法，把下面系統分配給你的句子，完整打出來（標點符號請用全形，文字、表點符號都要與題目一模一樣）：",
       "type": "quote-exact",
       "method": "panel",
-      "fragment": "，"
+      "fragment": "下"
     },
     {
       "id": "3-2",
@@ -44,32 +85,32 @@
       "type": "quote-exact",
       "method": "ctrl",
       "referenceTable": "ctrlPunct",
-      "fragment": "前進"
+      "fragment": "一"
     },
     {
       "id": "3-3",
       "title": "直接快捷鍵（反引號版）",
-      "prompt": "第三種方法：如果 Ctrl 版在你的電腦上沒作用，換成用反引號鍵（`，Esc 鍵下面那個鍵）也可以，對照下面這張表：",
+      "prompt": "第三種方法：如果你不想用 Ctrl 鍵，也可以換成用反引號鍵（「`」，也就是 Esc 鍵下面、ㄅ旁邊的鍵），對照下面這張表：",
       "type": "quote-exact",
       "method": "backtick",
       "referenceTable": "backtickPunct",
-      "fragment": "下一"
+      "fragment": "個"
     },
     {
       "id": 4,
       "title": "表情密碼",
-      "prompt": "按下 Win + 句號（.）會叫出 Windows 內建的表情符號面板，請用它打出指定的表情符號：🔍",
+      "prompt": "Windows 其實內建了一個表情符號面板，可以直接搜尋、點選任何 emoji 輸入。試著搜尋「windows 表情符號 快捷鍵」，找出怎麼叫出來，然後打出指定的表情符號：🔍",
       "type": "text-exact-strict",
       "answer": "🔍",
-      "fragment": "個"
+      "fragment": "基"
     },
     {
       "id": 5,
       "title": "截圖蒐證",
-      "prompt": "下面藏著這一關的密語，用 QR code 加密過了。請用 Win+Shift+S 截圖，務必完整框住整個 QR code、不要裁切到邊緣，然後直接在下面的蒐證欄按 Ctrl+V 貼上，系統會自動幫你解碼。",
+      "prompt": "下面藏著這一關的密語，用 QR code 加密過了。試著搜尋「windows 螢幕截圖 教學」，找出怎麼部分截圖，截圖時務必完整框住整個 QR code、不要裁切到邊緣，也不要把整個電腦畫面截圖下來，並直接在下面的蒐證欄按 Ctrl+V 貼上，系統會自動幫你解碼。",
       "type": "qr-paste",
       "secret": "AGENT-05",
-      "fragment": "基地"
+      "fragment": "地"
     },
     {
       "id": 6,
