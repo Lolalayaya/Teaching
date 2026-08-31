@@ -15,6 +15,25 @@ export function initGate({ password, onUnlock, autoUnlock = false }) {
     onUnlock();
   }
 
+  function savePat() {
+    const patInput = document.querySelector('[data-pat-input]');
+    if (!patInput) return;
+    setToken(patInput.value.trim());
+    const status = document.querySelector('[data-pat-status]');
+    if (status) status.textContent = '✅ Token 已儲存在這台電腦（其他電腦要各自輸入一次,所有分頁共用同一組）。';
+  }
+
+  // 這兩個監聽器一定要在「已經用老師密碼自動解鎖」時也綁上，
+  // 之前的 bug 是把它們寫在下面 autoUnlock 的 return 之後，
+  // 導致回訪的老師（幾乎每次都是 autoUnlock=true）點「儲存 Token」完全沒反應。
+  document.querySelector('[data-save-pat-btn]')?.addEventListener('click', savePat);
+  // 密碼欄位按 Enter 可以直接解鎖,Token 欄位補上同樣的習慣,
+  // 否則貼上 Token 後按 Enter 什麼都不會發生,使用者容易誤以為存好了、
+  // 重新整理後才發現其實從頭到尾沒存進 localStorage。
+  document.querySelector('[data-pat-input]')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') savePat();
+  });
+
   // 已經在全站門用老師密碼解鎖過了，這裡就不用再問一次密碼。
   if (autoUnlock) {
     unlock();
@@ -30,21 +49,5 @@ export function initGate({ password, onUnlock, autoUnlock = false }) {
   });
   passwordInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') unlockBtn.click();
-  });
-
-  function savePat() {
-    const patInput = document.querySelector('[data-pat-input]');
-    if (!patInput) return;
-    setToken(patInput.value.trim());
-    const status = document.querySelector('[data-pat-status]');
-    if (status) status.textContent = '✅ Token 已儲存在這台電腦（其他電腦要各自輸入一次,所有分頁共用同一組）。';
-  }
-
-  document.querySelector('[data-save-pat-btn]')?.addEventListener('click', savePat);
-  // 密碼欄位按 Enter 可以直接解鎖,Token 欄位補上同樣的習慣,
-  // 否則貼上 Token 後按 Enter 什麼都不會發生,使用者容易誤以為存好了、
-  // 重新整理後才發現其實從頭到尾沒存進 localStorage。
-  document.querySelector('[data-pat-input]')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') savePat();
   });
 }
