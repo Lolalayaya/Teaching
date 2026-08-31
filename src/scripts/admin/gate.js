@@ -32,10 +32,19 @@ export function initGate({ password, onUnlock, autoUnlock = false }) {
     if (e.key === 'Enter') unlockBtn.click();
   });
 
-  document.querySelector('[data-save-pat-btn]')?.addEventListener('click', () => {
+  function savePat() {
     const patInput = document.querySelector('[data-pat-input]');
+    if (!patInput) return;
     setToken(patInput.value.trim());
     const status = document.querySelector('[data-pat-status]');
-    if (status) status.textContent = 'Token 已儲存在這台電腦（其他電腦要各自輸入一次,所有分頁共用同一組）。';
+    if (status) status.textContent = '✅ Token 已儲存在這台電腦（其他電腦要各自輸入一次,所有分頁共用同一組）。';
+  }
+
+  document.querySelector('[data-save-pat-btn]')?.addEventListener('click', savePat);
+  // 密碼欄位按 Enter 可以直接解鎖,Token 欄位補上同樣的習慣,
+  // 否則貼上 Token 後按 Enter 什麼都不會發生,使用者容易誤以為存好了、
+  // 重新整理後才發現其實從頭到尾沒存進 localStorage。
+  document.querySelector('[data-pat-input]')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') savePat();
   });
 }
