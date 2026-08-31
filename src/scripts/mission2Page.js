@@ -126,6 +126,14 @@ function handleSubmit(index) {
   const level = STEPS[index];
   const section = levelSections[index];
   const feedback = section.querySelector('[data-feedback]');
+
+  // See the matching guard in escapeRoomPage.js: without this, submitting an
+  // already-correct level a second time during the 500ms transition window
+  // (Enter, then also clicking submit; a fast double-click) double-pushes
+  // this level's fragment, which shifts every later fragment past the
+  // fixed-length reveal banner and drops them silently.
+  if (section.dataset.solved === 'true') return;
+
   const result = validateLevel(level, index);
   const ok = typeof result === 'boolean' ? result : result.ok;
   const customMessage = typeof result === 'object' ? result.message : null;
@@ -133,6 +141,7 @@ function handleSubmit(index) {
   section.classList.remove('shake');
 
   if (ok) {
+    section.dataset.solved = 'true';
     feedback.textContent = '答對了！';
     feedback.classList.remove('wrong');
     feedback.classList.add('correct');

@@ -114,11 +114,23 @@ function handleSubmit(index) {
   const level = STEPS[index];
   const section = levelSections[index];
   const feedback = section.querySelector('[data-feedback]');
+
+  // A correct answer schedules the transition to the next level 500ms later
+  // (see below) so the level stays visible/interactive for a moment. If the
+  // same level gets submitted again in that window (e.g. Enter, then also
+  // clicking the submit button, or a fast double-click) without this guard,
+  // its fragment gets pushed into the progress array a second time — which
+  // shifts every later fragment's position past the fixed-length reveal
+  // banner, silently dropping them ("answer looks solved, but the rest of
+  // the decoded text never appears").
+  if (section.dataset.solved === 'true') return;
+
   const ok = validateLevel(level, index);
 
   section.classList.remove('shake');
 
   if (ok) {
+    section.dataset.solved = 'true';
     feedback.textContent = '答對了！';
     feedback.classList.remove('wrong');
     feedback.classList.add('correct');
