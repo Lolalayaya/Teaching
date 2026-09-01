@@ -64,6 +64,6 @@ export function applyClassFilter() {
 
   if (notice) {
     notice.hidden = false;
-    notice.textContent = `目前登入的班級為 ${selection.grade} 0 ${Number(selection.cls)} 🔓`;
+    notice.textContent = `目前登入的班級為 ${code} 🔓`;
   }
 }
