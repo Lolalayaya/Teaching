@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "finalSentenceEn": "Be relaxed, not careless.",
   "finalMottoZh": "可以輕鬆，不可以隨便",
   "shiftAmount": "3",
@@ -11,7 +11,10 @@
       "title": "定位點",
       "prompt": "摸摸看你面前鍵盤的，感受一下上面凸起的觸感——這是打字時手指定位用的兩個鍵。請分別輸入這兩個按鍵的英文字母（大小寫皆可）。",
       "type": "letters",
-      "answers": ["f", "j"],
+      "answers": [
+        "f",
+        "j"
+      ],
       "fragment": "Eh"
     },
     {
@@ -20,9 +23,33 @@
       "prompt": "把滑鼠的操作方式跟正確的用途配對起來。",
       "type": "match",
       "pairs": [
-        { "left": "單擊", "options": ["叫出選單", "選取", "開啟"], "answer": "選取" },
-        { "left": "雙擊", "options": ["開啟", "叫出選單", "選取"], "answer": "開啟" },
-        { "left": "右鍵", "options": ["選取", "開啟", "叫出選單"], "answer": "叫出選單" }
+        {
+          "left": "單擊",
+          "options": [
+            "叫出選單",
+            "選取",
+            "開啟"
+          ],
+          "answer": "選取"
+        },
+        {
+          "left": "雙擊",
+          "options": [
+            "開啟",
+            "叫出選單",
+            "選取"
+          ],
+          "answer": "開啟"
+        },
+        {
+          "left": "右鍵",
+          "options": [
+            "選取",
+            "開啟",
+            "叫出選單"
+          ],
+          "answer": "叫出選單"
+        }
       ],
       "fragment": " uh"
     },
@@ -32,9 +59,33 @@
       "prompt": "把視窗右上角的按鈕跟功能配對起來。",
       "type": "match",
       "pairs": [
-        { "left": "—", "options": ["關閉", "最小化", "最大化／還原"], "answer": "最小化" },
-        { "left": "□", "options": ["最大化／還原", "關閉", "最小化"], "answer": "最大化／還原" },
-        { "left": "✕", "options": ["最小化", "最大化／還原", "關閉"], "answer": "關閉" }
+        {
+          "left": "—",
+          "options": [
+            "關閉",
+            "最小化",
+            "最大化／還原"
+          ],
+          "answer": "最小化"
+        },
+        {
+          "left": "□",
+          "options": [
+            "最大化／還原",
+            "關閉",
+            "最小化"
+          ],
+          "answer": "最大化／還原"
+        },
+        {
+          "left": "✕",
+          "options": [
+            "最小化",
+            "最大化／還原",
+            "關閉"
+          ],
+          "answer": "關閉"
+        }
       ],
       "fragment": "oda"
     },
@@ -43,7 +94,10 @@
       "title": "大小寫顛倒",
       "prompt": "畫面出現一段訊息：「heLlo! greAt tO mEeT yOu!」，請找出哪兩個字母原本應該大寫、卻不小心變成小寫了？（各輸入一個字母）",
       "type": "letters",
-      "answers": ["h", "g"],
+      "answers": [
+        "h",
+        "g"
+      ],
       "fragment": "hg"
     },
     {
@@ -51,7 +105,12 @@
       "title": "是哪個鍵",
       "prompt": "這段訊息之所以大小寫顛倒錯亂，是因為不小心按到了哪個鍵？",
       "type": "choice",
-      "options": ["Caps Lock", "Num Lock", "Shift", "Tab"],
+      "options": [
+        "Caps Lock",
+        "Num Lock",
+        "Shift",
+        "Tab"
+      ],
       "answer": "Caps Lock",
       "fragment": ","
     },
@@ -68,8 +127,16 @@
       "title": "中英文切換",
       "prompt": "螢幕右下角顯示目前是英文輸入模式，但你想打注音，請問要按哪個鍵切回中文？（請選取兩個選項）",
       "type": "choice-multi",
-      "options": ["Alt+Tab", "Ctrl+Shift", "Win+.", "Shift"],
-      "answers": ["Shift", "Ctrl+Shift"],
+      "options": [
+        "Alt+Tab",
+        "Ctrl+Shift",
+        "Win+.",
+        "Shift"
+      ],
+      "answers": [
+        "Shift",
+        "Ctrl+Shift"
+      ],
       "fragment": "fd"
     },
     {
@@ -78,10 +145,46 @@
       "prompt": "把下面的情境跟正確的快捷鍵配對起來。",
       "type": "match",
       "pairs": [
-        { "left": "貼上剛剛複製的內容", "options": ["Ctrl+X", "Ctrl+V", "Ctrl+C", "Ctrl+Z"], "answer": "Ctrl+V" },
-        { "left": "剪下選取的文字", "options": ["Ctrl+C", "Ctrl+Z", "Ctrl+X", "Ctrl+V"], "answer": "Ctrl+X" },
-        { "left": "復原剛剛的失誤", "options": ["Ctrl+V", "Ctrl+Z", "Ctrl+C", "Ctrl+X"], "answer": "Ctrl+Z" },
-        { "left": "複製選取的文字", "options": ["Ctrl+Z", "Ctrl+X", "Ctrl+C", "Ctrl+V"], "answer": "Ctrl+C" }
+        {
+          "left": "貼上剛剛複製的內容",
+          "options": [
+            "Ctrl+X",
+            "Ctrl+V",
+            "Ctrl+C",
+            "Ctrl+Z"
+          ],
+          "answer": "Ctrl+V"
+        },
+        {
+          "left": "剪下選取的文字",
+          "options": [
+            "Ctrl+C",
+            "Ctrl+Z",
+            "Ctrl+X",
+            "Ctrl+V"
+          ],
+          "answer": "Ctrl+X"
+        },
+        {
+          "left": "復原剛剛的失誤",
+          "options": [
+            "Ctrl+V",
+            "Ctrl+Z",
+            "Ctrl+C",
+            "Ctrl+X"
+          ],
+          "answer": "Ctrl+Z"
+        },
+        {
+          "left": "複製選取的文字",
+          "options": [
+            "Ctrl+Z",
+            "Ctrl+X",
+            "Ctrl+C",
+            "Ctrl+V"
+          ],
+          "answer": "Ctrl+C"
+        }
       ],
       "fragment": "uhoh"
     },
@@ -90,7 +193,12 @@
       "title": "副檔名配對",
       "prompt": "檔名「hw.docx／pic.jpg／muse.mp3／vir.exe」，請選出唯一的音樂檔。",
       "type": "choice",
-      "options": ["hw.docx", "pic.jpg", "muse.mp3", "vir.exe"],
+      "options": [
+        "hw.docx",
+        "pic.jpg",
+        "muse.mp3",
+        "vir.exe"
+      ],
       "answer": "muse.mp3",
       "fragment": "v"
     },
