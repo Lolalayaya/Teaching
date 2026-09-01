@@ -105,7 +105,13 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
             {level.type === 'hex-color' && (
               <div class="hex-row">
                 <input type="text" class="text-input" data-hex-input placeholder="請找出 Hex 碼" autocomplete="off" />
-                <input type="color" class="color-input" data-color-input aria-label="用滴管挑選顏色" />
+                <input
+                  type="color"
+                  class="color-input"
+                  data-color-input
+                  value="#3B82F6"
+                  aria-label="用滴管挑選顏色"
+                />
               </div>
             )}
 
