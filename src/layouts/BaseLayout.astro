@@ -2,6 +2,7 @@
 import Nav from '../components/Nav.astro';
 import '../styles/global.css';
 import { GRADES } from '../scripts/classOptions.js';
+import { GATE_SESSION_VERSION } from '../scripts/classPasswords.js';
 
 interface Props {
   title: string;
@@ -22,7 +23,7 @@ const skipGate = Astro.url.pathname.includes('/admin');
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <title>{title} | 柔雅老師的資訊柑仔店</title>
-    <script is:inline>
+    <script is:inline define:vars={{ gateSessionVersion: GATE_SESSION_VERSION }}>
       (function () {
         try {
           var saved = localStorage.getItem('teaching-site:theme');
@@ -31,12 +32,22 @@ const skipGate = Astro.url.pathname.includes('/admin');
           }
         } catch (e) {}
       })();
-      // 跟 src/scripts/siteGate.js 的 UNLOCK_KEY 要保持一致，這裡先同步設定
-      // data-gate-state，避免解鎖後每次重新整理都閃一下鎖定畫面。
+      // 跟 src/scripts/siteGate.js 的 UNLOCK_KEY／過期邏輯要保持一致，
+      // 這裡先同步設定 data-gate-state，避免解鎖後每次重新整理都閃一下鎖定畫面。
+      // 學生的班級解鎖超過一小時、或版本號跟 classPasswords.js 的
+      // GATE_SESSION_VERSION 對不上(老師用來一次踢掉所有班級)都算過期，
+      // 老師模式不受影響。gateSessionVersion 是用 define:vars 從 frontmatter
+      // 傳進來的，這樣才不用在這裡另外複製一份數字。
       (function () {
         try {
           var unlock = JSON.parse(localStorage.getItem('teaching-site:unlock') || 'null');
-          if (unlock && (unlock.mode === 'class' || unlock.mode === 'teacher')) {
+          var ONE_HOUR = 60 * 60 * 1000;
+          var classInvalid =
+            unlock &&
+            unlock.mode === 'class' &&
+            ((!unlock.unlockedAt || Date.now() - unlock.unlockedAt > ONE_HOUR) ||
+              unlock.gateVersion !== gateSessionVersion);
+          if (unlock && ((unlock.mode === 'class' && !classInvalid) || unlock.mode === 'teacher')) {
             document.documentElement.setAttribute('data-gate-state', 'unlocked');
           }
         } catch (e) {}
