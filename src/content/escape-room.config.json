@@ -92,7 +92,7 @@
     {
       "id": "4-1",
       "title": "大小寫顛倒",
-      "prompt": "畫面出現一段訊息：「heLlo! greAt tO mEeT yOu!」，請找出哪兩個字母原本應該大寫、卻不小心變成小寫了？（各輸入一個字母）",
+      "prompt": "畫面出現一段訊息：「heLlo! greAt tO mEeT yOu!」，請找出哪兩個字母原本應該大寫、卻不小心變成小寫了？（各輸入一個字母，英文字母首字母大寫）",
       "type": "letters",
       "answers": [
         "h",

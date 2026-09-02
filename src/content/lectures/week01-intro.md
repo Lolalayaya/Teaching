@@ -47,6 +47,7 @@ summary: 認識電腦教室的使用規則、帳號登入、自由時間的範�
 | 程式設計 | [Scratch](https://scratch.mit.edu/)、[Code.org](https://code.org/)、[Blockly Games](https://blockly.games/) |
 | 綜合學習 | [均一教育平台](https://www.junyiacademy.org/)、[教育部因材網](https://adl.edu.tw/)、[PaGamO](https://www.pagamo.org/) |
 | 打字練習 | [TypingClub](https://www.typingclub.com/)、[10FastFingers](https://10fastfingers.com/)、[Typing.tw](https://typing.tw/)、[花蓮縣打字練習網](https://contest.hlc.edu.tw/typing/)、[快打高手](http://www.kiec.kh.edu.tw/typing/index.asp)、[校園打字Game](http://tgame.eduweb.com.tw/index.php)、[BBC Bitesize 英打教學](https://www.bbc.co.uk/bitesize/topics/zf2f9j6/articles/z3c6tfr) |
+| 運算思維 | [運算思維小遊戲](https://padlet.com/lola91310_2/padlet-s0236z31enybsb4mkrg3) |
 
 **不可以**看影片、玩非教學類的遊戲、使用社群或聊天軟體。
 
