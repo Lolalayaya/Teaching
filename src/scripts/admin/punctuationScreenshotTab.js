@@ -1,10 +1,10 @@
 import { fetchFile, putFile, getToken } from './githubApi.js';
 
-const FILE_PATH = 'src/content/mission-2.config.json';
-const PROGRESS_KEY = 'teaching-site:mission-2';
+const FILE_PATH = 'src/content/punctuation-screenshot.config.json';
+const PROGRESS_KEY = 'teaching-site:punctuation-screenshot';
 
-export function initMission2Tab() {
-  const panel = document.querySelector('[data-tab-panel][data-tab="mission-2"]');
+export function initPunctuationScreenshotTab() {
+  const panel = document.querySelector('[data-tab-panel][data-tab="punctuation-screenshot"]');
   panel.innerHTML = `
     <h2>目前狀態</h2>
     <button type="button" data-load-btn>讀取目前內容</button>
@@ -12,7 +12,7 @@ export function initMission2Tab() {
     <p>目前版本號：<strong data-version-display>—</strong></p>
 
     <h2>快速重置所有學生進度</h2>
-    <p>版本號 +1 並發布，網站重新部署完成後，所有學生下次打開 mission-2 頁面時，進度會自動清空重新開始。</p>
+    <p>版本號 +1 並發布，網站重新部署完成後，所有學生下次打開特務闖關頁面時，進度會自動清空重新開始。</p>
     <button type="button" data-bump-version-btn>版本號 +1 並發布</button>
 
     <h2>複製貼上限制</h2>
@@ -104,7 +104,7 @@ export function initMission2Tab() {
     const newContent = `${JSON.stringify(parsed, null, 2)}\n`;
     try {
       setStatus(statusEl, '送出中…');
-      const result = await putFile(FILE_PATH, newContent, currentSha, `mission-2: bump version to ${parsed.version}`, token);
+      const result = await putFile(FILE_PATH, newContent, currentSha, `punctuation-screenshot: bump version to ${parsed.version}`, token);
       currentSha = result.sha;
       currentConfig = parsed;
       editor.value = newContent;
@@ -133,7 +133,7 @@ export function initMission2Tab() {
     const newContent = `${JSON.stringify(parsed, null, 2)}\n`;
     try {
       setStatus(statusEl, '送出中…');
-      const result = await putFile(FILE_PATH, newContent, currentSha, 'mission-2: update content via admin panel', token);
+      const result = await putFile(FILE_PATH, newContent, currentSha, 'punctuation-screenshot: update content via admin panel', token);
       currentSha = result.sha;
       currentConfig = parsed;
       versionDisplay.textContent = parsed.version;
@@ -163,7 +163,7 @@ export function initMission2Tab() {
         FILE_PATH,
         newContent,
         currentSha,
-        `mission-2: ${parsed.allowPaste ? 'allow' : 'disallow'} paste`,
+        `punctuation-screenshot: ${parsed.allowPaste ? 'allow' : 'disallow'} paste`,
         token
       );
       currentSha = result.sha;
@@ -187,7 +187,7 @@ export function initMission2Tab() {
       PROGRESS_KEY,
       JSON.stringify({ version: currentConfig.version, currentLevel: targetIndex, fragments, quoteAssignment: {} })
     );
-    setStatus(jumpStatus, `已將這台裝置的進度跳到「${currentConfig.levels[targetIndex].title}」。重新整理 mission-2 頁面即可看到。`);
+    setStatus(jumpStatus, `已將這台裝置的進度跳到「${currentConfig.levels[targetIndex].title}」。重新整理特務闖關頁面即可看到。`);
   });
 
   // Show current version / paste status right away instead of leaving them

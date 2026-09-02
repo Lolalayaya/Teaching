@@ -1,4 +1,4 @@
-import config from '../content/mission-2.config.json';
+import config from '../content/punctuation-screenshot.config.json';
 import QRCode from 'qrcode';
 import jsQR from 'jsqr';
 import {
@@ -11,7 +11,7 @@ import {
   checkChoice,
   checkChoiceMulti,
   checkTextExactStrict,
-} from './mission2.js';
+} from './punctuationScreenshot.js';
 
 const STEPS = config.levels;
 const QUOTE_LEVEL_IDS = STEPS.filter((l) => l.type === 'quote-exact').map((l) => l.id);

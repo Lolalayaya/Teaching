@@ -1,38 +1,10 @@
 ---
 import '../../styles/global.css';
-import config from '../../content/punctuation-screenshot.config.json';
+import config from '../../content/tech-time-machine.config.json';
 
 const STEPS = config.levels;
 const TOTAL_FRAGMENT_LENGTH = STEPS.reduce((sum, l) => sum + (l.fragment ? l.fragment.length : 0), 0);
 const base = import.meta.env.BASE_URL;
-
-const CTRL_PUNCT_ROWS = [
-  ['，', 'Ctrl + ,'],
-  ['。', 'Ctrl + .'],
-  ['、', "Ctrl + '"],
-  ['；', 'Ctrl + ;'],
-  ['：', 'Ctrl + Shift + ;'],
-  ['？', 'Ctrl + Shift + /'],
-  ['！', 'Ctrl + Shift + 1'],
-];
-
-const BACKTICK_PUNCT_ROWS = [
-  ['，', '` + ,'],
-  ['。', '` + .'],
-  ['、', "` + '"],
-  ['；', '` + ;'],
-  ['：', '` + Shift + ;'],
-  ['？', '` + Shift + /'],
-  ['！', '` + Shift + 1'],
-];
-
-const FILENAME_FORMAT_ROWS = [
-  ['班級', '年級（1、2、3 或 7、8、9）＋ 班級（01～12）', '701'],
-  ['（底線）', 'Shift + － （數字 0 右邊的鍵）', '_'],
-  ['座號', '01～30，請打正確座號', '05'],
-  ['姓名', '2～4 個中文字，請打全名，不要打綽號', '王小明'],
-  ['日期＋文字', '4 碼日期 + 後面至少要有「截圖」兩個字', '0907截圖任務'],
-];
 ---
 
 <!doctype html>
@@ -42,9 +14,9 @@ const FILENAME_FORMAT_ROWS = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <title>特務闖關 · 蒐證任務</title>
+    <title>科技生活時光機</title>
   </head>
-  <body class:list={['mission', { 'paste-allowed': config.allowPaste }]}>
+  <body class="mission">
     <div class="stage" data-stage>
       <button type="button" class="reset-btn" data-reset-btn title="重新開始" aria-label="重新開始這個任務">⟲</button>
 
@@ -56,52 +28,30 @@ const FILENAME_FORMAT_ROWS = [
       </div>
 
       <section class="panel intro-panel" data-intro-screen>
-        <h1>特務闖關・蒐證任務</h1>
-        <p>你是這次行動的情報員，任務是在電腦教室裡蒐集標點、表情、截圖與歸檔這幾項情報技能。完成所有關卡、集滿情報片段，就能結案，把成果送往下一個基地。</p>
-        <button type="button" class="primary-btn" data-start-btn>接受任務</button>
+        <h1>科技生活時光機</h1>
+        <p>穿梭過去、現在、未來，看看資訊科技怎麼一步步改變食衣住行育樂。搭上時光機，蒐集每一站的線索片段，最後填一份小問卷結案。</p>
+        <button type="button" class="primary-btn" data-start-btn>啟動時光機</button>
       </section>
 
       {STEPS.map((level, i) => (
         <section class="panel level-card" data-level-index={i} hidden>
-          <p class="level-index">第 {i + 1} 關／共 {STEPS.length} 關</p>
+          <p class="level-index">第 {i + 1} 站／共 {STEPS.length} 站</p>
           <h2>{level.title}</h2>
-          <p class={`prompt ${level.type === 'text-exact-strict' ? 'no-copy' : ''}`}>{level.prompt}</p>
+          <p class="prompt">{level.prompt}</p>
 
           <div class="answer-area" data-answer-area>
-            {level.type === 'quote-exact' && (
-              <p class="assigned-quote" data-quote-slot></p>
-            )}
-
-            {level.referenceTable === 'ctrlPunct' && (
-              <div class="ref-table-wrap">
-                <table class="ref-table punct-table">
-                  <thead><tr><th>符號</th><th>快捷鍵</th></tr></thead>
-                  <tbody>
-                    {CTRL_PUNCT_ROWS.map(([symbol, combo]) => (
-                      <tr><td>「{symbol}」</td><td>{combo}</td></tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {level.referenceTable === 'backtickPunct' && (
-              <div class="ref-table-wrap">
-                <table class="ref-table punct-table">
-                  <thead><tr><th>符號</th><th>快捷鍵</th></tr></thead>
-                  <tbody>
-                    {BACKTICK_PUNCT_ROWS.map(([symbol, combo]) => (
-                      <tr><td>「{symbol}」</td><td>{combo}</td></tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {level.type === 'choice-multi' && (
-              <div class={`choice-list ${level.id === 1 ? 'mono-choices' : ''}`} data-choice-group>
-                {level.options.map((opt) => (
-                  <button type="button" class="choice-btn" data-choice-option data-value={opt}>{opt}</button>
+            {level.type === 'match' && (
+              <div class="match-list">
+                {level.pairs.map((pair) => (
+                  <label class="match-row">
+                    <span>{pair.left}</span>
+                    <select data-match-left={pair.left}>
+                      <option value="">請選擇</option>
+                      {pair.options.map((opt) => (
+                        <option value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </label>
                 ))}
               </div>
             )}
@@ -113,56 +63,26 @@ const FILENAME_FORMAT_ROWS = [
                 ))}
               </div>
             )}
-
-            {(level.type === 'text-exact-strict' || level.type === 'quote-exact') && (
-              <input type="text" class="text-input" data-text-input autocomplete="off" />
-            )}
-
-            {level.type === 'search-query' && (
-              <input
-                type="text"
-                class="text-input search-input"
-                data-text-input
-                autocomplete="off"
-                placeholder="輸入你的搜尋語法…"
-              />
-            )}
-
-            {level.type === 'qr-paste' && (
-              <div class="qr-area">
-                <canvas class="qr-canvas" data-qr-canvas></canvas>
-                <div class="paste-zone" data-paste-zone tabindex="0" contenteditable="true" spellcheck="false">
-                  貼上截圖處（點這裡後按 Ctrl+V）
-                </div>
-                <p class="paste-status" data-paste-status></p>
-              </div>
-            )}
-
-            {level.type === 'filename-upload' && (
-              <div class="file-area">
-                <div class="ref-table-wrap">
-                  <table class="ref-table filename-table">
-                    <thead><tr><th>段落</th><th>規則</th><th>範例</th></tr></thead>
-                    <tbody>
-                      {FILENAME_FORMAT_ROWS.map(([part, rule, example]) => (
-                        <tr><td>{part}</td><td>{rule}</td><td>{example}</td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {level.sampleFile && (
-                  <a class="sample-link" href={`${base}${level.sampleFile}`} download>📎 下載範例檔案</a>
-                )}
-                <input type="file" class="file-input" data-file-input accept="image/png,image/jpeg" />
-                <p class="file-status" data-file-status></p>
-              </div>
-            )}
           </div>
 
           <p class="feedback" data-feedback aria-live="polite"></p>
           <button type="button" class="primary-btn" data-submit-btn>確認答案</button>
         </section>
       ))}
+
+      <section class="panel form-gate-screen" data-form-gate-screen hidden>
+        <h2>最後一站：小問卷</h2>
+        <p>填完下面這份表單，就正式結案。</p>
+        <figure class="embed">
+          <div class="embed-frame">
+            <iframe src={config.formUrl} title="科技生活時光機小測驗" loading="lazy"></iframe>
+          </div>
+          <p class="embed-fallback">
+            嵌入畫面無法顯示？<a href={config.formUrl} target="_blank" rel="noopener">在新視窗開啟 →</a>
+          </p>
+        </figure>
+        <button type="button" class="primary-btn" data-form-done-btn>我已經填完表單了，繼續</button>
+      </section>
 
       <section class="panel finale-screen" data-finale-screen hidden>
         <div class="stamp-wrap">
@@ -177,16 +97,12 @@ const FILENAME_FORMAT_ROWS = [
           <p class="finale-line">{config.finaleLine}</p>
         </div>
         <button type="button" class="primary-btn celebrate-btn" data-play-audio-btn hidden>播放慶祝音樂 🎉</button>
-        <div class="bridge-card" data-bridge-card hidden>
-          <span class="bridge-icon" aria-hidden="true">🚀</span>
-          <p>下一個基地，準備出發。</p>
-        </div>
-        <a class="recap-link" data-recap-link hidden href={`${base}lectures/week02-recap/`}>查看今日複習 →</a>
+        <a class="recap-link" data-recap-link hidden href={`${base}lectures/week3-7-recap/`}>查看今日複習 →</a>
       </section>
     </div>
 
     <script>
-      import '../../scripts/punctuationScreenshotPage.js';
+      import '../../scripts/techTimeMachinePage.js';
     </script>
   </body>
 </html>
@@ -298,10 +214,6 @@ const FILENAME_FORMAT_ROWS = [
     text-align: left;
   }
 
-  .prompt.no-copy {
-    user-select: none;
-  }
-
   .level-card {
     transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out), filter 450ms var(--ease-out);
   }
@@ -324,65 +236,30 @@ const FILENAME_FORMAT_ROWS = [
     margin: 1.5rem 0;
   }
 
-  .text-input {
+  .match-list {
+    display: grid;
+    gap: 0.75rem;
+    text-align: left;
+    max-width: 28rem;
+    margin: 0 auto;
+  }
+
+  .match-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .match-row select {
     background: var(--color-paper);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-input);
     color: var(--color-ink);
-    padding: 0.6rem 0.8rem;
+    padding: 0.5rem 0.6rem;
     font-family: inherit;
-    font-size: 1rem;
-    width: 100%;
-    max-width: 26rem;
-  }
-
-  .search-input {
-    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  }
-
-  .assigned-quote {
-    max-width: 26rem;
-    margin: 0 auto 1rem;
-    padding: 0.9rem 1.1rem;
-    background: var(--color-paper);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-input);
-    font-size: 1.05rem;
-    line-height: 1.8;
-    user-select: none;
-  }
-
-  .paste-allowed .assigned-quote {
-    user-select: text;
-  }
-
-  .ref-table-wrap {
-    overflow-x: auto;
-    margin: 0 auto 1rem;
-    max-width: 100%;
-  }
-
-  .ref-table {
-    margin: 0 auto;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  }
-
-  .ref-table th,
-  .ref-table td {
-    border: 1px solid var(--color-border);
-    padding: 0.3rem 0.6rem;
-    text-align: center;
-  }
-
-  .ref-table th {
-    color: var(--color-muted);
-    font-weight: 600;
-  }
-
-  .filename-table td:nth-child(2) {
-    text-align: left;
+    font-size: 0.9rem;
+    max-width: 18rem;
   }
 
   .choice-list {
@@ -390,11 +267,6 @@ const FILENAME_FORMAT_ROWS = [
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.6rem;
-  }
-
-  .choice-list.mono-choices .choice-btn {
-    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    font-size: 1.15rem;
   }
 
   .choice-btn {
@@ -417,74 +289,6 @@ const FILENAME_FORMAT_ROWS = [
     background: var(--color-accent-tint);
     border-color: var(--color-accent);
     color: var(--color-accent-hover);
-  }
-
-  .qr-area,
-  .file-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .qr-canvas {
-    border-radius: var(--radius-input);
-    border: 1px solid var(--color-border);
-    background: #fff;
-    padding: 0.5rem;
-  }
-
-  .paste-zone {
-    width: 100%;
-    max-width: 22rem;
-    min-height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0.75rem 1rem;
-    border: 1.5px dashed var(--color-border);
-    border-radius: var(--radius-input);
-    color: var(--color-muted);
-    background: var(--color-paper);
-    cursor: text;
-    transition: border-color 140ms var(--ease-out), color 140ms var(--ease-out);
-  }
-
-  .paste-zone:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-    border-color: var(--color-accent);
-  }
-
-  .paste-status,
-  .file-status {
-    min-height: 1.4em;
-    font-size: 0.88rem;
-    color: var(--color-muted);
-  }
-
-  .paste-status.correct,
-  .file-status.correct {
-    color: var(--color-correct);
-  }
-
-  .paste-status.wrong,
-  .file-status.wrong {
-    color: var(--color-wrong);
-  }
-
-  .file-input {
-    font-family: inherit;
-    font-size: 0.9rem;
-    color: var(--color-ink);
-  }
-
-  .sample-link {
-    display: inline-block;
-    color: var(--color-accent-hover);
-    font-size: 0.9rem;
-    text-decoration: underline;
   }
 
   .primary-btn {
@@ -539,6 +343,39 @@ const FILENAME_FORMAT_ROWS = [
     80% { transform: translateX(4px); }
   }
 
+  /* Form gate ---------------------------------------------------------- */
+
+  .form-gate-screen[hidden] {
+    display: none;
+  }
+
+  .embed {
+    margin: 1.25rem 0;
+  }
+
+  .embed-frame {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-input);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .embed-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .embed-fallback {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-top: 0.5rem;
+  }
+
+  .embed-fallback a {
+    color: var(--color-accent-hover);
+  }
+
   /* Finale ---------------------------------------------------------------- */
 
   .finale-screen[hidden] {
@@ -587,10 +424,6 @@ const FILENAME_FORMAT_ROWS = [
     transform: rotate(-2deg) scale(5);
   }
 
-  /* The classic "stamp effect" trick: appear already huge and half-visible
-     (like the block is right up against the page), hold briefly, then slam
-     down to its flat resting size/angle. Scale doing the work, not position —
-     that's what actually reads as an impact rather than a drop-and-bounce. */
   .finale-screen.stamped .stamp {
     animation: stamp-slam 480ms cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
   }
@@ -601,8 +434,6 @@ const FILENAME_FORMAT_ROWS = [
     100% { opacity: 1; transform: rotate(-8deg) scale(1); }
   }
 
-  /* A brief expanding ring right as the stamp lands, timed to the animation
-     duration above — the "ink hitting paper" beat. */
   .stamp-impact {
     position: absolute;
     inset: 0;
@@ -622,7 +453,6 @@ const FILENAME_FORMAT_ROWS = [
     100% { opacity: 0; transform: scale(1.6); }
   }
 
-  /* A tiny 2px thud on the whole stamp, same delay as the ring. */
   .finale-screen.stamped .stamp-wrap {
     animation: stamp-thud 220ms var(--ease-in-out) 480ms;
   }
@@ -667,37 +497,6 @@ const FILENAME_FORMAT_ROWS = [
     color: var(--color-muted);
   }
 
-  .bridge-card {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    border: 1px solid var(--color-border);
-    background: var(--color-paper);
-    border-radius: var(--radius-card);
-    padding: 0.9rem 1.3rem;
-    transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
-  }
-
-  @starting-style {
-    .bridge-card:not([hidden]) {
-      opacity: 0;
-      transform: translateY(10px) scale(0.96);
-    }
-  }
-
-  .bridge-card:not([hidden]) {
-    opacity: 1;
-    transform: none;
-  }
-
-  .bridge-icon {
-    font-size: 1.4rem;
-  }
-
-  .bridge-card p {
-    margin: 0;
-  }
-
   .recap-link {
     color: var(--color-accent-hover);
     font-size: 0.9rem;
@@ -710,8 +509,7 @@ const FILENAME_FORMAT_ROWS = [
     .choice-btn,
     .primary-btn,
     .reset-btn,
-    .finale-text,
-    .bridge-card {
+    .finale-text {
       transition-duration: 60ms !important;
     }
 

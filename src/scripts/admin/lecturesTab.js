@@ -7,7 +7,7 @@ import { renderGradeCheckboxes, getSelectedGrades, renderClassGrid, getSelectedC
 import { findCurrentConflicts } from './currentConflicts.js';
 
 const DIR = 'src/content/lectures';
-const KNOWN_UNLOCK_KEYS = ['teaching-site:escape-room-completed', 'teaching-site:mission-2-completed'];
+const KNOWN_UNLOCK_KEYS = ['teaching-site:escape-room-completed', 'teaching-site:punctuation-screenshot-completed'];
 
 function setStatus(el, message, isError) {
   el.textContent = message;
@@ -65,7 +65,7 @@ export function initLecturesTab() {
           <select data-unlock-key-select>
             <option value="">（不使用，只靠日期或都不設）</option>
             <option value="teaching-site:escape-room-completed">密室逃脫完成（teaching-site:escape-room-completed）</option>
-            <option value="teaching-site:mission-2-completed">mission-2 完成（teaching-site:mission-2-completed）</option>
+            <option value="teaching-site:punctuation-screenshot-completed">特務闖關完成（teaching-site:punctuation-screenshot-completed）</option>
             <option value="__custom__">其他（自訂）</option>
           </select>
         </label>

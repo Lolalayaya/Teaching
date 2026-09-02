@@ -42,14 +42,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     <nav class="admin-tabs">
       <button type="button" data-tab-btn data-tab="escape-room" class="active">密室逃脫</button>
-      <button type="button" data-tab-btn data-tab="mission-2">mission-2</button>
+      <button type="button" data-tab-btn data-tab="punctuation-screenshot">特務闖關（標點符號與截圖）</button>
       <button type="button" data-tab-btn data-tab="announcements">公告</button>
       <button type="button" data-tab-btn data-tab="lectures">講義</button>
       <button type="button" data-tab-btn data-tab="showcase">作品集</button>
     </nav>
 
     <section data-tab-panel data-tab="escape-room"></section>
-    <section data-tab-panel data-tab="mission-2" hidden></section>
+    <section data-tab-panel data-tab="punctuation-screenshot" hidden></section>
     <section data-tab-panel data-tab="announcements" hidden></section>
     <section data-tab-panel data-tab="lectures" hidden></section>
     <section data-tab-panel data-tab="showcase" hidden></section>
@@ -59,7 +59,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 <script>
   import { initGate } from '../../scripts/admin/gate.js';
   import { initEscapeRoomTab } from '../../scripts/admin/escapeRoomTab.js';
-  import { initMission2Tab } from '../../scripts/admin/mission2Tab.js';
+  import { initPunctuationScreenshotTab } from '../../scripts/admin/punctuationScreenshotTab.js';
   import { initAnnouncementsTab } from '../../scripts/admin/announcementsTab.js';
   import { initLecturesTab } from '../../scripts/admin/lecturesTab.js';
   import { initShowcaseTab } from '../../scripts/admin/showcaseTab.js';
@@ -85,7 +85,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     onUnlock: () => {
       unlockAsTeacher();
       initEscapeRoomTab();
-      initMission2Tab();
+      initPunctuationScreenshotTab();
       initAnnouncementsTab();
       initLecturesTab();
       initShowcaseTab();

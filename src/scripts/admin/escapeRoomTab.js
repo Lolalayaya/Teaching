@@ -142,6 +142,6 @@ export function initEscapeRoomTab() {
   });
 
   // 如果已經存好 Token,一開啟頁面就自動讀取目前內容,不用等老師手動按「讀取」
-  // 關卡下拉選單才會有東西可以選(mission-2 那邊本來就有這行,這裡是補齊)。
+  // 關卡下拉選單才會有東西可以選(punctuation-screenshot 那邊本來就有這行,這裡是補齊)。
   if (getToken()) loadContent();
 }

@@ -1,7 +1,7 @@
 export { checkChoice, checkChoiceMulti, checkTextExactStrict } from './escapeRoom.js';
 
-const STORAGE_KEY = 'teaching-site:mission-2';
-const COMPLETED_KEY = 'teaching-site:mission-2-completed';
+const STORAGE_KEY = 'teaching-site:punctuation-screenshot';
+const COMPLETED_KEY = 'teaching-site:punctuation-screenshot-completed';
 
 /** Marked the moment the finale is reached — read by the recap lecture page to unlock itself. */
 export function markCompleted() {

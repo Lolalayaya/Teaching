@@ -1,6 +1,6 @@
 # 第一堂課教案（45分鐘）
 
-內部教學用，不發布到網站上。學生版對應內容在 [src/content/lectures/unit01-intro.md](../src/content/lectures/unit01-intro.md)。
+內部教學用，不發布到網站上。學生版對應內容在 [src/content/lectures/week01-intro.md](../src/content/lectures/week01-intro.md)。
 
 **暫定全年級通用**：這份講義跟密室逃脫目前不分年級，7、8、9年級的第一堂課都用同一份內容（網站上已移除 `grades` 篩選，選任何班級都會看到）。之後如果要依年級拆開不同內容，再回來把 `grades` 欄位加回去、另外拆檔案即可。
 

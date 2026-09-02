@@ -5,7 +5,7 @@ order: 4
 date: 2026-09-07
 published: false
 unlock:
-  storageKey: "teaching-site:mission-2-completed"
+  storageKey: "teaching-site:punctuation-screenshot-completed"
   message: "🔒 這份複習講義會在你完成特務闖關（看到任務完成的畫面）之後解鎖。"
 semester: 115-1
 tags: ["複習", "特務闖關", "標點符號"]
