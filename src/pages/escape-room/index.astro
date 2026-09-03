@@ -69,7 +69,14 @@ const ALPHABET_ROWS = Array.from({ length: 26 }, (_, i) => ({
             {level.type === 'letters' && (
               <div class="letters-row">
                 {level.answers.map((_, ai) => (
-                  <input type="text" maxlength="1" class="letter-input" data-letter-input aria-label={`字母 ${ai + 1}`} />
+                  <input
+                    type="text"
+                    maxlength="1"
+                    class="letter-input"
+                    data-letter-input
+                    autocomplete="off"
+                    aria-label={`字母 ${ai + 1}`}
+                  />
                 ))}
               </div>
             )}
