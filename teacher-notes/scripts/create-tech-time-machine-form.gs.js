@@ -14,11 +14,14 @@
  * 這份表單會自動設定成「測驗模式」（有標準答案、自動評分），並且在填完送出後
  * 的確認畫面裡放一個連結，讓學生點回去 tech-time-machine 頁面時網址帶著
  * ?done=1，網頁會自動偵測到這個參數、跳過「填表單」畫面直接顯示「任務完成」。
+ *
+ * 配分：第一題是「班級座號姓名」文字題，85分（用來對應到姓名，不是真的評分內容）；
+ * 後面5題單選題各3分，85 + 3×5 = 100分。
  */
 function createForm() {
   var RETURN_URL = 'https://Lolalayaya.github.io/Teaching/tech-time-machine/?done=1';
 
-  var form = FormApp.create('科技生活時光機・驗收小測驗');
+  var form = FormApp.create('W3-7-科技生活時光機・驗收小測驗');
   form.setIsQuiz(true);
   form.setDescription('闖完科技生活時光機之後，填這份小測驗結案。');
   form.setConfirmationMessage(
@@ -26,18 +29,17 @@ function createForm() {
   );
   form.setShowLinkToRespondAgain(false);
 
+  var idItem = form.addTextItem();
+  idItem.setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
+    .setRequired(true)
+    .setPoints(85);
+
   addScoredChoice(
     form,
     '「擴增實境（AR）」最常被用來做什麼？',
     ['試穿衣服、模擬穿搭', '自動炒菜', '修理汽車引擎', '掃描課本內容'],
     '試穿衣服、模擬穿搭'
-  );
-
-  addScoredChoice(
-    form,
-    '「物聯網（IoT）」的智慧住宅，主要解決了什麼問題？',
-    ['遠端管理、控制家裡的電器', '提高房租', '增加房子的坪數', '更換油漆顏色'],
-    '遠端管理、控制家裡的電器'
   );
 
   addScoredChoice(
@@ -72,10 +74,10 @@ function createForm() {
   Logger.log('填答/嵌入用網址（貼回網站 formUrl）：' + form.getPublishedUrl());
 }
 
-/** 新增一題單選題，設成1分、有標準答案（測驗模式下才會自動評分）。 */
+/** 新增一題單選題，設成3分、有標準答案（測驗模式下才會自動評分）。 */
 function addScoredChoice(form, title, options, correctOption) {
   var item = form.addMultipleChoiceItem();
-  item.setTitle(title).setPoints(1).setRequired(true);
+  item.setTitle(title).setPoints(3).setRequired(true);
   item.setChoices(
     options.map(function (opt) {
       return item.createChoice(opt, opt === correctOption);

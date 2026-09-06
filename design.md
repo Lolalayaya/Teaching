@@ -116,6 +116,44 @@ any saved choice before first paint to avoid a flash of the wrong theme.
   making the 本堂課 box feel like a competing dense block instead of a quiet
   nested surface. Narrowed to `oklch(85% 0.048 75)`, a much subtler step.
 
+## v4: psychology/aesthetics pass + dark-mode refinement
+
+A round of colour-psychology research (see chat log, sources in the session)
+confirmed the light-mode palette on its own merits — warm brown/tan tones are
+independently documented as calming/grounding/nostalgic, and purple/magenta as
+creativity+wisdom (not trust, which is blue's territory — irrelevant here
+since this site handles no transactions). Checked against `frontend-design`'s
+AI-cliché calibration too: passes clean on all three named looks.
+
+Dark mode was flagged as only *partially* satisfying the same psychology —
+Sand-dark's neutral base carries none of light-mode's warm/nostalgic signal,
+and Plum-11 (required for AA text contrast — see below) reads more
+"cheerful/optimistic" than "wise/sophisticated" due to its brightness. Two
+fixes, both verified with real computed WCAG contrast ratios (not eyeballed):
+
+- **Dark paper nudged warm**: `#191918` → **`#1e1a16`** — a small step back
+  toward the kraft identity without re-entering "muddy coffee" territory.
+  Verified: ink-on-paper contrast barely moves (15.14 → 14.88), still far
+  above AA.
+- **Text/fill accent split**: computed contrast for every Radix Plum-dark
+  step against the paper. Only **plum-10/11** clear 4.5:1 as *text* on this
+  paper (plum-9 and below fail body-text AA, e.g. plum-9 is only 3.6–3.7:1)
+  — so `--color-accent` (links, titles, nav-active) **stays plum-11**,
+  non-negotiable for accessibility. But paired with light ink text instead of
+  dark paper text, **plum-7** (`#734079`) clears 6.6:1 comfortably as a
+  *fill* colour — available for buttons/price-tag backgrounds that want a
+  richer, more "sophisticated" surface than plum-11's pale wash, without
+  touching the text-contrast-critical role.
+
+  **Implemented** as a token pair: `--color-accent-fill` / `--color-on-accent-fill`
+  (light mode: equal to `--color-accent` / `--color-paper` — no visual change,
+  since Mulberry is dark enough to hold both roles). `--color-accent-fill-hover`
+  follows the same split. Dark mode: fill = plum-7 `#734079`, fill-hover =
+  plum-8 `#92549c`, on-fill = `--color-ink`. Wired into `.class-picker button`
+  and `.current-focus .eyebrow` — the two large-surface fills on the site.
+  Text-accent (`--color-accent`, links/titles/nav-active/focus-ring) is
+  untouched, still plum-11.
+
 ## Signature element
 
 Per `frontend-design`'s "spend your boldness in one place" principle: a

@@ -9,6 +9,9 @@
   --color-accent: oklch(33% 0.11 335);
   --color-accent-hover: oklch(26% 0.11 335);
   --color-accent-tint: oklch(91% 0.04 335);
+  --color-accent-fill: var(--color-accent);
+  --color-accent-fill-hover: var(--color-accent-hover);
+  --color-on-accent-fill: var(--color-paper);
 
   --font-sans: "Manrope", system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
   --radius-card: 10px;
@@ -18,11 +21,14 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark: Radix Colors Sand-dark (neutral) + Plum-dark (accent) — a true dark
-   neutral, not a low-lightness version of the light-mode kraft hue. */
+/* Dark: Radix Colors Sand-dark (neutral, nudged slightly warm) + Plum-dark
+   (accent). Text-accent (plum-11) and fill-accent (plum-7) are split — see
+   design.md for why: plum-11 is the only step in the family that clears
+   4.5:1 as small text on this paper; deeper "richer-looking" steps only
+   clear AA when used as a large fill with light text on top. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-paper: #191918;
+    --color-paper: #1e1a16;
     --color-paper-2: #2a2a28;
     --color-ink: #eeeeec;
     --color-border: #494844;
@@ -30,11 +36,14 @@
     --color-accent: #e796f3;
     --color-accent-hover: #f4d4f4;
     --color-accent-tint: #451d47;
+    --color-accent-fill: #734079;
+    --color-accent-fill-hover: #92549c;
+    --color-on-accent-fill: var(--color-ink);
   }
 }
 
 :root[data-theme="dark"] {
-  --color-paper: #191918;
+  --color-paper: #1e1a16;
   --color-paper-2: #2a2a28;
   --color-ink: #eeeeec;
   --color-border: #494844;
@@ -42,4 +51,7 @@
   --color-accent: #e796f3;
   --color-accent-hover: #f4d4f4;
   --color-accent-tint: #451d47;
+  --color-accent-fill: #734079;
+  --color-accent-fill-hover: #92549c;
+  --color-on-accent-fill: var(--color-ink);
 }

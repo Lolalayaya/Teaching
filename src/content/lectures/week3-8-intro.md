@@ -11,7 +11,7 @@ summary: 透過真人陣列活動，認識陣列、索引、元素的基本概�
 embeds:
   - type: google-form
     title: 索引行動小測驗
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_FORM_ID/viewform
+    url: https://forms.gle/6ePPoDGcUDkrWM4RA
 ---
 
 ## 學習目標
@@ -59,7 +59,5 @@ embeds:
 透過親自站一次隊伍、親自往後移一位，比單純用看的更能感受到「插入」這個動作背後，其實需要移動很多筆資料。
 
 ## 五、今天的挑戰：索引行動小測驗
-
-<!-- TODO: 上面 embeds 的 Google 表單網址目前是佔位連結，請改成實際建立好的表單網址 -->
 
 完成今天的真人陣列活動後，請上機完成上方的「索引行動小測驗」，測驗裡會考今天學到的陣列、索引、元素、變數與清單的差異。送出表單後，畫面會顯示你的得分，請到前面跟老師確認分數，即完成本次課堂作業。
