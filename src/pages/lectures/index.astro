@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const base = import.meta.env.BASE_URL;
-const lectures = (await getCollection('lectures')).sort((a, b) => a.data.order - b.data.order);
+const lectures = (await getCollection('lectures')).sort((a, b) => b.data.order - a.data.order);
 ---
 
 <BaseLayout title="課程講義">
