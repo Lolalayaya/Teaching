@@ -192,12 +192,13 @@ levelSections.forEach((section, index) => {
     // These levels test whether you can actually produce the punctuation/emoji
     // yourself — pasting it in would skip the whole point of the exercise.
     // The emoji level (text-exact-strict) is always locked — there's no
-    // legitimate reason to paste a single emoji. The punctuation levels
-    // (quote-exact) respect `allowPaste`, a teacher-side escape hatch (admin
-    // panel) for when a student is genuinely stuck and needs the block lifted.
+    // legitimate reason to paste a single emoji. Each punctuation level
+    // (quote-exact) has its own `allowPaste` flag, a teacher-side escape
+    // hatch (admin panel) for when a student is genuinely stuck on that
+    // specific method and needs the block lifted — independent per level.
     const isEmojiLevel = STEPS[index].type === 'text-exact-strict';
     const isPunctuationLevel = STEPS[index].type === 'quote-exact';
-    if (isEmojiLevel || (isPunctuationLevel && !config.allowPaste)) {
+    if (isEmojiLevel || (isPunctuationLevel && !STEPS[index].allowPaste)) {
       input.addEventListener('paste', (e) => {
         e.preventDefault();
         const feedback = section.querySelector('[data-feedback]');
@@ -239,6 +240,14 @@ levelSections.forEach((section, index) => {
       status.classList.remove('wrong');
       status.classList.add('correct');
     });
+  });
+
+  // The QR code must be captured via an actual screenshot, not lifted
+  // straight out of the page — always blocked, not tied to `allowPaste`.
+  section.querySelectorAll('[data-qr-canvas]').forEach((canvas) => {
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    canvas.setAttribute('draggable', 'false');
+    canvas.addEventListener('dragstart', (e) => e.preventDefault());
   });
 
   section.querySelectorAll('[data-file-input]').forEach((input) => {

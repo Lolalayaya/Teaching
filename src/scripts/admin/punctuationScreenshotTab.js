@@ -3,6 +3,12 @@ import { fetchFile, putFile, getToken } from './githubApi.js';
 const FILE_PATH = 'src/content/punctuation-screenshot.config.json';
 const PROGRESS_KEY = 'teaching-site:punctuation-screenshot';
 
+const PUNCTUATION_LEVELS = [
+  { id: '3-1', label: '呼叫小鍵盤' },
+  { id: '3-2', label: '直接快捷鍵（Ctrl 版）' },
+  { id: '3-3', label: '直接快捷鍵（反引號版）' },
+];
+
 export function initPunctuationScreenshotTab() {
   const panel = document.querySelector('[data-tab-panel][data-tab="punctuation-screenshot"]');
   panel.innerHTML = `
@@ -16,9 +22,14 @@ export function initPunctuationScreenshotTab() {
     <button type="button" data-bump-version-btn>版本號 +1 並發布</button>
 
     <h2>複製貼上限制</h2>
-    <p>標點符號那幾關，預設不能複製貼上答案（逼學生自己動手打）。如果有學生卡關卡太久，可以在這裡臨時解除限制。表情符號那一關不受這個開關影響，永遠不能複製貼上。</p>
-    <p>目前狀態：<strong data-paste-status-display>—</strong></p>
-    <button type="button" data-toggle-paste-btn>切換複製貼上限制</button>
+    <p>標點符號三關各自獨立設定，預設都不能複製貼上答案（逼學生自己動手打）。如果有學生卡在某一關卡太久，可以只針對那一關臨時解除限制，其他兩關不受影響。表情符號那一關不受這些開關影響，永遠不能複製貼上。</p>
+    ${PUNCTUATION_LEVELS.map(
+      ({ id, label }) => `
+    <div class="paste-toggle-row">
+      <span>${label}：<strong data-paste-status-display="${id}">—</strong></span>
+      <button type="button" data-toggle-paste-btn="${id}">切換</button>
+    </div>`
+    ).join('')}
     <p data-paste-toggle-status class="status"></p>
 
     <h2>跳到特定關卡（僅影響這台裝置）</h2>
@@ -41,7 +52,6 @@ export function initPunctuationScreenshotTab() {
   const editor = panel.querySelector('[data-content-editor]');
   const jumpSelect = panel.querySelector('[data-jump-select]');
   const jumpStatus = panel.querySelector('[data-jump-status]');
-  const pasteStatusDisplay = panel.querySelector('[data-paste-status-display]');
   const pasteToggleStatus = panel.querySelector('[data-paste-toggle-status]');
   let currentSha = null;
   let currentConfig = null;
@@ -58,7 +68,11 @@ export function initPunctuationScreenshotTab() {
   }
 
   function updatePasteDisplay(config) {
-    pasteStatusDisplay.textContent = config.allowPaste ? '可以複製貼上（限制已解除）' : '不能複製貼上（預設）';
+    PUNCTUATION_LEVELS.forEach(({ id }) => {
+      const level = config.levels.find((l) => l.id === id);
+      const el = panel.querySelector(`[data-paste-status-display="${id}"]`);
+      if (el) el.textContent = level?.allowPaste ? '可以複製貼上（限制已解除）' : '不能複製貼上（預設）';
+    });
   }
 
   async function loadContent() {
@@ -145,38 +159,43 @@ export function initPunctuationScreenshotTab() {
     }
   });
 
-  panel.querySelector('[data-toggle-paste-btn]').addEventListener('click', async () => {
-    const token = getToken();
-    if (!token) return setStatus(pasteToggleStatus, '請先在上方儲存 GitHub Token。', true);
-    if (!currentSha && !(await loadContent())) return;
-    let parsed;
-    try {
-      parsed = JSON.parse(editor.value);
-    } catch {
-      return setStatus(pasteToggleStatus, '目前編輯框裡的內容不是合法的JSON，請先修正或重新讀取。', true);
-    }
-    parsed.allowPaste = !parsed.allowPaste;
-    const newContent = `${JSON.stringify(parsed, null, 2)}\n`;
-    try {
-      setStatus(pasteToggleStatus, '送出中…');
-      const result = await putFile(
-        FILE_PATH,
-        newContent,
-        currentSha,
-        `punctuation-screenshot: ${parsed.allowPaste ? 'allow' : 'disallow'} paste`,
-        token
-      );
-      currentSha = result.sha;
-      currentConfig = parsed;
-      editor.value = newContent;
-      updatePasteDisplay(parsed);
-      setStatus(
-        pasteToggleStatus,
-        `已切換為「${parsed.allowPaste ? '可以複製貼上' : '不能複製貼上'}」，網站正在重新部署（約1-3分鐘）。`
-      );
-    } catch (err) {
-      setStatus(pasteToggleStatus, err.message, true);
-    }
+  panel.querySelectorAll('[data-toggle-paste-btn]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const levelId = btn.dataset.togglePasteBtn;
+      const token = getToken();
+      if (!token) return setStatus(pasteToggleStatus, '請先在上方儲存 GitHub Token。', true);
+      if (!currentSha && !(await loadContent())) return;
+      let parsed;
+      try {
+        parsed = JSON.parse(editor.value);
+      } catch {
+        return setStatus(pasteToggleStatus, '目前編輯框裡的內容不是合法的JSON，請先修正或重新讀取。', true);
+      }
+      const level = parsed.levels.find((l) => l.id === levelId);
+      if (!level) return setStatus(pasteToggleStatus, `找不到關卡 ${levelId}。`, true);
+      level.allowPaste = !level.allowPaste;
+      const newContent = `${JSON.stringify(parsed, null, 2)}\n`;
+      try {
+        setStatus(pasteToggleStatus, '送出中…');
+        const result = await putFile(
+          FILE_PATH,
+          newContent,
+          currentSha,
+          `punctuation-screenshot: ${level.allowPaste ? 'allow' : 'disallow'} paste on ${levelId}`,
+          token
+        );
+        currentSha = result.sha;
+        currentConfig = parsed;
+        editor.value = newContent;
+        updatePasteDisplay(parsed);
+        setStatus(
+          pasteToggleStatus,
+          `已把「${level.title}」切換為「${level.allowPaste ? '可以複製貼上' : '不能複製貼上'}」，網站正在重新部署（約1-3分鐘）。`
+        );
+      } catch (err) {
+        setStatus(pasteToggleStatus, err.message, true);
+      }
+    });
   });
 
   panel.querySelector('[data-jump-btn]').addEventListener('click', () => {

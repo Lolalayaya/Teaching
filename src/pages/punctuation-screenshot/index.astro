@@ -44,7 +44,7 @@ const FILENAME_FORMAT_ROWS = [
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <title>特務闖關 · 蒐證任務</title>
   </head>
-  <body class:list={['mission', { 'paste-allowed': config.allowPaste }]}>
+  <body class="mission">
     <div class="stage" data-stage>
       <button type="button" class="reset-btn" data-reset-btn title="重新開始" aria-label="重新開始這個任務">⟲</button>
 
@@ -69,7 +69,7 @@ const FILENAME_FORMAT_ROWS = [
 
           <div class="answer-area" data-answer-area>
             {level.type === 'quote-exact' && (
-              <p class="assigned-quote" data-quote-slot></p>
+              <p class={`assigned-quote ${level.allowPaste ? 'paste-allowed' : ''}`} data-quote-slot></p>
             )}
 
             {level.referenceTable === 'ctrlPunct' && (
@@ -352,7 +352,7 @@ const FILENAME_FORMAT_ROWS = [
     user-select: none;
   }
 
-  .paste-allowed .assigned-quote {
+  .assigned-quote.paste-allowed {
     user-select: text;
   }
 
@@ -432,6 +432,9 @@ const FILENAME_FORMAT_ROWS = [
     border: 1px solid var(--color-border);
     background: #fff;
     padding: 0.5rem;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
   }
 
   .paste-zone {
