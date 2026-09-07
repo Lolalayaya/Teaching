@@ -259,4 +259,7 @@ export function initAnnouncementsTab() {
   });
 
   resetForm();
+  // 如果已經存好 Token,一開啟分頁就自動載入清單,不然「編輯」按鈕不會出現,
+  // 只看得到「新增」表單，容易誤以為只有新增能勾選年級／班級。
+  if (getToken()) refreshList();
 }
