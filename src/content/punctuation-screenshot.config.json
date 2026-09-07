@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "allowPaste": true,
   "finaleLine": "情報已經封存，準備送往下一個基地待命。",
   "quoteBank": {
@@ -73,8 +73,16 @@
       "title": "標點大不同",
       "prompt": "下面四個符號長得很像，但其實一半是「全形」、一半是「半形」。中文打字習慣用全形標點，這樣字距才會跟中文字對齊好看。\n\n請選出裡面兩個「全形」的標點符號。不確定的話，可以搜尋「全形 半形 標點 差異」看看。",
       "type": "choice-multi",
-      "options": ["；", ";", "，", ","],
-      "answers": ["；", "，"],
+      "options": [
+        "；",
+        ";",
+        "，",
+        ","
+      ],
+      "answers": [
+        "；",
+        "，"
+      ],
       "fragment": "前"
     },
     {
@@ -82,7 +90,12 @@
       "title": "字距爆炸警報",
       "prompt": "情境：小明打英文作業的時候，忽然發現每個字母、數字之間的空隙變得超級寬，看起來很奇怪。\n\n原本應該是 Excellent 卻變成 Ｅｘｃｅｌｌｅｎｔ，這是怎麼回事？該怎麼修正？\n\n想不出來的話，可以自己動手試試看，或搜尋「打字 字距 變寬」之類的關鍵字。",
       "type": "choice",
-      "options": ["按 Caps Lock", "按 Shift+空白鍵", "重新開機", "按 Ctrl+Alt+Delete"],
+      "options": [
+        "按 Caps Lock",
+        "按 Shift+空白鍵",
+        "重新開機",
+        "按 Ctrl+Alt+Delete"
+      ],
       "answer": "按 Shift+空白鍵",
       "fragment": "進"
     },
