@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "allowPaste": true,
+  "allowPaste": false,
   "finaleLine": "情報已經封存，準備送往下一個基地待命。",
   "quoteBank": {
     "id": "analects",
