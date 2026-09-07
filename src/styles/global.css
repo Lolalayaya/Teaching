@@ -262,10 +262,12 @@ main {
 }
 
 [data-audience].is-filtered-out {
-  transition: opacity 200ms var(--ease-out), max-height 200ms var(--ease-out), visibility 0s linear 200ms;
+  transition: opacity 200ms var(--ease-out), max-height 200ms var(--ease-out), visibility 0s linear 200ms,
+    display 200ms allow-discrete;
   opacity: 0;
   max-height: 0;
   visibility: hidden;
+  display: none;
   pointer-events: none;
 }
 
@@ -275,7 +277,7 @@ main {
   }
 
   [data-audience].is-filtered-out {
-    transition: opacity 150ms ease, visibility 0s linear 150ms;
+    transition: opacity 150ms ease, visibility 0s linear 150ms, display 150ms allow-discrete;
     max-height: 0;
   }
 }
