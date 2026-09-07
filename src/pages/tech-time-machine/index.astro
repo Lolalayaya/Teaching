@@ -97,7 +97,6 @@ const base = import.meta.env.BASE_URL;
           <p class="finale-line">{config.finaleLine}</p>
         </div>
         <button type="button" class="primary-btn celebrate-btn" data-play-audio-btn hidden>播放慶祝音樂 🎉</button>
-        <a class="recap-link" data-recap-link hidden href={`${base}lectures/week3-7-recap/`}>查看今日複習 →</a>
       </section>
     </div>
 
@@ -495,12 +494,6 @@ const base = import.meta.env.BASE_URL;
 
   .finale-line {
     color: var(--color-muted);
-  }
-
-  .recap-link {
-    color: var(--color-accent-hover);
-    font-size: 0.9rem;
-    text-decoration: underline;
   }
 
   @media (prefers-reduced-motion: reduce) {

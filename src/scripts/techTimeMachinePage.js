@@ -191,13 +191,11 @@ document.querySelector('[data-play-audio-btn]').addEventListener('click', playCe
 function revealFinale() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finaleTextEl = document.querySelector('[data-finale-text]');
-  const recapLink = document.querySelector('[data-recap-link]');
   const audioBtn = document.querySelector('[data-play-audio-btn]');
 
   if (reduceMotion) {
     finaleScreen.classList.add('stamped');
     finaleTextEl.hidden = false;
-    recapLink.hidden = false;
     audioBtn.hidden = false;
     return;
   }
@@ -205,7 +203,6 @@ function revealFinale() {
   finaleScreen.classList.add('stamped');
   setTimeout(() => {
     finaleTextEl.hidden = false;
-    recapLink.hidden = false;
     audioBtn.hidden = false;
   }, 550);
 }
