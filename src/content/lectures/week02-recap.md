@@ -3,7 +3,6 @@ title: 第二週 任務檔案 002・特務闖關〔檔案回顧〕標點符號�
 unit: 第二單元複習
 order: 4
 date: 2026-09-07
-published: false
 unlock:
   storageKey: "teaching-site:punctuation-screenshot-completed"
   message: "🔒 這份複習講義會在你完成特務闖關（看到任務完成的畫面）之後解鎖。"
