@@ -114,7 +114,7 @@
       "type": "quote-exact",
       "method": "ctrl",
       "referenceTable": "ctrlPunct",
-      "allowPaste": true,
+      "allowPaste": false,
       "fragment": "一"
     },
     {
