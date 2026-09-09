@@ -16,6 +16,9 @@
  * 6. Scratch連結欄位有設基本格式驗證（網址裡要包含 scratch.mit.edu），避免學生
  *    貼錯網址或忘記貼；但沒辦法驗證專案是不是真的「已分享」，這件事表單做不到，
  *    要靠說明文字提醒學生自己檢查。
+ * 7. 「班級座號姓名」也用正規表示法擋格式（例如 801_05_王小明），格式不對無法送出。
+ *    這份表單不是測驗模式，這格不計分、也不會自動評分，Scratch積木邏輯還是要
+ *    老師自己點連結手動看。
  */
 function createForm() {
   var form = FormApp.create('W4-8-排行榜行動・任務繳交');
@@ -28,7 +31,13 @@ function createForm() {
     .addTextItem()
     .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 801_05_王小明）')
     .setHelpText('格式：班級_座號_姓名，例如 801_05_王小明。')
-    .setRequired(true);
+    .setRequired(true)
+    .setValidation(
+      FormApp.createTextValidation()
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 801_05_王小明。')
+        .requireTextMatchesPattern('^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$')
+        .build()
+    );
 
   var linkItem = form.addTextItem();
   linkItem

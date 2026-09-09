@@ -15,7 +15,9 @@
  * 6. 建議另外把表單的「回覆」分頁連結到一張Google試算表（表單編輯畫面右上角「回覆」
  *    分頁 → 綠色試算表圖示），這樣就能直接對照班級座號姓名，核對誰還沒填。
  *
- * 配分：第一題「班級座號姓名」文字題85分（用來對應到姓名，不是真的評分內容）；
+ * 第一題「班級座號姓名」文字題用正規表示法擋格式（例如 701_05_王小明），格式不對無法
+ * 送出；執行 createForm() 時會順便建立一個「表單提交時」的觸發條件，格式一通過驗證，
+ * 送出後就自動打85分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
  * 第二題主題選擇題不計分，純粹用來跳頁；跳過去之後對應主題的5題單選各3分。
  * 85 + 3×5 = 100分，答完自動送出，不會看到其他主題的題目。
  */
@@ -27,12 +29,7 @@ function createForm() {
       '表單會自動跳到對應的5題。'
   );
 
-  form
-    .addTextItem()
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
-    .setRequired(true)
-    .setPoints(85);
+  addNameIdItem(form, 85);
 
   var topicItem = form.addMultipleChoiceItem();
   topicItem.setTitle('你們這組選的主題是？').setRequired(true);
@@ -126,6 +123,8 @@ function createForm() {
     topicItem.createChoice('資訊科技合理使用原則', responsibleUsePage),
   ]);
 
+  installAutoGradeTrigger(form);
+
   Logger.log('編輯用網址（自己改題目用）：' + form.getEditUrl());
   Logger.log('填答/嵌入用網址（貼回 week4-7-intro.md）：' + form.getPublishedUrl());
 }
@@ -139,4 +138,56 @@ function addScoredChoice(form, title, options, correctOption) {
       return item.createChoice(opt, opt === correctOption);
     })
   );
+}
+
+/** 「班級座號姓名」格式：班級(17開頭)+座號(01~10)_月或日(01~26)_姓名(2~4個中文字)。 */
+var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$';
+
+/**
+ * 新增「班級座號姓名」文字題，用正規表示法擋格式；格式一通過驗證，
+ * onFormSubmit 觸發條件送出時就會自動打滿分（見下方 installAutoGradeTrigger）。
+ */
+function addNameIdItem(form, points) {
+  var item = form.addTextItem();
+  item
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
+    .setRequired(true)
+    .setValidation(
+      FormApp.createTextValidation()
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 701_05_王小明。')
+        .requireTextMatchesPattern(NAME_ID_PATTERN)
+        .build()
+    );
+  if (points) {
+    item.setPoints(points);
+  }
+  return item;
+}
+
+/** 綁定「表單提交時」觸發條件：讓「班級座號姓名」只要格式驗證通過就自動給滿分。 */
+function installAutoGradeTrigger(form) {
+  ScriptApp.getProjectTriggers()
+    .filter(function (trigger) {
+      return trigger.getHandlerFunction() === 'onFormSubmit' && trigger.getTriggerSourceId() === form.getId();
+    })
+    .forEach(function (trigger) {
+      ScriptApp.deleteTrigger(trigger);
+    });
+  ScriptApp.newTrigger('onFormSubmit').forForm(form).onFormSubmit().create();
+}
+
+/** 表單提交時觸發：「班級座號姓名」通過格式驗證才送得出去，這裡直接給滿分即可。 */
+function onFormSubmit(e) {
+  var formResponse = e.response;
+  var itemResponses = formResponse.getItemResponses();
+
+  itemResponses.forEach(function (itemResponse) {
+    var item = itemResponse.getItem();
+    if (item.getType() === FormApp.ItemType.TEXT && item.getTitle().indexOf('班級座號姓名') !== -1) {
+      itemResponse.setScore(item.asTextItem().getPoints());
+    }
+  });
+
+  formResponse.withItemGrades(itemResponses).submit();
 }

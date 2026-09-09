@@ -15,8 +15,10 @@
  *    分頁 → 綠色試算表圖示），方便核對誰還沒填。
  * 6. 舊的手動建立的表單（forms.gle/6ePPoDGcUDkrWM4RA）確認換過來之後可以自己決定要不要刪掉。
  *
- * 表單設成「測驗模式」（有標準答案、自動評分）。第一題是「班級座號姓名」文字題，不計分，
- * 純粹用來對應到姓名；其餘5題各20分，滿分100分。
+ * 表單設成「測驗模式」（有標準答案、自動評分）。第一題「班級座號姓名」文字題用正規表示法
+ * 擋格式（例如 801_05_王小明），格式不對無法送出；執行 createForm() 時會順便建立一個
+ * 「表單提交時」的觸發條件，格式一通過驗證，送出後就自動打85分，不用手動批改
+ * （第一次執行會多跳出一次授權要求，允許即可）。其餘6題各2.5分，85 + 6×2.5 = 100分。
  */
 function createForm() {
   var form = FormApp.create('W3-8-索引行動・索引行動小測驗');
@@ -26,11 +28,7 @@ function createForm() {
       '元素、變數與清單的差異。'
   );
 
-  form
-    .addTextItem()
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 801_05_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 801_05_王小明。')
-    .setRequired(true);
+  addNameIdItem(form, 85);
 
   addScoredChoice(
     form,
@@ -74,17 +72,71 @@ function createForm() {
     '變數'
   );
 
+  installAutoGradeTrigger(form);
+
   Logger.log('編輯用網址（自己改題目用）：' + form.getEditUrl());
   Logger.log('填答/嵌入用網址（貼回 week3-8-intro.md）：' + form.getPublishedUrl());
 }
 
-/** 新增一題單選題，設成20分、有標準答案（測驗模式下才會自動評分）。 */
+/** 新增一題單選題，設成2.5分、有標準答案（測驗模式下才會自動評分）。 */
 function addScoredChoice(form, title, options, correctOption) {
   var item = form.addMultipleChoiceItem();
-  item.setTitle(title).setPoints(20).setRequired(true);
+  item.setTitle(title).setPoints(2.5).setRequired(true);
   item.setChoices(
     options.map(function (opt) {
       return item.createChoice(opt, opt === correctOption);
     })
   );
+}
+
+/** 「班級座號姓名」格式：班級(17開頭)+座號(01~10)_月或日(01~26)_姓名(2~4個中文字)。 */
+var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$';
+
+/**
+ * 新增「班級座號姓名」文字題，用正規表示法擋格式；格式一通過驗證，
+ * onFormSubmit 觸發條件送出時就會自動打滿分（見下方 installAutoGradeTrigger）。
+ */
+function addNameIdItem(form, points) {
+  var item = form.addTextItem();
+  item
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 801_05_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 801_05_王小明。')
+    .setRequired(true)
+    .setValidation(
+      FormApp.createTextValidation()
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 801_05_王小明。')
+        .requireTextMatchesPattern(NAME_ID_PATTERN)
+        .build()
+    );
+  if (points) {
+    item.setPoints(points);
+  }
+  return item;
+}
+
+/** 綁定「表單提交時」觸發條件：讓「班級座號姓名」只要格式驗證通過就自動給滿分。 */
+function installAutoGradeTrigger(form) {
+  ScriptApp.getProjectTriggers()
+    .filter(function (trigger) {
+      return trigger.getHandlerFunction() === 'onFormSubmit' && trigger.getTriggerSourceId() === form.getId();
+    })
+    .forEach(function (trigger) {
+      ScriptApp.deleteTrigger(trigger);
+    });
+  ScriptApp.newTrigger('onFormSubmit').forForm(form).onFormSubmit().create();
+}
+
+/** 表單提交時觸發：「班級座號姓名」通過格式驗證才送得出去，這裡直接給滿分即可。 */
+function onFormSubmit(e) {
+  var formResponse = e.response;
+  var itemResponses = formResponse.getItemResponses();
+
+  itemResponses.forEach(function (itemResponse) {
+    var item = itemResponse.getItem();
+    if (item.getType() === FormApp.ItemType.TEXT && item.getTitle().indexOf('班級座號姓名') !== -1) {
+      itemResponse.setScore(item.asTextItem().getPoints());
+    }
+  });
+
+  formResponse.withItemGrades(itemResponses).submit();
 }
