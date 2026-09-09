@@ -65,11 +65,15 @@ const FILENAME_FORMAT_ROWS = [
         <section class="panel level-card" data-level-index={i} hidden>
           <p class="level-index">第 {i + 1} 關／共 {STEPS.length} 關</p>
           <h2>{level.title}</h2>
-          <p class={`prompt ${level.type === 'text-exact-strict' ? 'no-copy' : ''}`}>{level.prompt}</p>
+          <p class="prompt">{level.prompt}</p>
 
           <div class="answer-area" data-answer-area>
             {level.type === 'quote-exact' && (
               <p class={`assigned-quote ${level.allowPaste ? 'paste-allowed' : ''}`} data-quote-slot></p>
+            )}
+
+            {level.type === 'text-exact-strict' && (
+              <p class="target-emoji no-copy">{level.answer}</p>
             )}
 
             {level.referenceTable === 'ctrlPunct' && (
@@ -298,8 +302,14 @@ const FILENAME_FORMAT_ROWS = [
     text-align: left;
   }
 
-  .prompt.no-copy {
+  .no-copy {
     user-select: none;
+  }
+
+  .target-emoji {
+    font-size: 3rem;
+    text-align: center;
+    margin: 0.5rem 0 1.25rem;
   }
 
   .level-card {
