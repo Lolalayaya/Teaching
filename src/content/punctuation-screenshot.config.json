@@ -124,7 +124,7 @@
       "type": "quote-exact",
       "method": "backtick",
       "referenceTable": "backtickPunct",
-      "allowPaste": false,
+      "allowPaste": true,
       "fragment": "個"
     },
     {
