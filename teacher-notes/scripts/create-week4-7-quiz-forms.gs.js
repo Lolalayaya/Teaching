@@ -20,6 +20,20 @@
  * 送出後就自動打85分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
  * 第二題主題選擇題不計分，純粹用來跳頁；跳過去之後對應主題的5題單選各3分。
  * 85 + 3×5 = 100分，答完自動送出，不會看到其他主題的題目。
+ *
+ * 這份表單本來就用「分頁」做主題分流：第一頁是「班級座號姓名＋選主題」，選完後
+ * 跳到對應主題那一頁（其餘主題不會看到），所以維持現有的分頁結構，不再另外拆
+ * 「區段一/區段二」。
+ *
+ * createForm() 已經自動設定：收集電子郵件、限制每人只能回覆1次、問題順序隨機。
+ * 以下幾項 Google Forms 目前沒有開放 Apps Script 用程式設定，執行完 createForm()
+ * 之後，麻煩自己到表單右上角⚙️（設定）手動確認/勾選一次：
+ * 1.「回覆」分頁：「收集電子郵件地址」確認是選「已驗證」，不是「回覆者輸入」；
+ *    「傳送回覆者回覆副本」選「一律」。
+ * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選
+ *    （漏答的題目、正確答案、分數）。
+ * 3. 每一題單選題右下角有個「隨機排列選項順序」的洗牌圖示，需要每一題手動點開
+ *    （Apps Script 沒有提供程式化設定選項洗牌的方法，這份表單共15題都要點）。
  */
 function createForm() {
   var form = FormApp.create('W4-7-抉擇任務・個人複習測驗');
@@ -28,6 +42,9 @@ function createForm() {
     '讀完講義裡你們這組對應主題的案例之後，填這份測驗。第一步請先選你們這組的主題，' +
       '表單會自動跳到對應的5題。'
   );
+  form.setCollectEmail(true);
+  form.setLimitOneResponsePerUser(true);
+  form.setShuffleQuestions(true);
 
   addNameIdItem(form, 85);
 
@@ -150,12 +167,12 @@ var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$
 function addNameIdItem(form, points) {
   var item = form.addTextItem();
   item
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 710_16_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 710_16_王小明。')
     .setRequired(true)
     .setValidation(
       FormApp.createTextValidation()
-        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 701_05_王小明。')
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 710_16_王小明。')
         .requireTextMatchesPattern(NAME_ID_PATTERN)
         .build()
     );

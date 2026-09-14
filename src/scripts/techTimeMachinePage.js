@@ -194,17 +194,17 @@ function revealFinale() {
   const audioBtn = document.querySelector('[data-play-audio-btn]');
 
   if (reduceMotion) {
-    finaleScreen.classList.add('stamped');
+    finaleScreen.classList.add('warped');
     finaleTextEl.hidden = false;
     audioBtn.hidden = false;
     return;
   }
 
-  finaleScreen.classList.add('stamped');
+  finaleScreen.classList.add('warped');
   setTimeout(() => {
     finaleTextEl.hidden = false;
     audioBtn.hidden = false;
-  }, 550);
+  }, 750);
 }
 
 // --- Initial load ----------------------------------------------------------

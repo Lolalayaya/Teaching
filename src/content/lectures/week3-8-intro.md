@@ -5,13 +5,13 @@ order: 5
 date: 2026-09-14
 semester: 115-1
 grades: ['8']
-published: false
+current: true
 tags: ["陣列", "索引", "真人陣列", "資料結構"]
 summary: 透過手遊排行榜真人陣列活動，認識陣列、索引、元素的基本概念，並分辨變數與陣列（清單）的差異。
 embeds:
   - type: google-form
     title: 索引行動小測驗
-    url: https://forms.gle/6ePPoDGcUDkrWM4RA
+    url: https://forms.gle/mLT3iQJWcAwWeTrr9
 ---
 
 ## 學習目標

@@ -138,7 +138,12 @@ export function initTechTimeMachineTab() {
       PROGRESS_KEY,
       JSON.stringify({ version: currentConfig.version, currentLevel: targetIndex, fragments })
     );
-    setStatus(jumpStatus, `已將這台裝置的進度跳到「${currentConfig.levels[targetIndex].title}」。重新整理科技生活時光機頁面即可看到。`);
+    // 跳關屬於重新測試流程,順便清掉「表單已完成／任務已完成」這兩個殘留旗標,
+    // 不然之後玩到最後一關會直接跳過表單畫面(這兩個旗標一旦設定就會永久留著,
+    // 只有 reset 按鈕或版本號+1才會清)。
+    localStorage.removeItem('teaching-site:tech-time-machine-form-done');
+    localStorage.removeItem('teaching-site:tech-time-machine-completed');
+    setStatus(jumpStatus, `已將這台裝置的進度跳到「${currentConfig.levels[targetIndex].title}」（並清掉表單/完成旗標）。重新整理科技生活時光機頁面即可看到。`);
   });
 
   // 如果已經存好 Token,一開啟頁面就自動讀取目前內容,不用等老師手動按「讀取」

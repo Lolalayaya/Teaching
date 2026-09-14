@@ -15,12 +15,23 @@
  * 的確認畫面裡放一個連結，讓學生點回去 tech-time-machine 頁面時網址帶著
  * ?done=1，網頁會自動偵測到這個參數、跳過「填表單」畫面直接顯示「任務完成」。
  *
+ * 表單分成兩個區段：區段一只有「班級座號姓名」，區段二是全部測驗題目。
  * 「班級座號姓名」這題用正規表示法擋格式（例如 701_05_王小明），格式不對無法送出；
  * 執行 createForm() 時會順便建立一個「表單提交時」的觸發條件，只要格式一通過驗證，
  * 送出後就自動把這題打滿分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
  *
  * 配分：第一題「班級座號姓名」85分（只要格式正確就自動給分，不是真的評分內容）；
  * 後面5題單選題各3分，85 + 3×5 = 100分。
+ *
+ * createForm() 已經自動設定：收集電子郵件、限制每人只能回覆1次、問題順序隨機。
+ * 以下幾項 Google Forms 目前沒有開放 Apps Script 用程式設定，執行完 createForm()
+ * 之後，麻煩自己到表單右上角⚙️（設定）手動確認/勾選一次：
+ * 1.「回覆」分頁：「收集電子郵件地址」確認是選「已驗證」，不是「回覆者輸入」；
+ *    「傳送回覆者回覆副本」選「一律」。
+ * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選
+ *    （漏答的題目、正確答案、分數）。
+ * 3. 每一題單選題右下角有個「隨機排列選項順序」的洗牌圖示，需要每一題手動點開
+ *    （Apps Script 沒有提供程式化設定選項洗牌的方法）。
  */
 function createForm() {
   var RETURN_URL = 'https://Lolalayaya.github.io/Teaching/tech-time-machine/?done=1';
@@ -32,8 +43,13 @@ function createForm() {
     '感謝完成小測驗！請點下面這個連結，回到時光機頁面完成結案：\n' + RETURN_URL
   );
   form.setShowLinkToRespondAgain(false);
+  form.setCollectEmail(true);
+  form.setLimitOneResponsePerUser(true);
+  form.setShuffleQuestions(true);
 
   addNameIdItem(form, 85);
+
+  form.addPageBreakItem().setTitle('測驗題目');
 
   addScoredChoice(
     form,
@@ -97,12 +113,12 @@ var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$
 function addNameIdItem(form, points) {
   var item = form.addTextItem();
   item
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 710_16_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 710_16_王小明。')
     .setRequired(true)
     .setValidation(
       FormApp.createTextValidation()
-        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 701_05_王小明。')
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 710_16_王小明。')
         .requireTextMatchesPattern(NAME_ID_PATTERN)
         .build()
     );

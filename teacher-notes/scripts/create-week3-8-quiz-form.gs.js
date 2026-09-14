@@ -16,7 +16,7 @@
  * 6. 舊的手動建立的表單（forms.gle/6ePPoDGcUDkrWM4RA）確認換過來之後可以自己決定要不要刪掉。
  *
  * 表單設成「測驗模式」（有標準答案、自動評分）。第一題「班級座號姓名」文字題用正規表示法
- * 擋格式（例如 801_05_王小明），格式不對無法送出；執行 createForm() 時會順便建立一個
+ * 擋格式（例如 710_16_王小明），格式不對無法送出；執行 createForm() 時會順便建立一個
  * 「表單提交時」的觸發條件，格式一通過驗證，送出後就自動打85分，不用手動批改
  * （第一次執行會多跳出一次授權要求，允許即可）。其餘6題各2.5分，85 + 6×2.5 = 100分。
  */
@@ -99,12 +99,12 @@ var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$
 function addNameIdItem(form, points) {
   var item = form.addTextItem();
   item
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 801_05_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 801_05_王小明。')
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 8710_16_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 710_16_王小明。')
     .setRequired(true)
     .setValidation(
       FormApp.createTextValidation()
-        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 801_05_王小明。')
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 710_16_王小明。')
         .requireTextMatchesPattern(NAME_ID_PATTERN)
         .build()
     );
@@ -139,4 +139,50 @@ function onFormSubmit(e) {
   });
 
   formResponse.withItemGrades(itemResponses).submit();
+}
+
+function reinstallTrigger() {
+  var form = FormApp.openByUrl('https://docs.google.com/forms/d/1P7-C8pdjV5qxhPD1ynP0PDlp_LzpBrzIGjhLD5ATzMc/edit');
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    ScriptApp.deleteTrigger(triggers[i]);
+  }
+  ScriptApp.newTrigger('autoGradeIdField')
+    .forForm(form)
+    .onFormSubmit()
+    .create();
+  Logger.log('Trigger 已重新建立完成');
+}
+function autoGradeIdField(e) {
+  try {
+    var form = e.source;
+    var response = e.response;
+    var items = form.getItems(FormApp.ItemType.TEXT);
+    if (items.length === 0) {
+      Logger.log('沒有找到任何簡答題項目');
+      return;
+    }
+    var idItem = items[0]; // 保持原本的 Item 型別，不要轉成 TextItem
+    var itemResponse = response.getGradableResponseForItem(idItem);
+    itemResponse.setScore(85);
+    var gradedResponse = response.withItemGrade(itemResponse);
+    form.submitGrades([gradedResponse]);
+    Logger.log('已成功給分：85分，回覆時間 ' + response.getTimestamp());
+  } catch (err) {
+    Logger.log('自動評分失敗：' + err.message);
+  }
+}
+
+function backfillGrades() {
+  var form = FormApp.openByUrl('https://docs.google.com/forms/d/1P7-C8pdjV5qxhPD1ynP0PDlp_LzpBrzIGjhLD5ATzMc/edit');
+  var idItem = form.getItems(FormApp.ItemType.TEXT)[0]; // 同樣不要轉成 TextItem
+  var responses = form.getResponses();
+  var gradedResponses = [];
+  for (var i = 0; i < responses.length; i++) {
+    var itemResponse = responses[i].getGradableResponseForItem(idItem);
+    itemResponse.setScore(85);
+    gradedResponses.push(responses[i].withItemGrade(itemResponse));
+  }
+  form.submitGrades(gradedResponses);
+  Logger.log('已補上 ' + gradedResponses.length + ' 份回覆的85分');
 }
