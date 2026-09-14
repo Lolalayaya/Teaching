@@ -72,7 +72,7 @@ const base = import.meta.env.BASE_URL;
 
       <section class="panel form-gate-screen" data-form-gate-screen hidden>
         <h2>最後一站：課後問卷</h2>
-        <p>填完下面這份表單，就正式結案。</p>
+        <p>填完下面這份表單並送出後，畫面上會出現一個連結，<strong>點那個連結回來這裡</strong>才會正式結案——沒有送出表單就沒辦法往下走。</p>
         <figure class="embed">
           <div class="embed-frame">
             <iframe src={config.formUrl} title="科技生活時光機小測驗" loading="lazy"></iframe>
@@ -81,7 +81,6 @@ const base = import.meta.env.BASE_URL;
             嵌入畫面無法顯示？<a href={config.formUrl} target="_blank" rel="noopener">在新視窗開啟 →</a>
           </p>
         </figure>
-        <button type="button" class="primary-btn" data-form-done-btn>我已經填完表單了，繼續</button>
       </section>
 
       <section class="panel finale-screen" data-finale-screen hidden>

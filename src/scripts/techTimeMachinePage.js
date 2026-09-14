@@ -159,11 +159,6 @@ document.querySelector('[data-reset-btn]').addEventListener('click', () => {
   }
 });
 
-document.querySelector('[data-form-done-btn]').addEventListener('click', () => {
-  markFormDone();
-  showFinale();
-});
-
 // --- Finale --------------------------------------------------------------
 
 function playCelebrationChime() {
