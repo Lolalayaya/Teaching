@@ -1,7 +1,8 @@
-import { fetchFile, putFile, getToken } from './githubApi.js';
+import { fetchFile, putFile, getToken, fetchLatestCommitDate, formatCommitTime } from './githubApi.js';
 
 const FILE_PATH = 'src/content/escape-room.config.json';
 const PROGRESS_KEY = 'teaching-site:escape-room';
+const BUMP_MESSAGE_PREFIX = 'escape-room: bump version to ';
 
 export function initEscapeRoomTab() {
   const panel = document.querySelector('[data-tab-panel][data-tab="escape-room"]');
@@ -9,7 +10,7 @@ export function initEscapeRoomTab() {
     <h2>目前狀態</h2>
     <button type="button" data-load-btn>讀取目前內容</button>
     <p data-status class="status"></p>
-    <p>目前版本號：<strong data-version-display>—</strong></p>
+    <p>目前版本號：<strong data-version-display>—</strong>（上次 +1 的時間：<strong data-version-time-display>—</strong>）</p>
 
     <h2>快速重置所有學生進度</h2>
     <p>版本號 +1 並發布，網站重新部署完成後，所有學生下次打開密室逃脫頁面時，進度會自動清空重新開始。</p>
@@ -32,6 +33,7 @@ export function initEscapeRoomTab() {
 
   const statusEl = panel.querySelector('[data-status]');
   const versionDisplay = panel.querySelector('[data-version-display]');
+  const versionTimeDisplay = panel.querySelector('[data-version-time-display]');
   const editor = panel.querySelector('[data-content-editor]');
   const jumpSelect = panel.querySelector('[data-jump-select]');
   const jumpStatus = panel.querySelector('[data-jump-status]');
@@ -68,6 +70,14 @@ export function initEscapeRoomTab() {
       versionDisplay.textContent = currentConfig.version;
       populateJumpSelect(currentConfig);
       setStatus(statusEl, '讀取成功。');
+      versionTimeDisplay.textContent = '讀取中…';
+      fetchLatestCommitDate(FILE_PATH, BUMP_MESSAGE_PREFIX, token)
+        .then((date) => {
+          versionTimeDisplay.textContent = formatCommitTime(date);
+        })
+        .catch(() => {
+          versionTimeDisplay.textContent = '未知';
+        });
       return true;
     } catch (err) {
       setStatus(statusEl, err.message, true);
@@ -91,11 +101,12 @@ export function initEscapeRoomTab() {
     const newContent = `${JSON.stringify(parsed, null, 2)}\n`;
     try {
       setStatus(statusEl, '送出中…');
-      const result = await putFile(FILE_PATH, newContent, currentSha, `escape-room: bump version to ${parsed.version}`, token);
+      const result = await putFile(FILE_PATH, newContent, currentSha, `${BUMP_MESSAGE_PREFIX}${parsed.version}`, token);
       currentSha = result.sha;
       currentConfig = parsed;
       editor.value = newContent;
       versionDisplay.textContent = parsed.version;
+      versionTimeDisplay.textContent = formatCommitTime(new Date().toISOString());
       populateJumpSelect(parsed);
       setStatus(
         statusEl,

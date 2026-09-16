@@ -76,6 +76,33 @@ export async function deleteFile(path, sha, message, token) {
   }
 }
 
+// 找出「最近一次符合某個 commit 訊息開頭」的 commit 時間——用來顯示
+// 「上次按 +1 的時間」，而不是這個檔案最後被編輯的時間（那兩個不一定一樣，
+// 因為「儲存並發布」也會 commit 這個檔案，但訊息開頭不是 bump version to）。
+// 只翻近期的 commit 歷史（100 筆），找不到就回傳 null，畫面上顯示「未知」即可，
+// 不需要因為翻不到就整個失敗。
+export async function fetchLatestCommitDate(path, messagePrefix, token) {
+  const res = await fetch(
+    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?path=${encodeURIComponent(path)}&sha=${BRANCH}&per_page=100`,
+    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+  );
+  if (!res.ok) return null;
+  const commits = await res.json();
+  const match = commits.find((c) => c.commit?.message?.startsWith(messagePrefix));
+  return match?.commit?.committer?.date ?? match?.commit?.author?.date ?? null;
+}
+
+export function formatCommitTime(isoDate) {
+  if (!isoDate) return '未知';
+  return new Date(isoDate).toLocaleString('zh-TW', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export async function listDir(path, token) {
   const res = await fetch(`${contentsUrl(path)}?ref=${BRANCH}`, {
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },

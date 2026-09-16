@@ -89,8 +89,8 @@ function addScoredChoice(form, title, options, correctOption) {
   );
 }
 
-/** 「班級座號姓名」格式：班級(17開頭)+座號(01~10)_月或日(01~26)_姓名(2~4個中文字)。 */
-var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$';
+/** 「班級座號姓名」格式：班級(17開頭)+班級編號(01~10)_座號(01~27)_姓名(2~4個中文字)。 */
+var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-7])_[一-龥]{2,4}$';
 
 /**
  * 新增「班級座號姓名」文字題，用正規表示法擋格式；格式一通過驗證，
@@ -114,31 +114,21 @@ function addNameIdItem(form, points) {
   return item;
 }
 
-/** 綁定「表單提交時」觸發條件：讓「班級座號姓名」只要格式驗證通過就自動給滿分。 */
+/** 綁定「表單提交時」觸發條件，讓 autoGradeIdField（見下方）在每次送出時打85分。
+ *  之前用的是 onFormSubmit + formResponse.withItemGrades(...).submit()，但正式
+ *  上課多人同時送出時，這個寫法常常收到 Google 端暫時性的伺服器錯誤而沒打成分；
+ *  改用 autoGradeIdField 這個 getGradableResponseForItem + form.submitGrades()
+ *  的寫法比較能成功觸發，但仍建議每次上完課手動重跑一次 backfillGrades()（見下方）
+ *  補齊漏掉的分數，不要只依賴這個即時觸發。 */
 function installAutoGradeTrigger(form) {
   ScriptApp.getProjectTriggers()
     .filter(function (trigger) {
-      return trigger.getHandlerFunction() === 'onFormSubmit' && trigger.getTriggerSourceId() === form.getId();
+      return trigger.getHandlerFunction() === 'autoGradeIdField' && trigger.getTriggerSourceId() === form.getId();
     })
     .forEach(function (trigger) {
       ScriptApp.deleteTrigger(trigger);
     });
-  ScriptApp.newTrigger('onFormSubmit').forForm(form).onFormSubmit().create();
-}
-
-/** 表單提交時觸發：「班級座號姓名」通過格式驗證才送得出去，這裡直接給滿分即可。 */
-function onFormSubmit(e) {
-  var formResponse = e.response;
-  var itemResponses = formResponse.getItemResponses();
-
-  itemResponses.forEach(function (itemResponse) {
-    var item = itemResponse.getItem();
-    if (item.getType() === FormApp.ItemType.TEXT && item.getTitle().indexOf('班級座號姓名') !== -1) {
-      itemResponse.setScore(item.asTextItem().getPoints());
-    }
-  });
-
-  formResponse.withItemGrades(itemResponses).submit();
+  ScriptApp.newTrigger('autoGradeIdField').forForm(form).onFormSubmit().create();
 }
 
 function reinstallTrigger() {

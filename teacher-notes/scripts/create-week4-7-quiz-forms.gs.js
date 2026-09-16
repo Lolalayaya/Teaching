@@ -34,6 +34,10 @@
  *    （漏答的題目、正確答案、分數）。
  * 3. 每一題單選題右下角有個「隨機排列選項順序」的洗牌圖示，需要每一題手動點開
  *    （Apps Script 沒有提供程式化設定選項洗牌的方法，這份表單共15題都要點）。
+ *
+ * 上課結束後，建議手動重跑一次 backfillGrades()，補齊即時觸發沒成功打到分的回覆：
+ * 先把 createForm() 印出的「編輯用網址」貼到下面 FORM_EDIT_URL，上方選單選
+ * backfillGrades 執行即可（可重複執行，不會重複扣分或出錯）。
  */
 function createForm() {
   var form = FormApp.create('W4-7-抉擇任務・個人複習測驗');
@@ -157,8 +161,8 @@ function addScoredChoice(form, title, options, correctOption) {
   );
 }
 
-/** 「班級座號姓名」格式：班級(17開頭)+座號(01~10)_月或日(01~26)_姓名(2~4個中文字)。 */
-var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-6])_[一-龥]{2,4}$';
+/** 「班級座號姓名」格式：班級(17開頭)+班級編號(01~10)_座號(01~27)_姓名(2~4個中文字)。 */
+var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-7])_[一-龥]{2,4}$';
 
 /**
  * 新增「班級座號姓名」文字題，用正規表示法擋格式；格式一通過驗證，
@@ -182,29 +186,60 @@ function addNameIdItem(form, points) {
   return item;
 }
 
-/** 綁定「表單提交時」觸發條件：讓「班級座號姓名」只要格式驗證通過就自動給滿分。 */
+/** 綁定「表單提交時」觸發條件，讓 autoGradeIdField（見下方）在每次送出時打85分。
+ *  之前用的是 onFormSubmit + formResponse.withItemGrades(...).submit()，但正式
+ *  上課多人同時送出時，這個寫法常常收到 Google 端暫時性的伺服器錯誤而沒打成分；
+ *  改用 autoGradeIdField 這個 getGradableResponseForItem + form.submitGrades()
+ *  的寫法比較能成功觸發，但仍建議每次上完課手動重跑一次 backfillGrades()（見下方）
+ *  補齊漏掉的分數，不要只依賴這個即時觸發。 */
 function installAutoGradeTrigger(form) {
   ScriptApp.getProjectTriggers()
     .filter(function (trigger) {
-      return trigger.getHandlerFunction() === 'onFormSubmit' && trigger.getTriggerSourceId() === form.getId();
+      return trigger.getHandlerFunction() === 'autoGradeIdField' && trigger.getTriggerSourceId() === form.getId();
     })
     .forEach(function (trigger) {
       ScriptApp.deleteTrigger(trigger);
     });
-  ScriptApp.newTrigger('onFormSubmit').forForm(form).onFormSubmit().create();
+  ScriptApp.newTrigger('autoGradeIdField').forForm(form).onFormSubmit().create();
 }
 
-/** 表單提交時觸發：「班級座號姓名」通過格式驗證才送得出去，這裡直接給滿分即可。 */
-function onFormSubmit(e) {
-  var formResponse = e.response;
-  var itemResponses = formResponse.getItemResponses();
-
-  itemResponses.forEach(function (itemResponse) {
-    var item = itemResponse.getItem();
-    if (item.getType() === FormApp.ItemType.TEXT && item.getTitle().indexOf('班級座號姓名') !== -1) {
-      itemResponse.setScore(item.asTextItem().getPoints());
+/** 表單提交時觸發：直接給「班級座號姓名」（第一題簡答題）打85分。 */
+function autoGradeIdField(e) {
+  try {
+    var form = e.source;
+    var response = e.response;
+    var items = form.getItems(FormApp.ItemType.TEXT);
+    if (items.length === 0) {
+      Logger.log('沒有找到任何簡答題項目');
+      return;
     }
-  });
+    var idItem = items[0];
+    var itemResponse = response.getGradableResponseForItem(idItem);
+    itemResponse.setScore(85);
+    var gradedResponse = response.withItemGrade(itemResponse);
+    form.submitGrades([gradedResponse]);
+    Logger.log('已成功給分：85分，回覆時間 ' + response.getTimestamp());
+  } catch (err) {
+    Logger.log('自動評分失敗：' + err.message);
+  }
+}
 
-  formResponse.withItemGrades(itemResponses).submit();
+/** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades()
+ *  才能重新打開這份表單、補打分數。 */
+var FORM_EDIT_URL = '';
+
+/** 補打所有回覆的85分：建議每次上完課手動重跑一次，確保沒有回覆漏掉自動評分
+ *  （重複執行也不會出錯，同一份回覆分數就是重打一次85分而已）。 */
+function backfillGrades() {
+  var form = FormApp.openByUrl(FORM_EDIT_URL);
+  var idItem = form.getItems(FormApp.ItemType.TEXT)[0];
+  var responses = form.getResponses();
+  var gradedResponses = [];
+  for (var i = 0; i < responses.length; i++) {
+    var itemResponse = responses[i].getGradableResponseForItem(idItem);
+    itemResponse.setScore(85);
+    gradedResponses.push(responses[i].withItemGrade(itemResponse));
+  }
+  form.submitGrades(gradedResponses);
+  Logger.log('已補上 ' + gradedResponses.length + ' 份回覆的85分');
 }
