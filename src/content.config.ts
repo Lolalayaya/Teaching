@@ -50,17 +50,6 @@ const lectures = defineCollection({
   }),
 });
 
-const announcements = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/announcements' }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    category: z.enum(['作業', '課程進度', '公告']),
-    dueDate: z.coerce.date().optional(),
-    ...audienceFields,
-  }),
-});
-
 const showcase = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/showcase' }),
   schema: z.object({
@@ -71,13 +60,13 @@ const showcase = defineCollection({
     description: z.string().optional(),
     embeds: z.array(embedSchema).optional(),
     // Visibility filtering (who sees this) — reuses the same fields as
-    // lectures/announcements, but deliberately WITHOUT `current`: showcase
-    // items never belong in the homepage 本堂課/今日重點 box, that stays
-    // scoped to lectures + announcements only.
+    // lectures, but deliberately WITHOUT `current`: showcase items never
+    // belong in the homepage 本堂課/今日重點 box, that stays scoped to
+    // lectures only.
     grades: z.array(gradeEnum).optional(),
     classes: z.array(z.string()).optional(),
     semester: semesterEnum.optional(),
   }),
 });
 
-export const collections = { lectures, announcements, showcase };
+export const collections = { lectures, showcase };

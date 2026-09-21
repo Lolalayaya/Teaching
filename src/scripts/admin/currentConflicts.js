@@ -22,11 +22,8 @@ async function loadCurrentItems(dir, token) {
 }
 
 export async function findCurrentConflicts(token, { grades = [], classes = [], excludePath }) {
-  const [lectureItems, announcementItems] = await Promise.all([
-    loadCurrentItems('src/content/lectures', token),
-    loadCurrentItems('src/content/announcements', token),
-  ]);
-  return [...lectureItems, ...announcementItems].filter(
+  const lectureItems = await loadCurrentItems('src/content/lectures', token);
+  return lectureItems.filter(
     (item) => item.path !== excludePath && overlaps(item.grades, grades) && overlaps(item.classes, classes)
   );
 }
