@@ -91,7 +91,8 @@ function createForm() {
   );
 
   Logger.log('編輯用網址（自己改題目用）：' + form.getEditUrl());
-  Logger.log('填答/嵌入用網址（貼回 week5-8-intro.md）：' + form.getPublishedUrl());
+  // 一定要加 ?embedded=true，不然嵌入iframe會被Google擋掉（顯示「docs.google.com拒絕連線」）
+  Logger.log('填答/嵌入用網址（可直接貼到 week5-8-intro.md 的 embeds.url）：' + form.getPublishedUrl() + '?embedded=true');
 }
 
 /** 新增一題單選題，points固定1分，options是[[選項文字, 是否為正解], ...]的陣列。 */

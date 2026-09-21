@@ -15,7 +15,7 @@ embeds:
     url: https://scratch.mit.edu/projects/1380849953/
   - type: google-form
     title: 排行榜行動任務繳交
-    url: https://forms.gle/Q1TSWR5SwYB5kVEv8
+    url: https://docs.google.com/forms/d/e/1FAIpQLSeqgOPsIe9jn8FntZMu0KOdd3a3jnQ5xHHaOF5mf7lEedE-DA/viewform?embedded=true
 ---
 
 ## 學習目標

@@ -11,7 +11,7 @@ summary: 透過手遊排行榜真人陣列活動，認識陣列、索引、元�
 embeds:
   - type: google-form
     title: 索引行動小測驗
-    url: https://forms.gle/mLT3iQJWcAwWeTrr9
+    url: https://docs.google.com/forms/d/e/1FAIpQLScB1tD0feDfyD04j1jB5TxDdHViUXzi67ylgLI7fK4ukJMJJA/viewform?embedded=true
 ---
 
 ## 學習目標
