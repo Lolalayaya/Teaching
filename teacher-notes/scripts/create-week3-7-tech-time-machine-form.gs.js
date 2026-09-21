@@ -1,41 +1,5 @@
 /**
  * 科技生活時光機・驗收小測驗 —— Google Apps Script，自動建立Google表單
- *
- * 使用方式：
- * 1. 開啟 https://script.google.com/ → 新增專案
- * 2. 把這個檔案的內容整個貼到編輯器裡（取代預設的 myFunction）
- * 3. 上方選單選 createForm 這個函式，按執行（第一次會要求授權，允許即可）
- * 4. 執行完成後，左下角「執行紀錄」會印出兩個網址：
- *    - 編輯用網址（自己修改題目用）
- *    - 填答/嵌入用網址（要貼回 tech-time-machine.config.json 的 formUrl）
- * 5. 把印出來的「嵌入用網址」貼給 Claude，或直接改 config：
- *    "formUrl": "<貼上的網址>&embedded=true"
- *
- * 這份表單會自動設定成「測驗模式」（有標準答案、自動評分），並且在填完送出後
- * 的確認畫面裡放一個連結，讓學生點回去 tech-time-machine 頁面時網址帶著
- * ?done=1，網頁會自動偵測到這個參數、跳過「填表單」畫面直接顯示「任務完成」。
- *
- * 表單分成兩個區段：區段一只有「班級座號姓名」，區段二是全部測驗題目。
- * 「班級座號姓名」這題用正規表示法擋格式（例如 701_05_王小明），格式不對無法送出；
- * 執行 createForm() 時會順便建立一個「表單提交時」的觸發條件，只要格式一通過驗證，
- * 送出後就自動把這題打滿分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
- *
- * 配分：第一題「班級座號姓名」85分（只要格式正確就自動給分，不是真的評分內容）；
- * 後面5題單選題各3分，85 + 3×5 = 100分。
- *
- * createForm() 已經自動設定：收集電子郵件、限制每人只能回覆1次、問題順序隨機。
- * 以下幾項 Google Forms 目前沒有開放 Apps Script 用程式設定，執行完 createForm()
- * 之後，麻煩自己到表單右上角⚙️（設定）手動確認/勾選一次：
- * 1.「回覆」分頁：「收集電子郵件地址」確認是選「已驗證」，不是「回覆者輸入」；
- *    「傳送回覆者回覆副本」選「一律」。
- * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選
- *    （漏答的題目、正確答案、分數）。
- * 3. 每一題單選題右下角有個「隨機排列選項順序」的洗牌圖示，需要每一題手動點開
- *    （Apps Script 沒有提供程式化設定選項洗牌的方法）。
- *
- * 上課結束後，建議手動重跑一次 backfillGrades()，補齊即時觸發沒成功打到分的回覆：
- * 先把 createForm() 印出的「編輯用網址」貼到下面 FORM_EDIT_URL，上方選單選
- * backfillGrades 執行即可（可重複執行，不會重複扣分或出錯）。
  */
 function createForm() {
   var RETURN_URL = 'https://Lolalayaya.github.io/Teaching/tech-time-machine/?done=1';
@@ -47,13 +11,8 @@ function createForm() {
     '感謝完成小測驗！請點下面這個連結，回到時光機頁面完成結案：\n' + RETURN_URL
   );
   form.setShowLinkToRespondAgain(false);
-  form.setCollectEmail(true);
-  form.setLimitOneResponsePerUser(true);
-  form.setShuffleQuestions(true);
 
   addNameIdItem(form, 85);
-
-  form.addPageBreakItem().setTitle('測驗題目');
 
   addScoredChoice(
     form,
@@ -107,22 +66,21 @@ function addScoredChoice(form, title, options, correctOption) {
   );
 }
 
-/** 「班級座號姓名」格式：班級(17開頭)+班級編號(01~10)_座號(01~27)_姓名(2~4個中文字)。 */
+/** 「班級座號姓名」格式：3位班級_2位座號_姓名（例如 701_05_王小明） */
 var NAME_ID_PATTERN = '^[1278](0[1-9]|10)_(0[1-9]|1[0-9]|2[0-7])_[一-龥]{2,4}$';
 
 /**
- * 新增「班級座號姓名」文字題，用正規表示法擋格式；格式一通過驗證，
- * onFormSubmit 觸發條件送出時就會自動打滿分（見下方 installAutoGradeTrigger）。
+ * 新增「班級座號姓名」文字題，用正規表示法擋格式
  */
 function addNameIdItem(form, points) {
   var item = form.addTextItem();
   item
-    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 710_16_王小明）')
-    .setHelpText('格式：班級_座號_姓名，例如 710_16_王小明。')
+    .setTitle('請輸入 班級座號姓名（格式：班級_座號_姓名，例如 701_05_王小明）')
+    .setHelpText('格式：班級_座號_姓名，例如 701_05_王小明。')
     .setRequired(true)
     .setValidation(
       FormApp.createTextValidation()
-        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 710_16_王小明。')
+        .setHelpText('格式錯誤，請依照 班級_座號_姓名 輸入，例如 701_05_王小明。')
         .requireTextMatchesPattern(NAME_ID_PATTERN)
         .build()
     );
@@ -132,12 +90,7 @@ function addNameIdItem(form, points) {
   return item;
 }
 
-/** 綁定「表單提交時」觸發條件，讓 autoGradeIdField（見下方）在每次送出時打85分。
- *  之前用的是 onFormSubmit + formResponse.withItemGrades(...).submit()，但正式
- *  上課多人同時送出時，這個寫法常常收到 Google 端暫時性的伺服器錯誤而沒打成分；
- *  改用 autoGradeIdField 這個 getGradableResponseForItem + form.submitGrades()
- *  的寫法比較能成功觸發，但仍建議每次上完課手動重跑一次 backfillGrades()（見下方）
- *  補齊漏掉的分數，不要只依賴這個即時觸發。 */
+/** 綁定「表單提交時」觸發條件 */
 function installAutoGradeTrigger(form) {
   ScriptApp.getProjectTriggers()
     .filter(function (trigger) {
@@ -149,7 +102,7 @@ function installAutoGradeTrigger(form) {
   ScriptApp.newTrigger('autoGradeIdField').forForm(form).onFormSubmit().create();
 }
 
-/** 表單提交時觸發：直接給「班級座號姓名」（第一題簡答題）打85分。 */
+/** 表單提交時自動給予第一題簡答題 85 分 */
 function autoGradeIdField(e) {
   try {
     var form = e.source;
@@ -168,24 +121,4 @@ function autoGradeIdField(e) {
   } catch (err) {
     Logger.log('自動評分失敗：' + err.message);
   }
-}
-
-/** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades()
- *  才能重新打開這份表單、補打分數。 */
-var FORM_EDIT_URL = '';
-
-/** 補打所有回覆的85分：建議每次上完課手動重跑一次，確保沒有回覆漏掉自動評分
- *  （重複執行也不會出錯，同一份回覆分數就是重打一次85分而已）。 */
-function backfillGrades() {
-  var form = FormApp.openByUrl(FORM_EDIT_URL);
-  var idItem = form.getItems(FormApp.ItemType.TEXT)[0];
-  var responses = form.getResponses();
-  var gradedResponses = [];
-  for (var i = 0; i < responses.length; i++) {
-    var itemResponse = responses[i].getGradableResponseForItem(idItem);
-    itemResponse.setScore(85);
-    gradedResponses.push(responses[i].withItemGrade(itemResponse));
-  }
-  form.submitGrades(gradedResponses);
-  Logger.log('已補上 ' + gradedResponses.length + ' 份回覆的85分');
 }

@@ -1,7 +1,10 @@
 /**
- * 第四週・抉擇任務 個人複習測驗 —— Google Apps Script，自動建立「一份」共用Google表單
- * 學生先選自己這組的主題，表單會依照選擇自動跳到對應的5題（個資保護／資訊安全／
- * 資訊科技合理使用原則），全班共用同一份表單、同一張回覆試算表，方便老師核對誰還沒填。
+ * 第五週・抉擇任務 個人複習測驗 —— Google Apps Script，自動建立Google表單
+ *
+ * 前5題考「資訊科技合理使用原則」的觀念（不考乖乖鑰匙圈案的細節，用其他情境／
+ * 直接問觀念的方式出題），全班每個人都要寫。接著選「你們這組選定的主題」，表單
+ * 會依選擇自動跳到對應主題的5題案例題（個資保護＝TikTok案例／資訊安全＝高雄
+ * 詐騙案例／資訊科技合理使用原則＝乖乖鑰匙圈案），只會看到自己那組的5題。
  *
  * 使用方式：
  * 1. 開啟 https://script.google.com/ → 新增專案
@@ -9,21 +12,18 @@
  * 3. 上方選單選 createForm 這個函式，按執行（第一次會要求授權，允許即可）
  * 4. 執行完成後，左下角「執行紀錄」會印出：
  *    - 編輯用網址（自己修改題目用）
- *    - 填答/嵌入用網址（要貼回 week4-7-intro.md frontmatter 的 embeds.url）
- * 5. 把印出來的「填答/嵌入用網址」貼回 week4-7-intro.md，
- *    對應 title「個人複習測驗」的 embeds.url（後面接上 &embedded=true）
- * 6. 建議另外把表單的「回覆」分頁連結到一張Google試算表（表單編輯畫面右上角「回覆」
- *    分頁 → 綠色試算表圖示），這樣就能直接對照班級座號姓名，核對誰還沒填。
+ *    - 填答/嵌入用網址（要貼回 week5-7-intro.md frontmatter 的 embeds.url，
+ *      後面接上 &embedded=true）
+ * 5. 建議把表單的「回覆」分頁連結到一張Google試算表（表單編輯畫面右上角「回覆」
+ *    分頁 → 綠色試算表圖示），方便對照班級座號姓名，核對誰還沒填。
  *
  * 第一題「班級座號姓名」文字題用正規表示法擋格式（例如 701_05_王小明），格式不對無法
  * 送出；執行 createForm() 時會順便建立一個「表單提交時」的觸發條件，格式一通過驗證，
- * 送出後就自動打85分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
- * 第二題主題選擇題不計分，純粹用來跳頁；跳過去之後對應主題的5題單選各3分。
- * 85 + 3×5 = 100分，答完自動送出，不會看到其他主題的題目。
+ * 送出後就自動打80分，不用手動批改（第一次執行會多跳出一次授權要求，允許即可）。
+ * 其餘10題（前5題固定＋跳轉後5題）單選各2分，80 + 2×10 = 100分。
  *
- * 這份表單本來就用「分頁」做主題分流：第一頁是「班級座號姓名＋選主題」，選完後
- * 跳到對應主題那一頁（其餘主題不會看到），所以維持現有的分頁結構，不再另外拆
- * 「區段一/區段二」。
+ * 這份表單用「分頁」做主題分流：第一頁是「班級座號姓名＋前5題觀念題＋選主題」，
+ * 選完後跳到對應主題那一頁（其餘主題不會看到）。
  *
  * createForm() 已經自動設定：收集電子郵件、限制每人只能回覆1次、問題順序隨機。
  * 以下幾項 Google Forms 目前沒有開放 Apps Script 用程式設定，執行完 createForm()
@@ -33,30 +33,56 @@
  * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選
  *    （漏答的題目、正確答案、分數）。
  * 3. 每一題單選題右下角有個「隨機排列選項順序」的洗牌圖示，需要每一題手動點開
- *    （Apps Script 沒有提供程式化設定選項洗牌的方法，這份表單共15題都要點）。
+ *    （Apps Script 沒有提供程式化設定選項洗牌的方法，這份表單共20題都要點）。
  *
  * 上課結束後，建議手動重跑一次 backfillGrades()，補齊即時觸發沒成功打到分的回覆：
  * 先把 createForm() 印出的「編輯用網址」貼到下面 FORM_EDIT_URL，上方選單選
  * backfillGrades 執行即可（可重複執行，不會重複扣分或出錯）。
  */
 function createForm() {
-  var form = FormApp.create('W4-7-抉擇任務・個人複習測驗');
+  var form = FormApp.create('W5-7-抉擇任務・個人複習測驗');
   form.setIsQuiz(true);
   form.setDescription(
-    '讀完講義裡你們這組對應主題的案例之後，填這份測驗。第一步請先選你們這組的主題，' +
-      '表單會自動跳到對應的5題。'
+    '前5題考這週學的資訊科技合理使用原則觀念，人人都要寫。接著請選你們這組選定的' +
+      '主題，表單會自動跳到對應主題的5題案例題。'
   );
   form.setCollectEmail(true);
   form.setLimitOneResponsePerUser(true);
   form.setShuffleQuestions(true);
 
-  addNameIdItem(form, 85);
+  addNameIdItem(form, 80);
+
+  // 固定5題：資訊科技合理使用原則觀念題，不考乖乖案細節，人人都寫。
+  addScoredChoice(form, '著作權法保護的是下列何者？', ['思想', '概念', '表達', '原理'], '表達');
+  addScoredChoice(
+    form,
+    '著作完成後，如果想受到著作權法保護，需要做什麼？',
+    ['必須到主管機關登記', '必須在作品上標示©符號', '不需要任何手續，創作完成就自動受保護', '必須向法院申請許可'],
+    '不需要任何手續，創作完成就自動受保護'
+  );
+  addScoredChoice(
+    form,
+    '「姓名表示權」屬於下列哪一種權利，且不能讓給別人或被繼承？',
+    ['著作財產權', '著作人格權', '專利權', '商標權'],
+    '著作人格權'
+  );
+  addScoredChoice(
+    form,
+    '判斷是否構成「合理使用」，下列何者「不是」法律列出的判斷基準？',
+    ['利用的目的及性質', '著作的性質', '創作者的年齡', '對著作市場價值的影響'],
+    '創作者的年齡'
+  );
+  addScoredChoice(
+    form,
+    '創用CC授權中，「NC」代表什麼意思？',
+    ['禁止改作', '姓名標示', '非商業性', '相同方式分享'],
+    '非商業性'
+  );
 
   var topicItem = form.addMultipleChoiceItem();
-  topicItem.setTitle('你們這組選的主題是？').setRequired(true);
+  topicItem.setTitle('你們這組選定的主題是？').setRequired(true);
 
-  // 先建立三個分頁（依序對應三個主題），每個分頁裡放該主題的5題，
-  // 最後把每個分頁設成「答完就送出」，不會接著跑到下一個主題的題目。
+  // 依選擇跳到對應主題的5題案例題（要等三個分頁都建立好，才能拿到它們的參照）。
   var personalDataPage = form.addPageBreakItem().setTitle('個資保護');
   addScoredChoice(
     form,
@@ -111,33 +137,36 @@ function createForm() {
   var responsibleUsePage = form.addPageBreakItem().setTitle('資訊科技合理使用原則');
   addScoredChoice(
     form,
-    '這兩位學生是在哪些地方發表不當言論？',
-    ['只有LINE群組', 'LINE群組和IG限時動態', '只有IG限時動態', '學校公佈欄'],
-    'LINE群組和IG限時動態'
+    '谷阿莫的影片系列叫什麼名字？',
+    ['X分鐘看完電影', '電影解說王', '一分鐘看電影', '電影懶人包'],
+    'X分鐘看完電影'
   );
   addScoredChoice(
     form,
-    '法院認定這些言論構成什麼？',
-    ['不構成任何法律責任', '公然侮辱、侵害名譽權', '只是言論自由，沒有問題', '僅違反校規，與法律無關'],
-    '公然侮辱、侵害名譽權'
+    '他的影片主要剪輯了哪些作品的畫面？',
+    ['只有國片', '迪士尼、得利影視等5家片商的作品', '只有動畫影集', '自己拍的素材'],
+    '迪士尼、得利影視等5家片商的作品'
   );
   addScoredChoice(
     form,
-    '最後判決誰要負賠償責任？',
-    ['只有兩位學生', '只有家長', '兩位學生和家長都要', '沒有人需要賠償'],
-    '兩位學生和家長都要'
+    '檢方認定他的行為屬於什麼，因此不算合理使用？',
+    ['引用', '改作', '翻譯', '公開播送'],
+    '改作'
   );
-  addScoredChoice(form, '賠償金額大約是多少？', ['1千5百元', '1萬5千元', '15萬元', '150萬元'], '1萬5千元');
   addScoredChoice(
     form,
-    '這個案例主要提醒我們什麼？',
-    ['在群組裡說的話不會有人知道', '網路發言即使覺得只是抱怨，也可能要負法律責任', '只有公開貼文才算數，群組內不算', '未成年人不需要負任何法律責任'],
-    '網路發言即使覺得只是抱怨，也可能要負法律責任'
+    '他最後怎麼解決這起訴訟？',
+    ['不了了之', '跟5家片商全部和解，賠償超過100萬元', '打贏官司，沒有賠錢', '片商全部撤告不用賠'],
+    '跟5家片商全部和解，賠償超過100萬元'
+  );
+  addScoredChoice(
+    form,
+    '這個案例告訴我們什麼？',
+    ['有加旁白解說就算自己的創作，不算侵權', '網紅名氣越大就越不會被告', '即使是知名創作者，未經授權使用他人作品一樣要負責任', '只要影片很紅就不算侵權'],
+    '即使是知名創作者，未經授權使用他人作品一樣要負責任'
   );
   responsibleUsePage.setGoToPage(FormApp.PageNavigationType.SUBMIT);
 
-  // 回到第一題「主題選擇」，設定依照選擇跳到對應分頁（要等三個分頁都建立好，
-  // 才能拿到它們的參照）。
   topicItem.setChoices([
     topicItem.createChoice('個資保護', personalDataPage),
     topicItem.createChoice('資訊安全', cyberSecurityPage),
@@ -147,13 +176,13 @@ function createForm() {
   installAutoGradeTrigger(form);
 
   Logger.log('編輯用網址（自己改題目用）：' + form.getEditUrl());
-  Logger.log('填答/嵌入用網址（貼回 week4-7-intro.md）：' + form.getPublishedUrl());
+  Logger.log('填答/嵌入用網址（貼回 week5-7-intro.md）：' + form.getPublishedUrl());
 }
 
-/** 新增一題單選題，設成3分、有標準答案（測驗模式下才會自動評分）。 */
+/** 新增一題單選題，設成2分、有標準答案（測驗模式下才會自動評分）。 */
 function addScoredChoice(form, title, options, correctOption) {
   var item = form.addMultipleChoiceItem();
-  item.setTitle(title).setPoints(3).setRequired(true);
+  item.setTitle(title).setPoints(2).setRequired(true);
   item.setChoices(
     options.map(function (opt) {
       return item.createChoice(opt, opt === correctOption);
@@ -186,7 +215,7 @@ function addNameIdItem(form, points) {
   return item;
 }
 
-/** 綁定「表單提交時」觸發條件，讓 autoGradeIdField（見下方）在每次送出時打85分。
+/** 綁定「表單提交時」觸發條件，讓 autoGradeIdField（見下方）在每次送出時打80分。
  *  之前用的是 onFormSubmit + formResponse.withItemGrades(...).submit()，但正式
  *  上課多人同時送出時，這個寫法常常收到 Google 端暫時性的伺服器錯誤而沒打成分；
  *  改用 autoGradeIdField 這個 getGradableResponseForItem + form.submitGrades()
@@ -203,7 +232,7 @@ function installAutoGradeTrigger(form) {
   ScriptApp.newTrigger('autoGradeIdField').forForm(form).onFormSubmit().create();
 }
 
-/** 表單提交時觸發：直接給「班級座號姓名」（第一題簡答題）打85分。 */
+/** 表單提交時觸發：直接給「班級座號姓名」（第一題簡答題）打80分。 */
 function autoGradeIdField(e) {
   try {
     var form = e.source;
@@ -215,10 +244,10 @@ function autoGradeIdField(e) {
     }
     var idItem = items[0];
     var itemResponse = response.getGradableResponseForItem(idItem);
-    itemResponse.setScore(85);
+    itemResponse.setScore(80);
     var gradedResponse = response.withItemGrade(itemResponse);
     form.submitGrades([gradedResponse]);
-    Logger.log('已成功給分：85分，回覆時間 ' + response.getTimestamp());
+    Logger.log('已成功給分：80分，回覆時間 ' + response.getTimestamp());
   } catch (err) {
     Logger.log('自動評分失敗：' + err.message);
   }
@@ -228,8 +257,8 @@ function autoGradeIdField(e) {
  *  才能重新打開這份表單、補打分數。 */
 var FORM_EDIT_URL = '';
 
-/** 補打所有回覆的85分：建議每次上完課手動重跑一次，確保沒有回覆漏掉自動評分
- *  （重複執行也不會出錯，同一份回覆分數就是重打一次85分而已）。 */
+/** 補打所有回覆的80分：建議每次上完課手動重跑一次，確保沒有回覆漏掉自動評分
+ *  （重複執行也不會出錯，同一份回覆分數就是重打一次80分而已）。 */
 function backfillGrades() {
   var form = FormApp.openByUrl(FORM_EDIT_URL);
   var idItem = form.getItems(FormApp.ItemType.TEXT)[0];
@@ -237,9 +266,9 @@ function backfillGrades() {
   var gradedResponses = [];
   for (var i = 0; i < responses.length; i++) {
     var itemResponse = responses[i].getGradableResponseForItem(idItem);
-    itemResponse.setScore(85);
+    itemResponse.setScore(80);
     gradedResponses.push(responses[i].withItemGrade(itemResponse));
   }
   form.submitGrades(gradedResponses);
-  Logger.log('已補上 ' + gradedResponses.length + ' 份回覆的85分');
+  Logger.log('已補上 ' + gradedResponses.length + ' 份回覆的80分');
 }
