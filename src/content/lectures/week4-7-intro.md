@@ -6,6 +6,7 @@ date: 2026-09-21
 semester: 115-1
 grades: ['7']
 published: false
+current: true
 tags: ["資訊倫理", "個資保護", "資訊安全", "個人資料保護法", "資料處理應用專題"]
 summary: 深入認識個人資料保護與資訊安全的定義、原則與自我防護方法，各搭配一個真實案例，為之後的專題做準備。
 embeds:
