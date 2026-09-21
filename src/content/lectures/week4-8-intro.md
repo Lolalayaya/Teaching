@@ -5,7 +5,7 @@ order: 9
 date: 2026-09-21
 semester: 115-1
 grades: ['8']
-published: false
+published: true
 current: true
 tags: ["陣列", "清單", "Scratch", "程式設計"]
 summary: 把上週手遊排行榜真人陣列的存取、替換、插入操作，改用Scratch的清單積木重新實作一次。
