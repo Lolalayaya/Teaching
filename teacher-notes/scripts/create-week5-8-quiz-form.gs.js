@@ -1,8 +1,8 @@
 /**
  * 第五週・擂台行動 小測驗（八年級） —— Google Apps Script，自動建立Google表單
  *
- * 分兩段：前5題是「迴圈、條件式」診斷題（去年Scratch學過的既有基礎，這學期教排序前
- * 先確認程度用，不是這堂課才教的新內容），後5題是今天打擂台法的步驟、比較次數(n-1)、
+ * 分兩段：前5題是「迴圈、條件式」複習題（去年Scratch學過的內容，這堂課會先帶學生
+ * 複習一次，下週要正式在Scratch裡用到），後5題是今天打擂台法的步驟、比較次數(n-1)、
  * 跟之後排序的關係。
  *
  * 使用方式：
@@ -38,8 +38,8 @@ function createForm() {
   var form = FormApp.create('W5-8-擂台行動・小測驗');
   form.setIsQuiz(true);
   form.setDescription(
-    '前5題考迴圈、條件式的既有基礎（去年Scratch學過的內容，排序正式開始前先確認一下）。' +
-      '完成小組打擂台活動之後，接著做後5題，考今天學到的打擂台法步驟與比較次數。'
+    '前5題考剛剛複習過的迴圈、條件式概念（去年Scratch學過的內容，下週要正式在Scratch' +
+      '裡用到）。完成小組打擂台活動之後，接著做後5題，考今天學到的打擂台法步驟與比較次數。'
   );
   form.setCollectEmail(true);
   form.setLimitOneResponsePerUser(true);

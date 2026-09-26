@@ -96,7 +96,17 @@ function createForm() {
   // （個資保護／資訊安全）和這週（資訊科技合理使用原則）「延伸閱讀：同一件事，
   // 不同媒體怎麼報導？」列出的其他新聞連結裡，逼學生真的點開至少一篇額外報導
   // （橫向閱讀），不能只憑頁面上老師寫的案例摘要就作答。
-  var personalDataPage = form.addPageBreakItem().setTitle('個資保護');
+  var personalDataPage = form
+    .addPageBreakItem()
+    .setTitle('個資保護')
+    .setHelpText(
+      '下面5題的答案要參考這幾篇報導（TikTok遭歐盟開罰案）：\n' +
+        '・中央社：https://www.cna.com.tw/news/aopl/202309150318.aspx\n' +
+        '・自由時報：https://news.ltn.com.tw/news/world/paper/1605115\n' +
+        '・ETtoday新聞雲：https://www.ettoday.net/news/20230916/2583515.htm\n' +
+        '・TechNews科技新報：https://technews.tw/2023/09/19/tiktok-slapped-with-eu-fine-of-345-million-euros/\n' +
+        '・Al Jazeera（英文）：https://www.aljazeera.com/news/2023/9/15/eu-regulator-slaps-tiktok-with-368m-fine-for-violating-privacy-laws'
+    );
   addScoredChoice(
     form,
     '負責調查、開罰TikTok的機構全名是？',
@@ -129,7 +139,17 @@ function createForm() {
   );
   personalDataPage.setGoToPage(FormApp.PageNavigationType.SUBMIT);
 
-  var cyberSecurityPage = form.addPageBreakItem().setTitle('資訊安全');
+  var cyberSecurityPage = form
+    .addPageBreakItem()
+    .setTitle('資訊安全')
+    .setHelpText(
+      '下面5題的答案要參考這幾篇報導（高雄國中生SIM卡詐騙案）：\n' +
+        '・ETtoday新聞雲：https://www.ettoday.net/news/20260727/3208294.htm\n' +
+        '・聯合新聞網：https://udn.com/news/story/124490/9653116\n' +
+        '・自由時報：https://news.ltn.com.tw/news/Kaohsiung/breakingnews/5518795\n' +
+        '・公視新聞網：https://news.pts.org.tw/article/819500\n' +
+        '・壹蘋新聞網：https://news.nextapple.com/local/20260727/BEC64F2BA38542285882C6D1D8893982'
+    );
   addScoredChoice(
     form,
     '貼文誘餌宣稱贈送的是哪一款遊戲的高級帳號？',
@@ -157,7 +177,16 @@ function createForm() {
   );
   cyberSecurityPage.setGoToPage(FormApp.PageNavigationType.SUBMIT);
 
-  var responsibleUsePage = form.addPageBreakItem().setTitle('資訊科技合理使用原則');
+  var responsibleUsePage = form
+    .addPageBreakItem()
+    .setTitle('資訊科技合理使用原則')
+    .setHelpText(
+      '下面5題的答案要參考這幾篇報導（谷阿莫著作權案）：\n' +
+        '・中央社：https://www.cna.com.tw/news/firstnews/202006090286.aspx\n' +
+        '・ETtoday新聞雲：https://www.ettoday.net/news/20200609/1733619.htm\n' +
+        '・CTWANT：https://www.ctwant.com/article/55708\n' +
+        '・鏡週刊：https://www.mirrormedia.mg/story/20200609ent031/'
+    );
   addScoredChoice(
     form,
     '又水整合、華納兄弟、索尼影業、環球影業，哪一家也在提告谷阿莫的5家片商名單中？',
