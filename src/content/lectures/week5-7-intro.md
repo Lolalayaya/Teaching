@@ -11,7 +11,7 @@ summary: 深入認識資訊科技合理使用原則（著作權），並正式�
 embeds:
   - type: google-form
     title: 個人複習測驗
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_W5_FORM_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSdtbM6wzJZ0mh7wLtsqoiq8aq10aOxf9n13mc3ZlP5doyE15g/viewform?embedded=true
 ---
 
 ## 學習目標

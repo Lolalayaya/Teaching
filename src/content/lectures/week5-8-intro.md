@@ -11,7 +11,7 @@ summary: 沿用手遊排行榜分數卡，用「打擂台法」兩兩比較找�
 embeds:
   - type: google-form
     title: 擂台行動小測驗
-    url: https://forms.gle/PLACEHOLDER_FORM_ID
+    url: https://docs.google.com/forms/d/e/1FAIpQLScjqE3N3LfYYUoF5L1DOR2gIyjlWx5OQN6jSVasSlel-28kvQ/viewform?embedded=true
 ---
 
 ## 學習目標
