@@ -1,7 +1,7 @@
 ---
 title: 第四週 任務檔案 004・防線任務｜個資保護與資訊安全
 unit: 第四單元
-order: 8
+order: 7
 date: 2026-09-21
 semester: 115-1
 grades: ['7']

@@ -1,7 +1,7 @@
 ---
 title: 第六週 任務檔案 006・掃描行動｜用迴圈重新實作打擂台法找最大值
 unit: 第六單元
-order: 11
+order: 12
 date: 2026-10-12
 semester: 115-1
 grades: ['8']

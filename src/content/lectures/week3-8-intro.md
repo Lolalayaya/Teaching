@@ -1,7 +1,7 @@
 ---
 title: 第三週 任務檔案 003・索引行動｜認識陣列
 unit: 第三單元
-order: 5
+order: 6
 date: 2026-09-14
 semester: 115-1
 grades: ['8']

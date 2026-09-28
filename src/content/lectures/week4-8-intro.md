@@ -1,7 +1,7 @@
 ---
 title: 第四週 任務檔案 004・排行榜行動｜Scratch清單實作
 unit: 第四單元
-order: 9
+order: 8
 date: 2026-09-21
 semester: 115-1
 grades: ['8']

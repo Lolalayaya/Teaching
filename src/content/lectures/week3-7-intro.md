@@ -1,7 +1,7 @@
 ---
 title: 第三週 任務檔案 003・科技生活時光機｜資訊科技導論
 unit: 第三單元
-order: 6
+order: 5
 date: 2026-09-14
 semester: 115-1
 grades: ['7']
