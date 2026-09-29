@@ -5,7 +5,7 @@ order: 7
 date: 2026-09-21
 semester: 115-1
 grades: ['7']
-classes: ['707', '708']
+currentFor: ['707', '708']
 published: true
 current: true
 tags: ["資訊倫理", "個資保護", "資訊安全", "個人資料保護法", "資料處理應用專題"]

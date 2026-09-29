@@ -46,6 +46,13 @@ const lectures = defineCollection({
       .optional(),
     tags: z.array(z.string()).optional(),
     summary: z.string().optional(),
+    // Narrows the homepage "本堂課‧今日重點" pinned box ONLY — e.g. when a
+    // holiday delays some classes a week, the just-finished week stays
+    // pinned for them while everyone else's pin moves to the new week.
+    // Does NOT affect `grades`/`classes` below, which still gate the
+    // general 課程講義 archive listing and should stay grade-wide so
+    // students can always look back at old weeks regardless of pace.
+    currentFor: z.array(z.string()).optional(),
     ...audienceFields,
   }),
 });

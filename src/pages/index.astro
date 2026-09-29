@@ -20,6 +20,7 @@ const currentItems = lectures
     summary: lecture.data.summary,
     grades: lecture.data.grades,
     classes: lecture.data.classes,
+    currentFor: lecture.data.currentFor,
     published: lecture.data.published,
     unlock: lecture.data.unlock,
   }));
@@ -41,6 +42,7 @@ const currentItems = lectures
             data-audience
             data-grades={(item.grades ?? []).join(',')}
             data-classes={(item.classes ?? []).join(',')}
+            data-current-for={(item.currentFor ?? []).join(',')}
             data-published={item.published === false ? 'false' : 'true'}
             data-unlock-after={item.unlock?.after?.toISOString() ?? ''}
             data-unlock-key={item.unlock?.storageKey ?? ''}

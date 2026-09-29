@@ -5,7 +5,7 @@ order: 8
 date: 2026-09-21
 semester: 115-1
 grades: ['8']
-classes: ['807']
+currentFor: ['807']
 published: true
 current: true
 tags: ["陣列", "清單", "Scratch", "程式設計"]

@@ -53,13 +53,21 @@ export function applyClassFilter() {
   items.forEach((item) => {
     const grades = (item.dataset.grades ?? '').split(',').filter(Boolean);
     const classes = (item.dataset.classes ?? '').split(',').filter(Boolean);
+    // Only present on the homepage "本堂課‧今日重點" pinned cards — narrows
+    // which classes still see that particular week pinned (holiday delays),
+    // without touching the grades/classes audience gate used everywhere else.
+    const currentFor = (item.dataset.currentFor ?? '').split(',').filter(Boolean);
 
     const gradeMatches = grades.length === 0 || grades.includes(selection.grade);
     const classMatches = classes.length === 0 || classes.includes(code);
+    const currentForMatches = currentFor.length === 0 || currentFor.includes(code);
     const published = item.dataset.published !== 'false';
     const unlocked = isUnlocked(item);
 
-    item.classList.toggle('is-filtered-out', !(gradeMatches && classMatches && published && unlocked));
+    item.classList.toggle(
+      'is-filtered-out',
+      !(gradeMatches && classMatches && currentForMatches && published && unlocked)
+    );
   });
 
   if (notice) {
