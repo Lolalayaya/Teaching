@@ -19,6 +19,14 @@ const { lecture } = Astro.props;
 const { Content } = await render(lecture);
 const unlock = lecture.data.unlock;
 const isUnpublished = lecture.data.published === false;
+// `classes` here means "only these classes should see this yet" (e.g. a
+// class that's delayed by a holiday shouldn't be able to open next week's
+// page/homework early) — distinct from `currentFor`, which only narrows the
+// homepage pinned box. Locked by default (same safe-default pattern as the
+// publish gate below); initAudienceGate() in audienceGate.js unlocks it
+// client-side if the viewer's stored class matches, or in teacher mode.
+const audienceClasses = lecture.data.classes ?? [];
+const hasAudienceGate = !isUnpublished && audienceClasses.length > 0;
 ---
 
 <BaseLayout title={lecture.data.title} description={lecture.data.summary}>
@@ -31,6 +39,18 @@ const isUnpublished = lecture.data.published === false;
         <p>🔒 這份內容還沒公開，請等老師公告後再回來查看。</p>
       </div>
       <div data-publish-content hidden>
+        <Content />
+        {lecture.data.embeds?.map((embed) => (
+          <Embed type={embed.type} title={embed.title} url={embed.url} />
+        ))}
+      </div>
+    </div>
+  ) : hasAudienceGate ? (
+    <div data-audience-gate data-audience-classes={audienceClasses.join(',')}>
+      <div class="locked-notice" data-audience-locked>
+        <p>🔒 這份內容還沒輪到你的班級，等老師說可以開始了再回來看。</p>
+      </div>
+      <div data-audience-content hidden>
         <Content />
         {lecture.data.embeds?.map((embed) => (
           <Embed type={embed.type} title={embed.title} url={embed.url} />
@@ -66,7 +86,9 @@ const isUnpublished = lecture.data.published === false;
 
 <script>
   import { initPublishGate } from '../../scripts/publishGate.js';
+  import { initAudienceGate } from '../../scripts/audienceGate.js';
   initPublishGate();
+  initAudienceGate();
 
   document.querySelectorAll('[data-unlock-wrapper]').forEach((wrapper) => {
     const el = wrapper as HTMLElement;
