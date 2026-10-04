@@ -12,7 +12,7 @@ summary: 正式學Scratch的迴圈積木，把上週的打擂台法改成用「�
 embeds:
   - type: scratch
     title: 掃描行動起始專案
-    url: https://scratch.mit.edu/projects/PLACEHOLDER_PROJECT_ID/
+    url: https://scratch.mit.edu/projects/1387264414
 ---
 
 ## 學習目標
