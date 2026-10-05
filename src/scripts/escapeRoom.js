@@ -50,8 +50,20 @@ export function loadOrResetProgress(currentVersion) {
   return stored;
 }
 
+// Converts fullwidth ASCII (U+FF01–U+FF5E, what a Chinese IME in fullwidth
+// mode produces when a student presses an ordinary letter/digit/punctuation
+// key — e.g. 'Ｆ' U+FF26 instead of 'F' U+0046) and the fullwidth space
+// (U+3000) to their regular halfwidth equivalents. Without this, a student
+// who typed the right key with the IME stuck in fullwidth mode sees what
+// looks like a correct answer but fails the comparison on the raw char code.
+function toHalfWidth(input) {
+  return String(input ?? '')
+    .replace(/[！-～]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .replace(/　/g, ' ');
+}
+
 function normalize(input) {
-  return String(input ?? '').trim().toLowerCase();
+  return toHalfWidth(input).trim().toLowerCase();
 }
 
 // Strips common punctuation (keeps letters, numbers, spaces) for the
