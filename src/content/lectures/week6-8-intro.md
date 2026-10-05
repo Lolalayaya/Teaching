@@ -2,11 +2,12 @@
 title: 第六週 任務檔案 006・掃描行動｜用迴圈重新實作打擂台法找最大值
 unit: 第六單元
 order: 12
-date: 2026-10-12
+date: 2026-10-05
 semester: 115-1
 grades: ['8']
-classes: ['801', '802', '803', '804', '805', '806', '808']
-published: false
+classes: ['802', '805', '806', '808']
+published: true
+current: true
 tags: ["迴圈", "條件式", "演算法", "走訪清單"]
 summary: 正式學Scratch的迴圈積木，把上週的打擂台法改成用「迴圈＋條件式」自動走訪整份排行榜清單，找出最大值。
 embeds:

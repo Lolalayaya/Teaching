@@ -5,8 +5,9 @@ order: 11
 date: 2026-10-05
 semester: 115-1
 grades: ['7']
-classes: ['701', '702', '703', '704', '705', '706', '709', '710']
-published: false
+classes: ['701', '702', '703', '705', '706', '709']
+published: true
+current: true
 tags: ["資料處理應用專題", "Google表單", "問卷設計", "個資保護", "資訊安全", "資訊科技合理使用原則"]
 summary: 學會使用Google表單設計問卷，各組練習建置自己負責的題目，並透過一份整合好的正式問卷，當場蒐集全班的第一手數據，為之後Google試算表分析做準備。
 embeds:

@@ -5,7 +5,7 @@ order: 9
 date: 2026-09-28
 semester: 115-1
 grades: ['7']
-classes: ['701', '702', '703', '704', '705', '706', '709', '710']
+currentFor: ['704', '710']
 published: true
 current: true
 tags: ["資訊倫理", "資訊科技合理使用原則", "著作權", "媒體素養", "資料處理應用專題", "分組"]
