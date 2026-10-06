@@ -5,7 +5,7 @@ order: 10
 date: 2026-09-28
 semester: 115-1
 grades: ['8']
-currentFor: ['801', '803', '804']
+currentFor: ['801', '803', '804', '807']
 published: true
 current: true
 tags: ["演算法", "比較", "找最大值", "迴圈", "條件式"]

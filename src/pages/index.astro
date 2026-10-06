@@ -14,16 +14,29 @@ const latestShowcase = showcaseItems.slice(0, 3);
 
 const currentItems = lectures
   .filter((lecture) => lecture.data.current)
-  .map((lecture) => ({
-    href: `${base}lectures/${lecture.id}/`,
-    title: `${lecture.data.unit} · ${lecture.data.title}`,
-    summary: lecture.data.summary,
-    grades: lecture.data.grades,
-    classes: lecture.data.classes,
-    currentFor: lecture.data.currentFor,
-    published: lecture.data.published,
-    unlock: lecture.data.unlock,
-  }));
+  .map((lecture) => {
+    // `classes`(新一週限制存取) 或 `currentFor`(舊一週只釘選給延後班級)
+    // 只要有其中一個設定,代表這張卡片不是釘給全年級看的——老師模式會同時
+    // 看到好幾週的卡片(見 classSelection.js 的「沒選班級=老師模式,不過濾」),
+    // 用這個標籤讓老師自己看首頁時知道「這張是只給哪些班看的」,而不是網站壞了。
+    const restrictedTo =
+      lecture.data.classes && lecture.data.classes.length > 0
+        ? lecture.data.classes
+        : lecture.data.currentFor && lecture.data.currentFor.length > 0
+          ? lecture.data.currentFor
+          : null;
+    return {
+      href: `${base}lectures/${lecture.id}/`,
+      title: `${lecture.data.unit} · ${lecture.data.title}`,
+      summary: lecture.data.summary,
+      grades: lecture.data.grades,
+      classes: lecture.data.classes,
+      currentFor: lecture.data.currentFor,
+      restrictedTo,
+      published: lecture.data.published,
+      unlock: lecture.data.unlock,
+    };
+  });
 ---
 
 <BaseLayout title="首頁">
@@ -48,6 +61,9 @@ const currentItems = lectures
             data-unlock-key={item.unlock?.storageKey ?? ''}
           >
             <a href={item.href}>{item.title}</a>
+            {item.restrictedTo && (
+              <p class="meta"><span class="tag">僅：{item.restrictedTo.join('、')} 班</span></p>
+            )}
             {item.summary && <p class="meta">{item.summary}</p>}
           </li>
         ))}
