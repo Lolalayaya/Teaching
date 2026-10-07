@@ -101,7 +101,7 @@ embeds:
 
 **操作方式**：每組推派一人開表單、其他組員用「新增編輯者」加入共編權限，一起把自己負責的那一套3題練習建進Google表單裡（練習用，不用正式傳送蒐集）。建好後，把表單的**編輯連結**與**作答者連結**貼到<a href="https://docs.google.com/spreadsheets/d/1ZhTmfrrS3vjP4F_jYniiCcvbGfYeQQNwDeHEDElSJ4U/edit?usp=sharing" target="_blank" rel="noopener">「表單一覽」試算表</a>裡自己那組對應的那一列，老師會用這份清單核對每組有沒有建好。
 
-**<a href="https://docs.google.com/spreadsheets/d/1ZhTmfrrS3vjP4F_jYniiCcvbGfYeQQNwDeHEDElSJ4U/edit?usp=sharing" target="_blank" rel="noopener">「表單一覽」試算表</a>**
+**👉<a href="https://docs.google.com/spreadsheets/d/1ZhTmfrrS3vjP4F_jYniiCcvbGfYeQQNwDeHEDElSJ4U/edit?usp=sharing" target="_blank" rel="noopener">👉「表單一覽」試算表👈</a>**
 
 ## 五、正式問卷：全班當場填寫
 
