@@ -5,7 +5,7 @@ order: 12
 date: 2026-10-05
 semester: 115-1
 grades: ['8']
-classes: ['802', '805', '806', '808']
+classes: ['801', '802', '803', '804', '805', '806', '808']
 published: true
 current: true
 tags: ["迴圈", "條件式", "演算法", "走訪清單"]
