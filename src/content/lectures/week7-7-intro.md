@@ -5,16 +5,17 @@ order: 13
 date: 2026-10-12
 semester: 115-1
 grades: ['7']
-classes: ['703', '705', '709']
-published: false
-tags: ["資料處理應用專題", "Google文件", "NotebookLM", "AI協作", "資訊科技合理使用原則", "個資保護", "資訊安全"]
-summary: 閱讀與自己主題相關的新聞報導和調查報告，用NotebookLM協助摘要，並用Google文件共編、排版，整理成一份有標明出處的資料筆記。
+classes: ['701', '702', '703', '705', '706', '709']
+published: true
+current: true
+tags: ["資料處理應用專題", "Google文件", "Gemini Notebook", "AI協作", "資訊科技合理使用原則", "個資保護", "資訊安全"]
+summary: 閱讀與自己主題相關的新聞報導和調查報告，先自己整理重點，再用Gemini Notebook（舊名NotebookLM）核對與補充，並用Google文件共編、排版，整理成一份有標明出處的資料筆記。
 ---
 
 ## 學習目標
 
 - 分辨第一手資料與第二手資料，並能用簡單的方法判斷一份資料是否可信
-- 使用NotebookLM協助閱讀與摘要，並能核對AI的摘要是否正確
+- 能自己閱讀文章、整理重點，再用Gemini Notebook（舊名NotebookLM）核對與補充，並判斷AI的摘要是否正確
 - 使用Google文件共編，並運用標題樣式、項目符號、縮排、超連結，整理出一份有標明出處的資料筆記
 
 ## 一、上週回顧：第一手資料與第二手資料
@@ -41,65 +42,80 @@ summary: 閱讀與自己主題相關的新聞報導和調查報告，用Notebook
 
 ## 三、你們這組的資料包
 
-每個主題的第一組和第二組，都使用同一份資料包。
+每個主題的第一組和第二組，都使用同一份資料包。每份資料包都是4篇，依序稱為第1篇～第4篇，分工時會用到（見第五節）。
 
 ### 個資保護
 
-- 案例：<a href="https://www.cna.com.tw/news/aopl/202309150318.aspx" target="_blank" rel="noopener">中央社：TikTok未妥善保護兒童個資，遭歐盟重罰（2023年9月15日）</a>
-- 案例：<a href="https://news.ltn.com.tw/news/world/paper/1605115" target="_blank" rel="noopener">自由時報：〈TikTok侵犯兒童隱私 歐盟重罰3.45億歐元〉</a>
-- 案例：<a href="https://technews.tw/2023/09/19/tiktok-slapped-with-eu-fine-of-345-million-euros/" target="_blank" rel="noopener">TechNews科技新報：〈未妥善處理未成年用戶數據，TikTok 遭歐盟重罰 3.45 億歐元〉</a>
-- 調查：<a href="https://www.children.org.tw/publication_research/research_report/296" target="_blank" rel="noopener">兒童福利聯盟：2020年兒少網路隱私與網友互動調查報告</a>
+1. 案例：<a href="https://www.cna.com.tw/news/aopl/202309150318.aspx" target="_blank" rel="noopener">中央社：TikTok未妥善保護兒童個資，遭歐盟重罰（2023年9月15日）</a>
+2. 案例：<a href="https://news.ltn.com.tw/news/world/paper/1605115" target="_blank" rel="noopener">自由時報：〈TikTok侵犯兒童隱私 歐盟重罰3.45億歐元〉</a>
+3. 案例：<a href="https://technews.tw/2023/09/19/tiktok-slapped-with-eu-fine-of-345-million-euros/" target="_blank" rel="noopener">TechNews科技新報：〈未妥善處理未成年用戶數據，TikTok 遭歐盟重罰 3.45 億歐元〉</a>
+4. 調查：<a href="https://www.children.org.tw/publication_research/research_report/296" target="_blank" rel="noopener">兒童福利聯盟：2020年兒少網路隱私與網友互動調查報告</a>
 
 ### 資訊安全
 
-- 案例：<a href="https://www.ettoday.net/news/20260727/3208294.htm" target="_blank" rel="noopener">ETtoday新聞雲：高雄國中生「免費遊戲帳號」SIM卡詐騙（2026年7月27日）</a>
-- 案例：<a href="https://news.pts.org.tw/article/819500" target="_blank" rel="noopener">公視新聞網：〈誆「免費贈熱門遊戲帳號」 高雄學生遭詐團逼交實體SIM卡〉</a>
-- 案例：<a href="https://www.ettoday.net/news/20260726/3207840.htm" target="_blank" rel="noopener">ETtoday新聞雲：〈「幫我投個票」點下去秒登出！LINE帳號被盜 警揭「奪回SOP」〉</a>
-- 調查：<a href="https://www.ettoday.net/news/20260826/3225904.htm" target="_blank" rel="noopener">ETtoday新聞雲：GASA與Whoscall《2026亞洲詐騙調查報告：台灣篇》</a>
+1. 案例：<a href="https://news.pts.org.tw/article/819500" target="_blank" rel="noopener">公視新聞網：〈誆「免費贈熱門遊戲帳號」 高雄學生遭詐團逼交實體SIM卡〉</a>
+2. 案例：<a href="https://udn.com/news/story/124490/9653116" target="_blank" rel="noopener">聯合新聞網：〈免費贈手遊帳號？高雄國中生交SIM卡變詐騙電話 被停話嚇壞父母〉</a>
+3. 案例：<a href="https://news.ltn.com.tw/news/Kaohsiung/breakingnews/5518795" target="_blank" rel="noopener">自由時報：〈抖音免費送遊戲帳號騙局 高雄學生險成詐團人頭門號〉</a>
+4. 調查：<a href="https://www.techbang.com/posts/132643-gasa-whoscall-2026-asia-scam-report-taiwan" target="_blank" rel="noopener">T客邦：GASA與Whoscall《2026亞洲詐騙調查報告：台灣篇》</a>
 
 ### 資訊科技合理使用原則
 
-- 案例：<a href="https://www.cna.com.tw/news/firstnews/202006090286.aspx" target="_blank" rel="noopener">中央社：谷阿莫與5家片商和解（2020年6月9日）</a>
-- 案例：<a href="https://www.ettoday.net/news/20200609/1733619.htm" target="_blank" rel="noopener">ETtoday新聞雲：〈谷阿莫「X分鐘看電影」遭5片商圍剿…今在臉書登道歉啟事「糾紛全解套」〉</a>
-- 案例：<a href="https://www.mirrormedia.mg/story/20200609ent031/" target="_blank" rel="noopener">鏡週刊：〈違反《著作權法》遭起訴欲和解 谷阿莫今發文道歉〉</a>
+1. 案例：<a href="https://www.cna.com.tw/news/firstnews/202006090286.aspx" target="_blank" rel="noopener">中央社：谷阿莫與5家片商和解（2020年6月9日）</a>
+2. 案例：<a href="https://www.ettoday.net/news/20200609/1733619.htm" target="_blank" rel="noopener">ETtoday新聞雲：〈谷阿莫「X分鐘看電影」遭5片商圍剿…今在臉書登道歉啟事「糾紛全解套」〉</a>
+3. 案例：<a href="https://www.mirrormedia.mg/story/20200609ent031/" target="_blank" rel="noopener">鏡週刊：〈違反《著作權法》遭起訴欲和解 谷阿莫今發文道歉〉</a>
+4. 案例：<a href="https://www.ctwant.com/article/55708" target="_blank" rel="noopener">CTWANT：〈谷阿莫改作影片侵權遭5片商提告 臉書道歉擺脫版權糾紛〉</a>
 
 資訊科技合理使用原則組的資料包裡沒有調查報告——老師找過，目前沒有夠新、夠可靠的台灣青少年統計。找不到合適的資料，本來就是做研究時會遇到的狀況；這一組的資料筆記可以把重點放在案例的細節，例如賠償金額、為什麼不算合理使用。
 
-## 四、用NotebookLM協助摘要
-
-NotebookLM是Google的AI工具，跟一般聊天機器人最大的差別是：**它只根據你給它的資料回答**，而且會標出答案出自哪一份資料的哪一段，方便回頭核對。
-
-1. 用學校帳號登入，打開 <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">notebooklm.google.com</a>
-2. 點「建立新的筆記本」
-3. 在「新增來源」選「網站」，把資料包裡的連結一個一個貼進去
-4. 在對話框輸入問題，例如：
-   - 「請用條列方式整理這個事件的經過：誰、發生什麼事、結果如何」
-   - 「這些資料裡提到了哪些數字？分別代表什麼意思？」
-   - 「這幾篇報導的說法有沒有不一樣的地方？」
-5. 點回答後面的數字標記，會跳到原文對應的段落——**每一個要寫進筆記的數字，都要回原文確認一次**
-
-AI的摘要有可能出錯或漏掉重點，它是幫你讀得更快的工具，不是替你寫作業的工具。寫進Google文件時，要**用自己的話改寫**，不要整段複製貼上，並在筆記最後註明哪些部分用了AI協助。
-
-如果NotebookLM無法登入或打不開，直接點開資料包的連結閱讀，一樣用上面的問題當作整理方向。
-
-## 五、Google文件：開文件、設共用
+## 四、Google文件：開文件、設共用
 
 每組要開一份共用的Google文件，所有組員一起編輯：
 
-1. 組內推派一位同學，開一份新的Google文件（開啟Google雲端硬碟，點左上角「新增」→「Google文件」，或在瀏覽器網址列輸入 `docs.new`）
+1. 組長指派一位同學，開一份新的Google文件（開啟Google雲端硬碟，點左上角「新增」→「Google文件」，或在瀏覽器網址列輸入 `docs.new`）
 2. 點右上角的「共用」按鈕
 3. 「一般存取權」選「知道連結的任何人」，右邊的權限選「編輯者」——選「查看者」的話，別人只能看不能打字；選「意見提供者」則只能留言，不能直接修改內容
-4. 點「複製連結」，傳給組員。組員點開連結就能直接編輯
-5. 組員同時打開、同時打字時，每個人的游標會顯示不同顏色和名字。對組員寫的內容有意見時，用「插入」→「留言」寫在旁邊，不要直接刪掉別人打的字
+4. 點「複製連結」，貼到<a href="https://docs.google.com/spreadsheets/d/1FzvJlAlAkHaFok_Hw_XqFtNHkTEKuL_Ijz4U91TX864/edit?usp=sharing" target="_blank" rel="noopener">「文件一覽」試算表</a>裡你們這組的那一列，並在同一列填好全組的分工（見第五節）
+5. 其他組員從試算表點開你們這組的連結，就能直接編輯
+6. 組員同時打開、同時打字時，每個人的游標會顯示不同顏色和名字。對組員寫的內容有意見時，用「插入」→「留言」寫在旁邊，不要直接刪掉別人打的字
 
-## 六、動手：完成你們這組的資料筆記
+## 五、第一步：自己讀、自己整理
+
+先不要用AI。自己讀過一次文章，才知道重點在哪裡，等一下也才有能力判斷AI說的對不對。
 
 ### 分工
 
-- **文件管理員（1人）**：開文件、設共用、確認每位組員都能編輯，並打好下面的文件架構
-- **其他組員**：每人負責資料包裡的一篇，用NotebookLM整理後，寫進文件對應的段落
+每組有三種角色。先看清楚每個角色要做什麼，再決定誰當哪一個。
 
-組員同時在同一份文件的不同段落打字，這就是共編。
+**每個角色要做的事**
+
+| 角色 | 讀什麼 | 寫什麼 |
+| --- | --- | --- |
+| 文件管理員 | 不用讀文章（4人組要讀第4篇，照讀者的工作做） | ・開始前：開文件、設共用、在試算表貼連結和寫分工，打好標題1和五個標題2<br>・一、案例經過：讀者都寫完後，刪掉重複的、照事情發生的順序排好<br>・三、我們班的問卷題目：把第六週這組負責的3題打進來 |
+| 第1～4篇讀者 | 自己負責的那一篇 | ・一、案例經過：寫這篇提到的2～3個重點，別人寫過的不要重複，可以縮排補充細節<br>・二、重要數字：寫這篇裡的數字和它代表的意思，後面標出媒體名稱，這篇沒有數字就不用寫<br>・四、參考資料：寫自己這篇的媒體名稱、標題、日期，並插入連結 |
+| 核對員 | 讀者寫完後，回原文對照「二、重要數字」 | ・二、重要數字：回原文核對每個數字和出處，有錯就改<br>・第二步：操作Gemini Notebook（舊名NotebookLM），把AI補充的重點用自己的話補進一或二<br>・五、AI核對紀錄：寫下AI補充了什麼、有沒有說錯的地方 |
+
+**人數不同時，誰要兼任**
+
+- 6人組：文件管理員、第1～4篇讀者、核對員，每個角色各1人
+- 5人組：文件管理員兼任核對員
+- 4人組：文件管理員兼讀第4篇；第1篇讀者兼任核對員
+
+**怎麼決定角色（限時2分鐘）**
+
+1. 組長主持，大家自己選想做的角色
+2. 兩個人以上想做同一個角色，猜拳決定，只猜一次
+3. 時間到還有角色沒人選，沒選到角色的人照座號從小到大，依序補上空著的角色
+4. 決定好後，由文件管理員把名字填進「文件一覽」試算表你們這組的那一列，填好就不再換
+
+組員同時在同一份文件的不同段落打字，這就是共編。老師評分時，會對照試算表的分工和文件的版本記錄。
+
+### 讀文章時找這些重點
+
+- 誰？發生什麼事？結果如何？
+- 文章裡有哪些數字？各代表什麼意思？
+- 你們這組負責的那一篇，跟同組其他人讀的文章，說法有沒有不一樣？
+
+用自己的話寫，不要整段複製貼上原文。
 
 ### 文件架構
 
@@ -115,20 +131,57 @@ AI的摘要有可能出錯或漏掉重點，它是幫你讀得更快的工具，
 - 每個數字一行，寫清楚它代表什麼，並在後面標出出自哪一篇
 
 **三、我們班的問卷題目**（標題2）
-- 把上週你們這組負責的3題打進來，第8~10週會拿這3題的班級數據跟上面的數字比較
+- 把第六週你們這組負責的3題打進來，第8~10週會拿這3題的班級數據跟上面的數字比較
 
 **四、參考資料**（標題2）
 - 每一篇都寫：媒體名稱、標題、日期
 - 選取標題文字，按 `Ctrl+K` 插入原文連結
 
-**五、AI使用說明**（標題2）
-- 寫一句話說明哪些部分用了NotebookLM協助、組員怎麼核對
+**五、AI核對紀錄**（標題2）
+- 第二步用AI核對之後再寫，見下一節
 
 標明出處不是多餘的步驟——第五週學過，引用別人的著作要明確標明出處，這份筆記本身就是在練習合理使用。
 
-### 繳交
+### 範例：LINE帳號被盜案
 
-完成後，把文件連結貼到<a href="PLACEHOLDER_DOC_LIST_SHEET_URL" target="_blank" rel="noopener">「文件一覽」試算表</a>裡你們這組的那一列。
+老師用LINE帳號被盜案做了一份完成的資料筆記，打字前先看看，完成後大概長這樣：
+
+<figure class="embed" data-embed-type="google-doc">
+  <figcaption><span class="tag">Google 文件</span> 資料筆記範例（LINE帳號被盜案）</figcaption>
+  <div class="embed-frame" style="aspect-ratio: 3 / 4">
+    <iframe src="https://docs.google.com/document/d/1hN107Q-TDY54vGqfsFN-7gY9fF718qkVuCsuhOl77Q8/preview" title="資料筆記範例（LINE帳號被盜案）" loading="lazy" allowfullscreen></iframe>
+  </div>
+  <p class="embed-fallback">嵌入畫面無法顯示？<a href="https://docs.google.com/document/d/1hN107Q-TDY54vGqfsFN-7gY9fF718qkVuCsuhOl77Q8/edit?usp=sharing" target="_blank" rel="noopener">在新視窗開啟 →</a></p>
+</figure>
+
+這個案例不在任何一組的資料包裡，請用你們自己的資料包，不要照抄。資料裡數字少是正常的，有幾個就寫幾個，不要自己編。
+
+## 六、第二步：用Gemini Notebook（舊名NotebookLM）核對與補充
+
+自己整理完之後，再請AI幫忙檢查，由核對員操作，其他組員一起看。Gemini Notebook是Google的AI工具（原本叫NotebookLM，有些畫面可能還是顯示舊名），跟一般聊天機器人最大的差別是：**它只根據你給它的資料回答**，而且會標出答案出自哪一份資料的哪一段，方便回頭核對。
+
+這種「先從指定資料裡找出相關內容，再根據找到的內容回答」的做法，在人工智慧領域稱為**RAG（檢索增強生成，Retrieval-Augmented Generation）**，可以減少AI憑空編造答案的情況。對人工智慧有興趣的同學，可以再自行搜尋相關資料。
+
+1. 用學校帳號登入，打開 <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">Gemini Notebook（舊名NotebookLM）</a>
+2. 點「建立新的筆記本」
+3. 在「新增來源」選「網站」，把資料包裡的連結一個一個貼進去
+4. 在對話框輸入跟第一步一樣的問題，例如：
+   - 「請用條列方式整理這個事件的經過：誰、發生什麼事、結果如何」
+   - 「這些資料裡提到了哪些數字？分別代表什麼意思？」
+   - 「這幾篇報導的說法有沒有不一樣的地方？」
+5. 拿AI的回答跟你們自己寫的筆記比對：
+   - **AI有、我們沒有的重點**：點回答後面的數字標記，跳到原文對應的段落確認，確定是對的，再用自己的話補進筆記
+   - **AI跟原文不一樣的地方**：AI也會出錯，以原文為準
+
+最後在「五、AI核對紀錄」寫下：AI幫你們補了哪些重點、有沒有發現AI說錯的地方。
+
+如果Gemini Notebook無法登入或打不開，就跳過這一步，在「五、AI核對紀錄」寫「本組未使用AI」。
+
+## 七、繳交
+
+完成後，確認<a href="https://docs.google.com/spreadsheets/d/1FzvJlAlAkHaFok_Hw_XqFtNHkTEKuL_Ijz4U91TX864/edit?usp=sharing" target="_blank" rel="noopener">「文件一覽」試算表</a>裡你們這組的那一列，貼的是這份資料筆記的連結，老師會從這裡點開評分。
+
+**<a href="https://docs.google.com/spreadsheets/d/1FzvJlAlAkHaFok_Hw_XqFtNHkTEKuL_Ijz4U91TX864/edit?usp=sharing" target="_blank" rel="noopener">👉「文件一覽」試算表👈</a>**
 
 交出去之前，先自我檢查：
 
@@ -136,10 +189,11 @@ AI的摘要有可能出錯或漏掉重點，它是幫你讀得更快的工具，
 - [ ] 標題1、標題2、項目符號都有套用
 - [ ] 每個數字都回原文核對過，並標出出處
 - [ ] 參考資料都有插入連結
+- [ ] 試算表裡的分工都填好了
 - [ ] 每位組員都有在文件裡寫到自己負責的部分
 
-這份資料筆記是**第一次段考的評分依據**。老師會從「檔案」→「版本記錄」看每位組員分別寫了哪些內容。
+老師會從「檔案」→「版本記錄」看每位組員分別寫了哪些內容。
 
-## 七、下週預告
+## 八、下週預告
 
-下週開始學Google試算表：把上週的班級問卷數據整理成圖表，練習用函式算出比例和平均。之後再拿今天筆記裡的數字，做「我們班 vs 全國」的比較。
+下週開始學Google試算表：把第六週的班級問卷數據整理成圖表，練習用函式算出比例和平均。之後再拿今天筆記裡的數字，做「我們班 vs 全國」的比較。
