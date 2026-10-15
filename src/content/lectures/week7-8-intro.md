@@ -1,7 +1,7 @@
 ---
 title: 第七週 任務檔案 007・歸位行動｜選擇排序法
 unit: 第七單元
-order: 14
+order: 15
 date: 2026-10-12
 semester: 115-1
 grades: ['8']
@@ -12,10 +12,10 @@ summary: 先用課程網站找回前兩週的重點當暖身，再沿用排行�
 embeds:
   - type: google-form
     title: 表單A・網站任務暖身
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_FORM_A_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSe25rClRWo68JeDZF0zQwCNyINMndFRgrI1_oKdB7Sx9SdXGQ/viewform?embedded=true
   - type: google-form
     title: 表單B・歸位行動小測驗＋Bug排序
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_FORM_B_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSfIIu9Fbz8KZZGwy9vmYRADypnBIeSBCp6z2CrnbZlhxJbSpQ/viewform?embedded=true
 ---
 
 ## 學習目標
@@ -27,11 +27,11 @@ embeds:
 
 ## 一、暖身：用網站找回前兩週的重點
 
-今天先做一個暖身，順便幫老師檢查課程網站好不好用。請打開下方的「**表單A・網站任務暖身**」，照題目到網站上找出指定的頁面，把答案抄下來。
+今天先做一個暖身。請打開下方的「**表單A・網站任務暖身**」，照題目到網站上找出指定的頁面，把答案抄下來。
 
 **⚠️ 請先點表單A下面的「在新視窗開啟」，讓表單開在另一個分頁**，再回到原本這個分頁去找答案。如果直接在這一頁點去別的講義，嵌在這裡的表單會被關掉，填到一半的答案就不見了。
 
-每一題除了寫答案，還會問你「找到了嗎？」和「難不難找？」，請照實際情況選。這份表單要填班級座號姓名，是為了確認每個人都有交；**你對網站的任何批評都不會影響成績**，老師之後會根據大家的意見改版網站，寫得越具體越有幫助。
+每一題除了寫答案，還會問你「找到了嗎？」和「難不難找？」，請照實際情況選。這份表單要填班級座號姓名，是為了確認每個人都有交；**你對網站的任何批評都不會影響成績**，老師之後會根據大家的意見改版網站，寫得越具體越有幫助，如果寫得非常認真也會幫你加分！
 
 表單A最後有兩組關於網站整體使用感受的問題，一樣照自己的感覺填就好，沒有標準答案。
 
@@ -66,8 +66,6 @@ embeds:
 - **交換，不是插入**：第3週的插入是後面的人全部往後移一位；選擇排序只把「最大值」跟「這一輪的位置」兩張卡互換，其他卡都不動。
 - **第4輪不用換**：最大值剛好已經在這一輪的位置上，那就不用動，直接進下一輪。
 - **5張卡只要排4輪**：前4個名次都確定了，最後剩下的那張一定是第5名，不用再比。
-
-接著各組拿自己的分數卡打亂，實際排一次。每排完一輪先停下來，舉手讓老師確認這一輪的順序。
 
 ## 四、要比較幾次？
 
