@@ -587,3 +587,249 @@ main {
   margin-bottom: 1rem;
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
 }
+
+/* 講義用「借暫存交換」分步動畫（src/scripts/swapDemo.js）。顏色比照
+   Scratch 積木分類：變數＝橘、清單＝紅橘，讓學生一眼對回積木區。 */
+.swap-demo {
+  --swap-var: #ff8c1a;
+  --swap-list: #ff661a;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+}
+
+.swap-demo-stage {
+  position: relative;
+  height: 176px;
+  overflow: hidden;
+}
+
+.swap-demo-base {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 14px;
+  height: 12px;
+  border-radius: 4px;
+  background: var(--color-muted);
+}
+
+.swap-demo-peg {
+  position: absolute;
+  bottom: 26px;
+  width: 8px;
+  height: 92px;
+  border-radius: 4px 4px 0 0;
+  background: var(--color-muted);
+  transform: translateX(-50%);
+}
+
+.swap-demo-disk {
+  position: absolute;
+  height: 34px;
+  min-width: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 1.1rem;
+  transform: translateX(-50%);
+  transition: bottom 320ms var(--ease-out), left 420ms var(--ease-out), box-shadow 150ms ease;
+}
+
+.swap-demo-disk-a {
+  background: var(--color-accent-fill);
+  color: var(--color-on-accent-fill);
+}
+
+.swap-demo-disk-b {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 2px solid var(--color-accent);
+}
+
+.swap-demo-disk.is-moving {
+  box-shadow: var(--shadow-card);
+  z-index: 1;
+}
+
+.swap-demo-disk.swap-demo-instant {
+  transition: none;
+}
+
+.swap-demo-disk.is-shaking {
+  animation: swap-demo-shake 450ms ease;
+}
+
+@keyframes swap-demo-shake {
+  0%, 100% { transform: translateX(-50%); }
+  20%, 60% { transform: translateX(calc(-50% - 8px)); }
+  40%, 80% { transform: translateX(calc(-50% + 8px)); }
+}
+
+.swap-demo-labels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.swap-demo-labels small {
+  display: block;
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.swap-demo-caption {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-input);
+  background: var(--color-paper);
+  min-height: 7.5rem;
+}
+
+.swap-demo-caption p {
+  margin: 0.25rem 0;
+}
+
+.swap-demo-title {
+  font-weight: 700;
+}
+
+.swap-demo-note {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.swap-demo-caption-wrong {
+  background: var(--color-wrong-bg);
+}
+
+.swap-demo-caption-wrong .swap-demo-title {
+  color: var(--color-wrong);
+}
+
+.swap-demo-blocks {
+  margin: 1rem 0;
+  padding-left: 1.6rem;
+}
+
+.swap-demo-block {
+  margin: 0.35rem 0;
+  opacity: 0.55;
+  transition: opacity 150ms ease;
+}
+
+.swap-demo-block::marker {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* 積木外觀只是「像」Scratch積木，讓學生認得出分類，不追求完全一樣 */
+.swap-demo-block {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  /* 固定深色字：白字在 Scratch 橘底上對比不到 3:1 */
+  color: #2b1a0a;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.swap-demo-block-var {
+  background: var(--swap-var);
+}
+
+.swap-demo-block-list {
+  background: var(--swap-list);
+}
+
+.swap-demo-block.is-done {
+  opacity: 0.85;
+}
+
+.swap-demo-block.is-active {
+  opacity: 1;
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+.swap-demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.swap-demo-controls button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 100ms var(--ease-out);
+}
+
+.swap-demo-controls button:hover:not(:disabled) {
+  background: var(--color-accent-tint);
+}
+
+.swap-demo-controls .swap-demo-primary {
+  border-color: transparent;
+  background: var(--color-accent-fill);
+  color: var(--color-on-accent-fill);
+}
+
+.swap-demo-controls .swap-demo-primary:hover:not(:disabled) {
+  background: var(--color-accent-fill-hover);
+}
+
+.swap-demo-controls .swap-demo-wrong-btn {
+  margin-left: auto;
+  color: var(--color-wrong);
+}
+
+.swap-demo-controls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.swap-demo-controls button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.swap-demo-controls button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap-demo-disk {
+    transition: none;
+  }
+  .swap-demo-disk.is-shaking {
+    animation: none;
+  }
+  .swap-demo-controls button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .swap-demo-disk {
+    font-size: 0.95rem;
+    min-width: 56px;
+  }
+  .swap-demo-labels {
+    font-size: 0.8rem;
+  }
+  .swap-demo-controls .swap-demo-wrong-btn {
+    margin-left: 0;
+  }
+}
