@@ -168,7 +168,7 @@ function addNameIdItem(form) {
 }
 
 /** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡。 */
-var FORM_EDIT_URL = 'PLACEHOLDER_W8_7_FORM_A_EDIT_URL';
+var FORM_EDIT_URL = 'https://docs.google.com/forms/d/1nD61r9N3pwkNVLS_8ar-YK4JGTV2J8Sn0tc4KrMnZ8g/edit';
 
 /**
  * 計算每份回覆的SUS分數（0~100）與全體平均。

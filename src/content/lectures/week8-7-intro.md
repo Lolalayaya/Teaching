@@ -6,13 +6,14 @@ date: 2026-10-19
 semester: 115-1
 grades: ['7']
 classes: ['701', '702', '703', '705', '706', '709']
-published: false
+published: true
+current: true
 tags: ["資料處理應用專題", "Google文件", "Gemini Notebook", "網站使用調查", "問卷調查"]
 summary: 先用課程網站完成指定任務，填寫網站使用調查，再回到上週的資料筆記，依照分工把五個段落全部完成並繳交。
 embeds:
   - type: google-form
     title: 表單A・網站使用調查
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_W8_7_FORM_A_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSe7I4JlHwvhKnWok-icPyKloL1yVf8CrJ9fU3EQJi0O19bCFA/viewform?embedded=true
 ---
 
 ## 學習目標
