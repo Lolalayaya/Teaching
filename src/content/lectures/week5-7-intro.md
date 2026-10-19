@@ -5,9 +5,8 @@ order: 9
 date: 2026-09-28
 semester: 115-1
 grades: ['7']
-currentFor: ['707', '708']
 published: true
-current: true
+current: false
 tags: ["資訊倫理", "資訊科技合理使用原則", "著作權", "媒體素養", "資料處理應用專題", "分組"]
 summary: 深入認識資訊科技合理使用原則（著作權），並正式分組選定資料處理應用專題要製作四格漫畫的主題方向。
 embeds:

@@ -5,7 +5,7 @@ order: 13
 date: 2026-10-12
 semester: 115-1
 grades: ['7']
-classes: ['701', '702', '703', '705', '706', '709']
+classes: ['701', '702', '703', '704', '705', '706', '709', '710']
 published: true
 current: true
 tags: ["資料處理應用專題", "Google文件", "Gemini Notebook", "AI協作", "資訊科技合理使用原則", "個資保護", "資訊安全"]

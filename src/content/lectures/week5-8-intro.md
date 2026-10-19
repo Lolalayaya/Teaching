@@ -5,9 +5,8 @@ order: 10
 date: 2026-09-28
 semester: 115-1
 grades: ['8']
-currentFor: ['807']
 published: true
-current: true
+current: false
 tags: ["演算法", "比較", "找最大值", "迴圈", "條件式"]
 summary: 沿用手遊排行榜分數卡，用「打擂台法」兩兩比較找出最高分，並複習迴圈、條件式這兩個Scratch積木概念，為下週正式在Scratch裡使用它們做準備。
 embeds:
