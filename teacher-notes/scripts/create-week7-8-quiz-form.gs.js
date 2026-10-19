@@ -88,8 +88,10 @@ function createForm() {
     .addPageBreakItem()
     .setTitle('Bug排序')
     .setHelpText(
-      '寫下這個課程網站上讓你卡住或覺得不方便的地方，剛好4個，依照寫下的順序叫做問題A、B、C、D，' +
-        '再幫每個問題打嚴重度（1＝有點不方便，5＝完全卡住、做不下去）。這一段不計分，' +
+      // 801試填時「剛好4個」逼出一堆「沒有」湊數，2026-10-19改成最多4個，沒寫的嚴重度選0（排序時自然排到最後）
+      '寫下這個課程網站上讓你卡住或覺得不方便的地方，最多4個，依照寫下的順序叫做問題A、B、C、D，' +
+        '再幫每個問題打嚴重度（1＝有點不方便，5＝完全卡住、做不下去）。' +
+        '想不到4個也沒關係，沒寫的那格留空，嚴重度選0。這一段不計分，' +
         '請照實際感覺寫，你的批評不會影響成績。'
     );
 
@@ -97,15 +99,22 @@ function createForm() {
     form
       .addParagraphTextItem()
       .setTitle('問題' + letter + '：讓你卡住或不方便的地方')
-      .setHelpText('寫具體一點，例如「在哪一頁、想做什麼、結果發生什麼事」。')
-      .setRequired(true);
+      // 原本的舉例「在哪一頁、想做什麼、結果發生什麼事」被學生直接當答案抄，改成不能照抄的說法
+      .setHelpText('寫具體一點：是哪一頁、你想做的事、結果怎樣了。')
+      .setRequired(false);
     form
       .addScaleItem()
       .setTitle(severityTitle(letter))
-      .setBounds(1, 5)
-      .setLabels('有點不方便', '完全卡住')
+      .setBounds(0, 5)
+      .setLabels('沒有這個問題', '完全卡住')
       .setRequired(true);
   });
+
+  // 原本放在排序那頁最後，801有人把第4輪的字母順序填進來，2026-10-19移到問題清單後面
+  form
+    .addParagraphTextItem()
+    .setTitle('🌱 如果你是這個網站的設計師，最想加什麼功能？（選填）')
+    .setRequired(false);
 
   form
     .addPageBreakItem()
@@ -118,7 +127,10 @@ function createForm() {
         '第3輪：在第3～4個位置裡找出最高的，跟第3個位置交換。\n' +
         '最高的已經在那個位置上，就不用交換，順序照抄。\n\n' +
         '【怎麼寫】每一輪結束後，把A～D當下的順序寫下來，只寫字母、字母中間空一格，例如：C A B D\n\n' +
-        '【同分怎麼辦】跟打擂台一樣：挑戰者要「比擂主高」才能上台。同分時，排在前面的那個留下來。\n\n' +
+        '【同分怎麼辦】跟打擂台一樣：挑戰者要「比擂主高」才能上台。同分時，排在前面的那個留下來。' +
+        '所以如果4個嚴重度都一樣，3輪都不用交換，每一輪都寫 A B C D。\n\n' +
+        // 801試填時10/17人整段照抄範例答案，2026-10-19加上提醒
+        '⚠️ 下面範例的答案不是你的答案，一定要用你自己打的嚴重度來排。\n\n' +
         '【範例】嚴重度 A＝2、B＝5、C＝3、D＝5\n' +
         '第1輪：B A C D（B和D都是5分，B排在前面，所以選B，跟第1個位置的A交換）\n' +
         '第2輪：B D C A（在A C D裡最高的是D，跟第2個位置的A交換）\n' +
@@ -137,11 +149,6 @@ function createForm() {
           .build()
       );
   }
-
-  form
-    .addParagraphTextItem()
-    .setTitle('🌱 如果你是這個網站的設計師，最想加什麼功能？（選填）')
-    .setRequired(false);
 
   installAutoGradeTrigger(form);
 

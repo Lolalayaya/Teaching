@@ -111,7 +111,8 @@ function createForm() {
     form
       .addParagraphTextItem()
       .setTitle('任務' + n + '：卡住的地方（選填）')
-      .setHelpText('例如：找不到入口、點了沒反應、看不懂按鈕在做什麼……')
+      // 801試填時原本有舉例，結果很多人順利找到也照抄舉例，2026-10-19拿掉
+      .setHelpText('寫下你實際卡在哪一步；沒有卡住就留空。')
       .setRequired(false);
   });
 
