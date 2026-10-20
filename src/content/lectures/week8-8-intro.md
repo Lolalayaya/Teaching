@@ -1,7 +1,7 @@
 ---
 title: 第八週 任務檔案 008・列隊行動｜用Scratch寫出選擇排序法
 unit: 第八單元
-order: 17
+order: 18
 date: 2026-10-19
 semester: 115-1
 grades: ['8']
@@ -123,7 +123,7 @@ embeds:
 
 準備好之後，點下面連結前往繳交：
 
-**[前往「列隊行動任務繳交」→](https://scratchy-jy4i.onrender.com/submit/PLACEHOLDER_ASSIGNMENT_ID)**
+**[前往「列隊行動任務繳交」→](https://scratchy-jy4i.onrender.com/submit/cmvg8jlws0000av1shrpjolt8)**
 
 填上班級座號姓名、上傳`.sb3`檔案和截圖，送出後系統會立刻自動檢查，馬上顯示一個建議分數給你參考——**正式成績要等老師確認公布才算數**，建議分數只是讓你知道大概做得如何。
 
