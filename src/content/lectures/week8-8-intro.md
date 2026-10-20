@@ -12,7 +12,7 @@ summary: 把上週用分數卡做的選擇排序寫成Scratch程式：先學會�
 embeds:
   - type: scratch
     title: 列隊行動起始專案
-    url: https://scratch.mit.edu/projects/PLACEHOLDER_PROJECT_ID
+    url: https://scratch.mit.edu/projects/1393460868
 ---
 
 ## 學習目標
