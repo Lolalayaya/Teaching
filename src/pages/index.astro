@@ -15,15 +15,18 @@ const latestShowcase = showcaseItems.slice(0, 3);
 const currentItems = lectures
   .filter((lecture) => lecture.data.current)
   .map((lecture) => {
-    // `classes`(新一週限制存取) 或 `currentFor`(舊一週只釘選給延後班級)
-    // 只要有其中一個設定,代表這張卡片不是釘給全年級看的——老師模式會同時
-    // 看到好幾週的卡片(見 classSelection.js 的「沒選班級=老師模式,不過濾」),
+    // `classes`(限制存取範圍)和`currentFor`(在能存取的班級裡,只釘選給誰)
+    // 可能同時設定(例如一週同時有「大部分班級繼續釘選」跟「少數班級已經
+    // 先跳下一週」的情況)。這張卡片既然出現在置頂區,`currentFor`(有設定
+    // 的話)才是「誰真的把這張卡片當作置頂」的名單,要優先顯示;`classes`
+    // 只是存取範圍,沒設`currentFor`時才退回顯示它。老師模式會同時看到好
+    // 幾週的卡片(見 classSelection.js 的「沒選班級=老師模式,不過濾」),
     // 用這個標籤讓老師自己看首頁時知道「這張是只給哪些班看的」,而不是網站壞了。
     const restrictedTo =
-      lecture.data.classes && lecture.data.classes.length > 0
-        ? lecture.data.classes
-        : lecture.data.currentFor && lecture.data.currentFor.length > 0
-          ? lecture.data.currentFor
+      lecture.data.currentFor && lecture.data.currentFor.length > 0
+        ? lecture.data.currentFor
+        : lecture.data.classes && lecture.data.classes.length > 0
+          ? lecture.data.classes
           : null;
     return {
       href: `${base}lectures/${lecture.id}/`,
