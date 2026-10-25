@@ -88,9 +88,11 @@ const hasAudienceGate = !isUnpublished && audienceClasses.length > 0;
   import { initPublishGate } from '../../scripts/publishGate.js';
   import { initAudienceGate } from '../../scripts/audienceGate.js';
   import { initSwapDemos } from '../../scripts/swapDemo.js';
+  import { initSearchDemos } from '../../scripts/searchDemo.js';
   initPublishGate();
   initAudienceGate();
   initSwapDemos();
+  initSearchDemos();
 
   document.querySelectorAll('[data-unlock-wrapper]').forEach((wrapper) => {
     const el = wrapper as HTMLElement;
