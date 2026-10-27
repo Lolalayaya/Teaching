@@ -19,3 +19,16 @@ export function initAudienceGate() {
     if (content) content.hidden = false;
   });
 }
+
+// 講義內文用:每班各自一份的內容(例如每班不同的練習檔連結)標上
+// `data-only-class="701"` 並預設 hidden,只有登入班級相符的學生看得到,老師模式全部顯示。
+// 跟上面的 classes 一樣只是擋住大部分學生,連結本身還是在頁面原始碼裡。
+export function initClassOnlyBlocks() {
+  const isTeacher = readUnlock()?.mode === 'teacher';
+  const selection = readSelection();
+  const code = selection ? classCode(selection) : null;
+
+  document.querySelectorAll('[data-only-class]').forEach((el) => {
+    if (isTeacher || el.dataset.onlyClass === code) el.hidden = false;
+  });
+}

@@ -1187,3 +1187,9 @@ button.search-card:disabled {
     transform: none;
   }
 }
+
+/* 講義內每班各自的內容（見 audienceGate.js 的 initClassOnlyBlocks）：
+   表格列之類有自己 display 的元素，hidden 屬性要明確蓋過 */
+[data-only-class][hidden] {
+  display: none !important;
+}

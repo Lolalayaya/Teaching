@@ -33,6 +33,11 @@
  * 707、708 因10/23颱風假，延到下一次上課（預計10/30）才上第六週。他們填完以後，把 CLASSES 改成 ['707', '708'] 再執行一次：
  * 只會多建這兩班的練習檔，答案總表會補上這兩列（其他班的列不會動），全年級那列重算。
  * 707、708 填完後，記得把第六週問卷關閉「接受回應」。
+ *
+ * 上課示範用：選 createDemoSheet 執行，會用目前全部回覆（去重複、去識別化、全年級合在一起）
+ * 建一份「上課示範」試算表，有兩個分頁——「示範（空白）」跟學生的練習檔長得一樣，老師可以
+ * 現場示範；「完成版」18欄的公式都填好了，還有一張圓餅圖，給學生看做完長什麼樣子。
+ * 全年級的數字跟各班不一樣，學生看了也不能直接抄答案。
  */
 
 // 第六週回覆試算表：ID是網址 /d/ 和 /edit 中間那一段，GID是網址最後 gid= 後面的數字（回覆所在的分頁）
@@ -84,6 +89,88 @@ function createPracticeSheets() {
   var key = updateAnswerKey(titles, byClass, built, folder);
   Logger.log('答案總表（老師用，不要分享）：' + key.getUrl());
   Logger.log('答案總表ID（貼到 ANSWER_KEY_SPREADSHEET_ID）：' + key.getId());
+}
+
+// 完成版的圓餅圖示範哪一題（0起算）：4＝個資保護・第二組Q2「謊報年齡註冊」，全年級約一半回答「有」
+var DEMO_CHART_QUESTION = 4;
+
+/** 全年級上課示範檔：「示範（空白）」＋「完成版」兩個分頁 */
+function createDemoSheet() {
+  var values = readSourceValues();
+  var titles = values[0].slice(FIRST_Q_COL, FIRST_Q_COL + 18);
+  var byClass = dedupeByClass(values.slice(1));
+  var all = [];
+  Object.keys(byClass).forEach(function (cls) {
+    all = all.concat(byClass[cls]);
+  });
+
+  var ss = buildClassSheet('全年級', titles, shuffle(all));
+  ss.rename('W9-7 上課示範（全年級' + all.length + '人）');
+  var blank = ss.getSheets()[0].setName('示範（空白）');
+  var done = blank.copyTo(ss).setName('完成版');
+  fillDemoFormulas(done, all.length);
+
+  var file = DriveApp.getFileById(ss.getId());
+  file.moveTo(getOrCreateFolder(FOLDER_NAME));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  Logger.log('上課示範（' + all.length + '人）：' + ss.getUrl());
+}
+
+/** 完成版：分析區填上公式（跟講義教的寫法一樣），再加一張圓餅圖 */
+function fillDemoFormulas(sheet, n) {
+  var top = n + 3; // 分析區第一列「選項」，跟 buildClassSheet 一致
+  var guessRow = top + 1;
+  var totalRow = top + 2;
+  var firstRow = top + 3;
+  var secondRow = top + 4;
+  var ratioRow = top + 5;
+  var avgRow = top + 6;
+
+  sheet.getRange(guessRow, 2, 1, 18).setValue('（自己猜）').setFontColor('#9ca3af');
+  for (var i = 0; i < 18; i++) {
+    var col = 2 + i;
+    var letter = columnLetter(col);
+    var range = letter + '2:' + letter + (n + 1);
+    sheet.getRange(totalRow, col).setFormula('=COUNTA(' + range + ')');
+    if (i % 3 === 2) {
+      sheet.getRange(avgRow, col).setFormula('=AVERAGE(' + range + ')').setNumberFormat('0.00');
+    } else {
+      var options = GROUPS[Math.floor(i / 3)].options[i % 3];
+      sheet.getRange(firstRow, col).setFormula('=COUNTIF(' + range + ', "' + options[0] + '")');
+      sheet.getRange(secondRow, col).setFormula('=COUNTIF(' + range + ', "' + options[1] + '")');
+      sheet.getRange(ratioRow, col).setFormula('=' + letter + firstRow + '/' + letter + totalRow).setNumberFormat('0.0%');
+    }
+  }
+
+  // 講義第六節的小表格：左邊選項文字、右邊 = 人數那格，再拿這4格畫圓餅圖
+  var q = DEMO_CHART_QUESTION;
+  var qLetter = columnLetter(2 + q);
+  var qOptions = GROUPS[Math.floor(q / 3)].options[q % 3];
+  var tableRow = avgRow + 3;
+  sheet.getRange(tableRow, 1, 2, 2).setValues([
+    [qOptions[0], '=' + qLetter + firstRow],
+    [qOptions[1], '=' + qLetter + secondRow],
+  ]);
+  var chart = sheet
+    .newChart()
+    .setChartType(Charts.ChartType.PIE)
+    .addRange(sheet.getRange(tableRow, 1, 2, 2))
+    .setOption('title', String(sheet.getRange(1, 2 + q).getValue()).split('｜')[1])
+    .setOption('pieSliceText', 'percentage')
+    .setPosition(tableRow, 3, 0, 0)
+    .build();
+  sheet.insertChart(chart);
+}
+
+/** 欄號轉英文字母，例如 2→B、19→S */
+function columnLetter(col) {
+  var s = '';
+  while (col > 0) {
+    var m = (col - 1) % 26;
+    s = String.fromCharCode(65 + m) + s;
+    col = Math.floor((col - 1) / 26);
+  }
+  return s;
 }
 
 /** 讀第六週回覆分頁的全部內容（第1列是題目） */

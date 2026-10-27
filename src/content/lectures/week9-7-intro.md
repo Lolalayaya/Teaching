@@ -5,8 +5,9 @@ order: 19
 date: 2026-10-26
 semester: 115-1
 grades: ['7']
-classes: ['701', '702', '703', '704', '705', '706', '709', '710']
-published: false
+classes: ['703', '705']
+published: true
+current: true
 tags: ["資料處理應用專題", "Google試算表", "COUNTIF", "AVERAGE", "圖表"]
 summary: 用Google試算表分析第六週班級問卷中自己組負責的3題，學會COUNTA、COUNTIF、百分比、AVERAGE與圖表，算出「我們班的答案」並寫進資料筆記。
 embeds:
@@ -33,20 +34,25 @@ embeds:
 
 ## 二、打開我們班的資料
 
-點下表中**自己班**的連結，會出現「要建立副本嗎？」，按「**建立副本**」。這份副本存在你自己的雲端硬碟，只有你能編輯，改壞了也不會影響別人。
+點下面的「**建立副本**」，會出現「要建立副本嗎？」，再按一次「**建立副本**」。這份副本存在你自己的雲端硬碟，只有你能編輯，改壞了也不會影響別人。
 
-| 班級 | 練習檔 |
-| --- | --- |
-| 701 | <a href="https://docs.google.com/spreadsheets/d/1AjreZOdC5xAOxN-8st6lyAGrp_LSWzrew9n_mukTeWk/copy" target="_blank" rel="noopener">建立副本</a> |
-| 702 | <a href="https://docs.google.com/spreadsheets/d/1yk43dXy5iampNNsrc5RlEDLdtNji4RCzzLENSkjy2Tc/copy" target="_blank" rel="noopener">建立副本</a> |
-| 703 | <a href="https://docs.google.com/spreadsheets/d/1TTiW7Wo60_eHdyhzCLA7Kc1mU5hbHRQYbJbflkyJQjA/copy" target="_blank" rel="noopener">建立副本</a> |
-| 704 | <a href="https://docs.google.com/spreadsheets/d/1CmhEG-B2gGOi57FbKARI52CHqsfbrZhkMsacH2J9EzE/copy" target="_blank" rel="noopener">建立副本</a> |
-| 705 | <a href="https://docs.google.com/spreadsheets/d/1xaTM8kDE1iA8xjzDj3FoQnaRuWB8zrn3kDZtjlb9-3Q/copy" target="_blank" rel="noopener">建立副本</a> |
-| 706 | <a href="https://docs.google.com/spreadsheets/d/1YsBe14sssTbZ3Q-wuruh6Be_Vt0gFJxjecdMYp_feVI/copy" target="_blank" rel="noopener">建立副本</a> |
-| 707 | 第六週問卷填完後提供 |
-| 708 | 第六週問卷填完後提供 |
-| 709 | <a href="https://docs.google.com/spreadsheets/d/1M9PtYyzvbDbfDqgm8524IG-9uvhTcp0nsG6dM_4kDSE/copy" target="_blank" rel="noopener">建立副本</a> |
-| 710 | <a href="https://docs.google.com/spreadsheets/d/1FTJnYs8V97PmhYSdmGbLqS7duUOep789VR5dgF84bUg/copy" target="_blank" rel="noopener">建立副本</a> |
+表格只會顯示你登入的班級。如果看到的不是自己班，請先按頁面上方的「登出／換班級」，用自己班的密碼重新登入。
+
+<table>
+  <thead><tr><th>班級</th><th>練習檔</th></tr></thead>
+  <tbody>
+    <tr data-only-class="701" hidden><td>701</td><td><a href="https://docs.google.com/spreadsheets/d/1AjreZOdC5xAOxN-8st6lyAGrp_LSWzrew9n_mukTeWk/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="702" hidden><td>702</td><td><a href="https://docs.google.com/spreadsheets/d/1yk43dXy5iampNNsrc5RlEDLdtNji4RCzzLENSkjy2Tc/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="703" hidden><td>703</td><td><a href="https://docs.google.com/spreadsheets/d/1TTiW7Wo60_eHdyhzCLA7Kc1mU5hbHRQYbJbflkyJQjA/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="704" hidden><td>704</td><td><a href="https://docs.google.com/spreadsheets/d/1CmhEG-B2gGOi57FbKARI52CHqsfbrZhkMsacH2J9EzE/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="705" hidden><td>705</td><td><a href="https://docs.google.com/spreadsheets/d/1xaTM8kDE1iA8xjzDj3FoQnaRuWB8zrn3kDZtjlb9-3Q/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="706" hidden><td>706</td><td><a href="https://docs.google.com/spreadsheets/d/1YsBe14sssTbZ3Q-wuruh6Be_Vt0gFJxjecdMYp_feVI/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="707" hidden><td>707</td><td>第六週問卷填完後提供</td></tr>
+    <tr data-only-class="708" hidden><td>708</td><td>第六週問卷填完後提供</td></tr>
+    <tr data-only-class="709" hidden><td>709</td><td><a href="https://docs.google.com/spreadsheets/d/1M9PtYyzvbDbfDqgm8524IG-9uvhTcp0nsG6dM_4kDSE/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+    <tr data-only-class="710" hidden><td>710</td><td><a href="https://docs.google.com/spreadsheets/d/1FTJnYs8V97PmhYSdmGbLqS7duUOep789VR5dgF84bUg/copy" target="_blank" rel="noopener">建立副本</a></td></tr>
+  </tbody>
+</table>
 
 ### 認識試算表
 
