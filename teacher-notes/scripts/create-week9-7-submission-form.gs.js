@@ -5,7 +5,7 @@
  * 這份表單收他們算出來的數字，跟「答案總表（老師用）」比對後自動給分：
  *   1. 班級座號姓名（80分）
  *   2. 組別（不計分，用來找對應的標準答案）
- *   3. 5題數字各4分：Q1總人數、Q1第一個選項人數、Q1第一個選項比例、Q2第一個選項比例、Q3平均
+ *   3. 5題數字各4分：Q1總人數、Q1 Yes人數、Q1 Yes比例、Q2 Yes比例、Q3平均
  *      80 + 4×5 = 100分。Q2比例是專門檢查「拖曳複製後有沒有改選項文字」的那一題。
  *   4. 試算表連結（不計分，老師要看圖表時點開）
  *
@@ -104,12 +104,29 @@ var LINK_TITLE = '貼上你的試算表連結';
 // -1 代表「人數」欄（第2欄，全班共用）。kind 決定比對方式。
 var NUMBER_ITEMS = [
   { title: 'Q1「總人數」', keyOffset: -1, kind: 'count' },
-  { title: 'Q1「第一個選項的人數」', keyOffset: 0, kind: 'count' },
-  { title: 'Q1「第一個選項的比例」', keyOffset: 1, kind: 'percent' },
-  { title: 'Q2「第一個選項的比例」', keyOffset: 3, kind: 'percent' },
+  { title: 'Q1「Yes的人數」', keyOffset: 0, kind: 'count', oldTitle: 'Q1「第一個選項的人數」' },
+  { title: 'Q1「Yes的比例」', keyOffset: 1, kind: 'percent', oldTitle: 'Q1「第一個選項的比例」' },
+  { title: 'Q2「Yes的比例」', keyOffset: 3, kind: 'percent', oldTitle: 'Q2「第一個選項的比例」' },
   { title: 'Q3「平均分數」', keyOffset: 4, kind: 'average' },
 ];
 var NUMBER_PATTERN = '^\\s*[0-9０-９]+([.．][0-9０-９]+)?\\s*[%％]?\\s*$';
+
+/**
+ * 2026-10-27 題目從「第一個選項」改成「Yes」：已經建好的表單執行一次這個函式，
+ * 把題目標題改成新的（批改靠標題找題目，不改的話 backfillGrades() 會找不到題目）。
+ * 已經送出的回覆不受影響，可以重複執行。
+ */
+function renameItemsToYes() {
+  var form = FormApp.openByUrl(FORM_EDIT_URL);
+  form.getItems().forEach(function (item) {
+    NUMBER_ITEMS.forEach(function (spec) {
+      if (spec.oldTitle && item.getTitle() === spec.oldTitle) {
+        item.setTitle(spec.title);
+        Logger.log('已改名：' + spec.oldTitle + ' → ' + spec.title);
+      }
+    });
+  });
+}
 
 /** 讀答案總表，回傳 { '701': [整列數字], ... } */
 function readAnswerKey() {

@@ -63,7 +63,10 @@ var GROUPS = [
 ];
 
 // 分析區的列標題，順序就是學生由上往下要做的順序
-var ANALYSIS_ROWS = ['選項', '我猜的結果', '總人數', '第一個選項的人數', '第二個選項的人數', '第一個選項的比例', '平均分數'];
+// 是非題的兩個選項各題不同（有／會／聽過），分析區統一叫Yes、No，括號列出實際的字。
+// 2026-10-27 從「第一個選項／第二個選項」改過來，已建好的檔案用 relabelExistingSheets() 更新。
+var ANALYSIS_ROWS = ['選項', '我猜的結果', '總人數', 'Yes的人數（有／會／聽過）', 'No的人數（沒有／不會／沒聽過）', 'Yes的比例', '平均分數'];
+var OLD_ANALYSIS_LABELS = { '第一個選項的人數': ANALYSIS_ROWS[3], '第二個選項的人數': ANALYSIS_ROWS[4], '第一個選項的比例': ANALYSIS_ROWS[5] };
 var NOT_USED_COLOR = '#e5e7eb';
 
 function createPracticeSheets() {
@@ -173,6 +176,27 @@ function columnLetter(col) {
   return s;
 }
 
+/**
+ * 把資料夾裡已經建好的練習檔、上課示範檔，分析區的「第一個選項／第二個選項」改成Yes／No。
+ * 只改老師雲端硬碟裡的原始檔；學生已經建立的副本不會跟著變。可以重複執行。
+ */
+function relabelExistingSheets() {
+  var files = getOrCreateFolder(FOLDER_NAME).getFilesByType(MimeType.GOOGLE_SHEETS);
+  while (files.hasNext()) {
+    var file = files.next();
+    if (file.getName().indexOf('答案總表') !== -1) continue;
+    var ss = SpreadsheetApp.openById(file.getId());
+    var changed = 0;
+    Object.keys(OLD_ANALYSIS_LABELS).forEach(function (oldLabel) {
+      changed += ss.createTextFinder(oldLabel).matchEntireCell(true).replaceAllWith(OLD_ANALYSIS_LABELS[oldLabel]);
+    });
+    ss.getSheets().forEach(function (sheet) {
+      sheet.setColumnWidth(1, 230);
+    });
+    Logger.log(file.getName() + '：改了 ' + changed + ' 格');
+  }
+}
+
 /** 讀第六週回覆分頁的全部內容（第1列是題目） */
 function readSourceValues() {
   var sheet = SpreadsheetApp.openById(SOURCE_SPREADSHEET_ID).getSheets().filter(function (s) {
@@ -241,7 +265,7 @@ function buildClassSheet(cls, titles, rows) {
     }
   }
 
-  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(1, 230);
   sheet.setColumnWidths(2, 18, 170);
   sheet.setFrozenRows(1);
   sheet.setFrozenColumns(1);
@@ -307,7 +331,7 @@ function updateAnswerKey(titles, byClass, builtClasses, folder) {
   return ss;
 }
 
-/** 一列答案總表：班級、人數，接著每題——是非題「第一個選項人數、比例」，量表題「平均」 */
+/** 一列答案總表：班級、人數，接著每題——是非題「Yes人數、比例」，量表題「平均」 */
 function summarize(label, rows) {
   var n = rows.length;
   var line = [label, n];
