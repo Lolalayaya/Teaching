@@ -5,7 +5,7 @@ order: 19
 date: 2026-10-26
 semester: 115-1
 grades: ['7']
-classes: ['703', '705']
+classes: ['701', '702', '703', '704', '705', '706', '709', '710']
 published: false
 tags: ["資料處理應用專題", "Google試算表", "COUNTIF", "AVERAGE", "圖表"]
 summary: 用Google試算表分析第六週班級問卷中自己組負責的3題，學會COUNTA、COUNTIF、百分比、AVERAGE與圖表，算出「我們班的答案」並寫進資料筆記。

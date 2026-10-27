@@ -6,9 +6,8 @@ date: 2026-10-12
 semester: 115-1
 grades: ['7']
 classes: ['701', '702', '703', '704', '705', '706', '709', '710']
-currentFor: ['701', '702', '704', '706', '709', '710']
 published: true
-current: true
+current: false
 tags: ["資料處理應用專題", "Google文件", "Gemini Notebook", "AI協作", "資訊科技合理使用原則", "個資保護", "資訊安全"]
 summary: 閱讀與自己主題相關的新聞報導和調查報告，先自己整理重點，再用Gemini Notebook（舊名NotebookLM）核對與補充，並用Google文件共編、排版，整理成一份有標明出處的資料筆記。
 ---

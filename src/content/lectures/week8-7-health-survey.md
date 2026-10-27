@@ -7,7 +7,7 @@ semester: 115-1
 grades: ['7']
 classes: ['709']
 published: true
-current: true
+current: false
 tags: ["健康促進", "網路問卷", "學務處衛生組"]
 summary: 學務處衛生組「115學年度學校健康促進實施計畫」的健康議題網路問卷（前測），本堂課用電腦登入完成指定的4項議題。
 ---
