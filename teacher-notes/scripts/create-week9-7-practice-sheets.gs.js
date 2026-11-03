@@ -38,13 +38,14 @@
  * 建一份「上課示範」試算表，有兩個分頁——「示範（空白）」跟學生的練習檔長得一樣，老師可以
  * 現場示範；「完成版」18欄的公式都填好了，還有一張圓餅圖，給學生看做完長什麼樣子。
  * 全年級的數字跟各班不一樣，學生看了也不能直接抄答案。
+ * 之後W6又有新回覆，選 refreshDemoSheet 執行：重做同一份示範檔的兩個分頁，網址不變。
  */
 
 // 第六週回覆試算表：ID是網址 /d/ 和 /edit 中間那一段，GID是網址最後 gid= 後面的數字（回覆所在的分頁）
 var SOURCE_SPREADSHEET_ID = '1h2by2pBgbgekHphw7mXkEAH_69LBPFl2TvJtpO4vyKQ';
 var SOURCE_SHEET_GID = 339197082;
 var ANSWER_KEY_SPREADSHEET_ID = '1xMt9GGxerXecZHDTw-uMPyH63kqU7nZEsepGlw_aQsA'; // 第一次執行留空會自動建立，之後填入印出的ID
-var CLASSES = ['701', '702', '703', '704', '705', '706', '709', '710'];
+var CLASSES = ['701', '702', '703', '704', '705', '706','707','708', '709', '710']; // 2026-10-30 已執行，前8班在10/23建好
 var FOLDER_NAME = 'W9-7 試算表練習檔';
 
 // 回覆試算表的欄位順序（從0起算）：0時間戳記、1電子郵件、2班級座號姓名、3~20是18題
@@ -117,6 +118,47 @@ function createDemoSheet() {
   file.moveTo(getOrCreateFolder(FOLDER_NAME));
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   Logger.log('上課示範（' + all.length + '人）：' + ss.getUrl());
+}
+
+/** 已經建好的上課示範檔（createDemoSheet 印出的網址 /d/ 和 /edit 中間那一段） */
+var DEMO_SPREADSHEET_ID = '1KKxELV4JQ8zlDosqCi012OBokSPxP-Ew37eWxGGg4Ig';
+
+/**
+ * 重做上課示範檔、網址不變：用目前全部回覆重建「示範（空白）」和「完成版」兩個分頁，
+ * 換掉 DEMO_SPREADSHEET_ID 裡的舊分頁。W6問卷有新回覆（例如10/30 707、708補填）後執行。
+ */
+function refreshDemoSheet() {
+  var values = readSourceValues();
+  var titles = values[0].slice(FIRST_Q_COL, FIRST_Q_COL + 18);
+  var byClass = dedupeByClass(values.slice(1));
+  var all = [];
+  Object.keys(byClass).forEach(function (cls) {
+    all = all.concat(byClass[cls]);
+  });
+
+  var temp = buildClassSheet('全年級', titles, shuffle(all));
+  var ss = SpreadsheetApp.openById(DEMO_SPREADSHEET_ID);
+  var oldSheets = ss.getSheets();
+  oldSheets.forEach(function (s, i) {
+    s.setName('舊分頁' + i); // 先改名，新分頁才能用原本的名字
+  });
+
+  var blank = temp.getSheets()[0].copyTo(ss).setName('示範（空白）');
+  var done = blank.copyTo(ss).setName('完成版');
+  [blank, done].forEach(function (s) {
+    s.setFrozenRows(1);
+    s.setFrozenColumns(1);
+  });
+  fillDemoFormulas(done, all.length);
+
+  oldSheets.forEach(function (s) {
+    ss.deleteSheet(s);
+  });
+  ss.setActiveSheet(blank);
+  ss.moveActiveSheet(1);
+  ss.rename('W9-7 上課示範（全年級' + all.length + '人）');
+  DriveApp.getFileById(temp.getId()).setTrashed(true);
+  Logger.log('上課示範已更新（' + all.length + '人）：' + ss.getUrl());
 }
 
 /** 完成版：分析區填上公式（跟講義教的寫法一樣），再加一張圓餅圖 */
