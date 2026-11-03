@@ -13,7 +13,7 @@ summary: 把第九週算出的「我們班」數字，和全年級、全國調�
 embeds:
   - type: google-form
     title: 第十週繳交表單
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_W10_7_FORM_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLScwrJHBOLKPMmIIz1EDHuFPHrMQBaoHc22I3WMs_M3YWMANdQ/viewform?embedded=true
 ---
 
 ## 學習目標
