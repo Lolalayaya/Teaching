@@ -5,7 +5,8 @@ order: 19
 date: 2026-10-26
 semester: 115-1
 grades: ['7']
-classes: ['703', '705']
+classes: ['701', '702', '703', '704', '705', '706', '709', '710']
+currentFor: ['701', '702', '704', '706', '709', '710']
 published: true
 current: true
 tags: ["資料處理應用專題", "Google試算表", "COUNTIF", "AVERAGE", "圖表"]

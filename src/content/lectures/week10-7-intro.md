@@ -6,7 +6,8 @@ date: 2026-11-02
 semester: 115-1
 grades: ['7']
 classes: ['703', '705']
-published: false
+published: true
+current: true
 tags: ["資料處理應用專題", "Google試算表", "儲存格參照", "直條圖", "資料比較"]
 summary: 把第九週算出的「我們班」數字，和全年級、全國調查放進同一張比較表與直條圖，算出差距，並寫出一句有數字根據的「我們發現⋯」。
 embeds:

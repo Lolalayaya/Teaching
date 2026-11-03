@@ -5,9 +5,8 @@ order: 12
 date: 2026-10-05
 semester: 115-1
 grades: ['8']
-currentFor: ['807']
 published: true
-current: true
+current: false
 tags: ["迴圈", "條件式", "演算法", "走訪清單"]
 summary: 正式學Scratch的迴圈積木，把上週的打擂台法改成用「迴圈＋條件式」自動走訪整份排行榜清單，找出最大值。
 embeds:
