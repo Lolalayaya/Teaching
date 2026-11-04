@@ -168,9 +168,12 @@ function isCorrect(kind, answer, expected) {
  */
 function gradeResponse(form, response, key) {
   var items = form.getItems();
-  function findItem(title) {
+  // oldTitle：還沒執行 renameItemsToYes() 的表單，題目還是舊名稱，也要找得到
+  // （2026-11-04 曾因為只認新名稱，整份回覆批改失敗、連80分都沒給）
+  function findItem(title, oldTitle) {
     for (var i = 0; i < items.length; i++) {
-      if (items[i].getTitle() === title) return items[i];
+      var t = items[i].getTitle();
+      if (t === title || (oldTitle && t === oldTitle)) return items[i];
     }
     throw new Error('找不到題目：' + title + '（題目標題是否被改過？）');
   }
@@ -186,7 +189,7 @@ function gradeResponse(form, response, key) {
 
   var result = { id: id, missingKey: !row, correct: [] };
   NUMBER_ITEMS.forEach(function (spec) {
-    var item = findItem(spec.title);
+    var item = findItem(spec.title, spec.oldTitle);
     var itemResponse = response.getGradableResponseForItem(item);
     var ok = false;
     if (row && g >= 0) {
@@ -235,7 +238,14 @@ function backfillGrades() {
   var correctCounts = NUMBER_ITEMS.map(function () { return 0; });
 
   responses.forEach(function (response) {
-    var out = gradeResponse(form, response, key);
+    var out;
+    try {
+      out = gradeResponse(form, response, key);
+    } catch (err) {
+      // 一份出錯就跳過這份，不要讓整批都沒有分數
+      Logger.log('這份回覆無法批改（' + response.getTimestamp() + '）：' + err.message);
+      return;
+    }
     graded.push(out.graded);
     if (out.result.missingKey) {
       Logger.log(out.result.id + '：答案總表沒有這班，數字題先給0分');
