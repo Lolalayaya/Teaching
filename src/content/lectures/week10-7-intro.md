@@ -86,6 +86,8 @@ embeds:
 
 ## 三、建比較表：三題一次算完
 
+**先看做完長什麼樣子：** <a href="https://docs.google.com/spreadsheets/d/1mPprVNsBQAUZv3dsiPs308JyBsVdBOPuzfyIPzprfEs/edit?usp=sharing" target="_blank" rel="noopener">比較表範例試算表</a>。這份是從全年級隨機抽30人當「示範班」做的，打開後看下方的「**比較表**」分頁，裡面有做好的比較表和兩張柱狀圖。範例的數字跟你們班不一樣，不能直接抄，請照下面的步驟用自己班的資料做一份。
+
 比較表統一做在**新分頁**，不要跟上週的問卷資料擠在一起：
 
 1. 點試算表左下角的「**＋**」（新增工作表），下方會多一個分頁
