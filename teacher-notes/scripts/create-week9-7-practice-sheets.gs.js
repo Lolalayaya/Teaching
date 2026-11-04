@@ -39,6 +39,9 @@
  * 現場示範；「完成版」18欄的公式都填好了，還有一張圓餅圖，給學生看做完長什麼樣子。
  * 全年級的數字跟各班不一樣，學生看了也不能直接抄答案。
  * 之後W6又有新回覆，選 refreshDemoSheet 執行：重做同一份示範檔的兩個分頁，網址不變。
+ *
+ * 第十週範例：選 createW10ExampleSheet 執行，從全年級隨機抽30筆當「示範班」，
+ * 比較表和兩張柱狀圖都做好（見 week10-7-intro.md 第三、四節）。
  */
 
 // 第六週回覆試算表：ID是網址 /d/ 和 /edit 中間那一段，GID是網址最後 gid= 後面的數字（回覆所在的分頁）
@@ -159,6 +162,120 @@ function refreshDemoSheet() {
   ss.rename('W9-7 上課示範（全年級' + all.length + '人）');
   DriveApp.getFileById(temp.getId()).setTrashed(true);
   Logger.log('上課示範已更新（' + all.length + '人）：' + ss.getUrl());
+}
+
+// 第十週範例：從全年級隨機抽幾筆當「示範班」，用哪一組示範（1＝個資保護・第二組：Q1、Q2都有全國數字，Q3比全年級）
+var W10_EXAMPLE_SIZE = 30;
+var W10_EXAMPLE_GROUP = 1;
+// 跟 week10-7-intro.md 第二節的表一致：短題目、全年級、全國（null＝沒有全國數字）
+var W10_EXAMPLE_ROWS = [
+  { label: '姓名、手機不用保密', grade: 0.169, national: 0.2 },
+  { label: '謊報年齡註冊', grade: 0.503, national: 0.424 },
+  { label: '公開姓名手機的風險（平均）', grade: 4.59, national: null },
+];
+
+/**
+ * 第十週範例檔：從去重複後的全年級回覆隨機抽 W10_EXAMPLE_SIZE 筆，建一份「示範班」練習檔，
+ * 把 W10_EXAMPLE_GROUP 那一組的分析區、比較表、兩張柱狀圖都做好，給學生看做完長什麼樣子。
+ * 抽出來的數字跟每一班都不一樣，學生不能直接抄。每次執行都會建一份新檔、重新抽樣。
+ */
+function createW10ExampleSheet() {
+  var values = readSourceValues();
+  var titles = values[0].slice(FIRST_Q_COL, FIRST_Q_COL + 18);
+  var byClass = dedupeByClass(values.slice(1));
+  var all = [];
+  Object.keys(byClass).forEach(function (cls) {
+    all = all.concat(byClass[cls]);
+  });
+  var sample = shuffle(all).slice(0, W10_EXAMPLE_SIZE);
+  var n = sample.length;
+
+  var ss = buildClassSheet('示範班', titles, sample);
+  ss.rename('W10-7 比較表範例（隨機抽' + n + '人）');
+  var sheet = ss.getSheets()[0]; // 「問卷資料」分頁，跟學生的練習檔一樣
+
+  // 分析區：只填示範的那一組3欄，列的位置跟 buildClassSheet 一致
+  var top = n + 3;
+  var totalRow = top + 2;
+  var firstRow = top + 3;
+  var secondRow = top + 4;
+  var ratioRow = top + 5;
+  var avgRow = top + 6;
+  var firstCol = 2 + W10_EXAMPLE_GROUP * 3;
+  var cells = [];
+  for (var q = 0; q < 3; q++) {
+    var col = firstCol + q;
+    var letter = columnLetter(col);
+    var range = letter + '2:' + letter + (n + 1);
+    sheet.getRange(totalRow, col).setFormula('=COUNTA(' + range + ')');
+    if (q === 2) {
+      sheet.getRange(avgRow, col).setFormula('=AVERAGE(' + range + ')').setNumberFormat('0.00');
+      cells.push("'問卷資料'!" + letter + avgRow);
+    } else {
+      var options = GROUPS[W10_EXAMPLE_GROUP].options[q];
+      sheet.getRange(firstRow, col).setFormula('=COUNTIF(' + range + ', "' + options[0] + '")');
+      sheet.getRange(secondRow, col).setFormula('=COUNTIF(' + range + ', "' + options[1] + '")');
+      sheet.getRange(ratioRow, col).setFormula('=' + letter + firstRow + '/' + letter + totalRow).setNumberFormat('0.0%');
+      cells.push("'問卷資料'!" + letter + ratioRow);
+    }
+  }
+
+  // 比較表：跟講義第三節一樣，做在新分頁「比較表」的A1（題目、我們班、全年級、全國、差距）
+  var cmp = ss.insertSheet('比較表');
+  cmp.setColumnWidth(1, 220);
+  cmp.setColumnWidths(2, 4, 90);
+  var t = 1;
+  cmp.getRange(t, 1, 1, 5).setValues([['題目', '我們班', '全年級', '全國', '差距']]).setFontWeight('bold').setBackground('#f3f4f6');
+  W10_EXAMPLE_ROWS.forEach(function (spec, q) {
+    var r = t + 1 + q;
+    var compareCol = spec.national === null ? 'C' : 'D';
+    cmp.getRange(r, 1, 1, 5).setValues([[
+      spec.label,
+      '=' + cells[q],
+      spec.grade,
+      spec.national === null ? '' : spec.national,
+      '=B' + r + '-' + compareCol + r,
+    ]]);
+    cmp.getRange(r, 2, 1, 4).setNumberFormat(q === 2 ? '0.00' : '0.0%');
+  });
+  cmp.getRange(t + 3, 4).setBackground(NOT_USED_COLOR);
+  cmp.getRange(t + 4, 1).setValue('差距：Q1、Q2是「我們班−全國」，單位是百分點；Q3是「我們班−全年級」，單位是分。').setFontColor('#6b7280');
+
+  // 資料標籤（series.dataLabel）用程式設定不一定會出現，建完要打開檔案手動勾「自訂→系列→資料標籤」
+  // 圖表一：Q1、Q2比例（題目到全國，不含差距欄和Q3），縱軸0~1＝0%~100%
+  var chart1 = cmp
+    .newChart()
+    .setChartType(Charts.ChartType.COLUMN)
+    .addRange(cmp.getRange(t, 1, 3, 4))
+    .setNumHeaders(1)
+    .setOption('title', '我們班 vs 全年級 vs 全國')
+    .setOption('legend', { position: 'bottom' })
+    .setOption('vAxis', { viewWindow: { min: 0, max: 1 }, format: 'percent' })
+    .setOption('series', { 0: { dataLabel: 'value' }, 1: { dataLabel: 'value' }, 2: { dataLabel: 'value' } })
+    .setPosition(t + 6, 1, 0, 0)
+    .build();
+  cmp.insertChart(chart1);
+
+  // 圖表二：Q3平均（標題列＋Q3那一列，兩塊不相連的範圍用列合併）
+  var chart2 = cmp
+    .newChart()
+    .setChartType(Charts.ChartType.COLUMN)
+    .addRange(cmp.getRange(t, 1, 1, 3))
+    .addRange(cmp.getRange(t + 3, 1, 1, 3))
+    .setMergeStrategy(Charts.ChartMergeStrategy.MERGE_ROWS)
+    .setNumHeaders(1)
+    .setOption('title', 'Q3平均分數：我們班 vs 全年級')
+    .setOption('legend', { position: 'bottom' })
+    .setOption('vAxis', { viewWindow: { min: 1, max: 5 } })
+    .setOption('series', { 0: { dataLabel: 'value' }, 1: { dataLabel: 'value' } })
+    .setPosition(t + 6, 4, 0, 0)
+    .build();
+  cmp.insertChart(chart2);
+
+  var file = DriveApp.getFileById(ss.getId());
+  file.moveTo(getOrCreateFolder(FOLDER_NAME));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  Logger.log('第十週範例（' + n + '人）：' + ss.getUrl());
 }
 
 /** 完成版：分析區填上公式（跟講義教的寫法一樣），再加一張圓餅圖 */
