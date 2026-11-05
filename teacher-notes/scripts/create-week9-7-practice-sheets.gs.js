@@ -356,6 +356,28 @@ function relabelExistingSheets() {
   }
 }
 
+/**
+ * 把資料夾裡已經建好的練習檔、上課示範檔，分析區「平均分數」那一列設成只顯示到小數點第二位。
+ * 只改老師雲端硬碟裡的原始檔；學生已經建立的副本不會跟著變（講義有教他們按「減少小數位數」）。
+ * 可以重複執行。
+ */
+function formatAverageCells() {
+  var files = getOrCreateFolder(FOLDER_NAME).getFilesByType(MimeType.GOOGLE_SHEETS);
+  while (files.hasNext()) {
+    var file = files.next();
+    if (file.getName().indexOf('答案總表') !== -1) continue;
+    var ss = SpreadsheetApp.openById(file.getId());
+    var count = 0;
+    ss.getSheets().forEach(function (sheet) {
+      var cell = sheet.getRange('A:A').createTextFinder('平均分數').matchEntireCell(true).findNext();
+      if (!cell) return;
+      sheet.getRange(cell.getRow(), 2, 1, 18).setNumberFormat('0.00');
+      count++;
+    });
+    Logger.log(file.getName() + '：改了 ' + count + ' 個分頁');
+  }
+}
+
 /** 讀第六週回覆分頁的全部內容（第1列是題目） */
 function readSourceValues() {
   var sheet = SpreadsheetApp.openById(SOURCE_SPREADSHEET_ID).getSheets().filter(function (s) {
@@ -419,6 +441,7 @@ function buildClassSheet(cls, titles, rows) {
     sheet.getRange(top, col).setValue(isScale ? '1～5分' : g.options[i % 3].join('／'));
     if (isScale) {
       sheet.getRange(top + 3, col, 3, 1).setBackground(NOT_USED_COLOR); // 人數、比例：量表題不用
+      sheet.getRange(top + 6, col).setNumberFormat('0.00'); // 平均只顯示到小數點第二位
     } else {
       sheet.getRange(top + 6, col).setBackground(NOT_USED_COLOR); // 平均：是非題不用
     }
