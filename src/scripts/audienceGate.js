@@ -32,3 +32,15 @@ export function initClassOnlyBlocks() {
     if (isTeacher || el.dataset.onlyClass === code) el.hidden = false;
   });
 }
+
+// 講義內文用:`<span data-class-code>7XX</span>` 換成登入班級的代碼(例如 703),
+// 學生照著找檔名時不用自己代換。老師模式或還沒選班級時保留原本的文字。
+export function initClassCodeText() {
+  if (readUnlock()?.mode === 'teacher') return;
+  const selection = readSelection();
+  if (!selection) return;
+  const code = classCode(selection);
+  document.querySelectorAll('[data-class-code]').forEach((el) => {
+    el.textContent = code;
+  });
+}

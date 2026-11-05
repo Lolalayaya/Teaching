@@ -86,12 +86,13 @@ const hasAudienceGate = !isUnpublished && audienceClasses.length > 0;
 
 <script>
   import { initPublishGate } from '../../scripts/publishGate.js';
-  import { initAudienceGate, initClassOnlyBlocks } from '../../scripts/audienceGate.js';
+  import { initAudienceGate, initClassOnlyBlocks, initClassCodeText } from '../../scripts/audienceGate.js';
   import { initSwapDemos } from '../../scripts/swapDemo.js';
   import { initSearchDemos } from '../../scripts/searchDemo.js';
   initPublishGate();
   initAudienceGate();
   initClassOnlyBlocks();
+  initClassCodeText();
   initSwapDemos();
   initSearchDemos();
 
