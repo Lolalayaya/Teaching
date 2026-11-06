@@ -6,13 +6,15 @@ date: 2026-11-02
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '804', '805', '806', '808']
-published: false
+currentFor: ['806']
+published: true
+current: true
 tags: ["演算法", "搜尋", "循序搜尋", "二分搜尋", "重複直到"]
 summary: 把上週翻牌找分數的兩種方法寫成Scratch程式：學會「重複直到」，讓迴圈找到就停；再用左、右、中間三個變數寫出二分搜尋，比一比兩種方法各要比較幾次。
 embeds:
   - type: scratch
     title: 定位行動起始專案
-    url: https://scratch.mit.edu/projects/PLACEHOLDER_PROJECT_ID
+    url: https://scratch.mit.edu/projects/1416588172
 ---
 
 ## 學習目標
@@ -155,7 +157,7 @@ embeds:
 
 準備好之後，點下面連結前往繳交：
 
-**[前往「定位行動任務繳交」→](https://scratchy-jy4i.onrender.com/submit/PLACEHOLDER_ASSIGNMENT_ID)**
+**[前往「定位行動任務繳交」→](https://scratchy-jy4i.onrender.com/submit/cmw4l5dcs0000dd1szgcira83)**
 
 填上班級座號姓名、上傳`.sb3`檔案和截圖，送出後系統會立刻自動檢查，馬上顯示一個建議分數給你參考：**正式成績要等老師確認公布才算數**，建議分數只是讓你知道大概做得如何。
 
