@@ -5,8 +5,8 @@ order: 18
 date: 2026-10-19
 semester: 115-1
 grades: ['8']
-classes: ['801', '802', '803', '804', '805', '806', '808']
-currentFor: ['803']
+classes: ['801', '802', '803', '804', '805', '806', '807', '808']
+currentFor: ['807']
 published: true
 current: true
 tags: ["演算法", "排序", "選擇排序法", "巢狀迴圈", "交換"]
