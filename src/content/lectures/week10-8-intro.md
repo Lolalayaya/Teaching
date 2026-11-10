@@ -6,7 +6,6 @@ date: 2026-11-02
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '804', '805', '806', '808']
-currentFor: ['806']
 published: true
 current: true
 tags: ["演算法", "搜尋", "循序搜尋", "二分搜尋", "重複直到"]
