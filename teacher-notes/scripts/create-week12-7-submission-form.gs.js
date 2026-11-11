@@ -1,7 +1,7 @@
 /**
- * 第十一週・宣導行動 繳交表單（七年級） —— Google Apps Script，自動建立Google表單並自動批改
+ * 第十二週・宣導行動 繳交表單（七年級） —— Google Apps Script，自動建立Google表單並自動批改
  *
- * 學生把第十週的「我們發現」做成個人Canva宣傳單（見 week11-7-intro.md）。
+ * 學生把第十週的「我們發現」做成個人Canva宣傳單（見 week12-7-intro.md）。
  * 宣傳單本身是段考2的成績，由老師照講義第五節的檢查表看Canva連結評分；
  * 這份表單只收連結和兩個文字欄位，給分如下：
  *   1. 班級座號姓名（60分）
@@ -16,7 +16,7 @@
  * 1. 開啟 https://script.google.com/ → 新增專案，把這個檔案的內容整個貼進去
  * 2. 選 createForm 執行（第一次會要求授權，允許即可）
  * 3. 執行紀錄會印出編輯用網址（貼到下面 FORM_EDIT_URL）和填答/嵌入用網址
- *    （貼到 week11-7-intro.md frontmatter 的 embeds.url，已經加好 ?embedded=true）
+ *    （貼到 week12-7-intro.md frontmatter 的 embeds.url，已經加好 ?embedded=true）
  *
  * createForm() 已經自動設定：收集電子郵件、限制每人只能回覆1次、測驗模式。
  * 以下幾項要自己到表單右上角⚙️（設定）手動確認一次：
@@ -27,7 +27,7 @@
  * 提醒句只拿5分的人，以及每個人的Canva連結，方便一份一份點開評分。
  */
 function createForm() {
-  var form = FormApp.create('W11-7-宣導行動・繳交表單');
+  var form = FormApp.create('W12-7-宣導行動・繳交表單');
   form.setIsQuiz(true);
   form.setDescription('貼上你的Canva宣傳單連結，再填宣傳單上的大數字和提醒。');
   form.setCollectEmail(true);
@@ -83,11 +83,11 @@ function createForm() {
 
   Logger.log('編輯用網址（自己改題目用，也貼到 FORM_EDIT_URL）：' + form.getEditUrl());
   // 一定要加 ?embedded=true，不然嵌入iframe會被Google擋掉（顯示「docs.google.com拒絕連線」）
-  Logger.log('填答/嵌入用網址（貼到 week11-7-intro.md 的 embeds.url）：' + form.getPublishedUrl() + '?embedded=true');
+  Logger.log('填答/嵌入用網址（貼到 week12-7-intro.md 的 embeds.url）：' + form.getPublishedUrl() + '?embedded=true');
 }
 
 /** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades() 才能重新打開這份表單 */
-var FORM_EDIT_URL = 'PLACEHOLDER_W11_FORM_EDIT_URL';
+var FORM_EDIT_URL = 'PLACEHOLDER_W12_FORM_EDIT_URL';
 
 var LINK_TITLE = 'Canva宣傳單的檢視連結';
 var NUMBER_TITLE = '宣傳單上的大數字';
