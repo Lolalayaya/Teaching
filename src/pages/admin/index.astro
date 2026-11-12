@@ -44,6 +44,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <button type="button" data-tab-btn data-tab="escape-room" class="active">密室逃脫</button>
       <button type="button" data-tab-btn data-tab="punctuation-screenshot">特務闖關（標點符號與截圖）</button>
       <button type="button" data-tab-btn data-tab="tech-time-machine">科技生活時光機</button>
+      <button type="button" data-tab-btn data-tab="reverse-mission">反轉行動（8年級猜數字）</button>
       <button type="button" data-tab-btn data-tab="lectures">講義</button>
       <button type="button" data-tab-btn data-tab="showcase">作品集</button>
     </nav>
@@ -51,6 +52,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <section data-tab-panel data-tab="escape-room"></section>
     <section data-tab-panel data-tab="punctuation-screenshot" hidden></section>
     <section data-tab-panel data-tab="tech-time-machine" hidden></section>
+    <section data-tab-panel data-tab="reverse-mission" hidden></section>
     <section data-tab-panel data-tab="lectures" hidden></section>
     <section data-tab-panel data-tab="showcase" hidden></section>
   </section>
@@ -61,6 +63,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   import { initEscapeRoomTab } from '../../scripts/admin/escapeRoomTab.js';
   import { initPunctuationScreenshotTab } from '../../scripts/admin/punctuationScreenshotTab.js';
   import { initTechTimeMachineTab } from '../../scripts/admin/techTimeMachineTab.js';
+  import { initReverseMissionTab } from '../../scripts/admin/reverseMissionTab.js';
   import { initLecturesTab } from '../../scripts/admin/lecturesTab.js';
   import { initShowcaseTab } from '../../scripts/admin/showcaseTab.js';
   import { TEACHER_PASSWORD } from '../../scripts/classPasswords.js';
@@ -87,6 +90,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       initEscapeRoomTab();
       initPunctuationScreenshotTab();
       initTechTimeMachineTab();
+      initReverseMissionTab();
       initLecturesTab();
       initShowcaseTab();
     },
@@ -282,6 +286,18 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 0.75rem;
+  }
+
+  .answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .answers-list ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    line-height: 1.7;
   }
 
   [data-tab-panel] details[open] {

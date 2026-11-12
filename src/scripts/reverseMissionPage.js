@@ -6,7 +6,10 @@ import {
   loadOrResetProgress,
   markCompleted,
   checkChoiceMulti,
-  countClassifyMistakes,
+  findClassifyMistakes,
+  findMultiMistakes,
+  quizHint,
+  traceHint,
   checkOrder,
   findWrongQuestions,
   findWrongTraceRows,
@@ -71,45 +74,69 @@ function readQuizAnswers(section, level) {
   });
 }
 
-function wrongListMessage(numbers, unit) {
-  return `第 ${numbers.join('、')} ${unit}還不對，再想想看！`;
+/** First mistake explained, the rest only counted — the wrong spots are outlined in red either way. */
+function firstPlusRest(firstMessage, total) {
+  return total > 1 ? `${firstMessage}\n（還有 ${total - 1} 個也要再檢查，已用紅框標出）` : firstMessage;
 }
 
-/** Returns `true` when solved, or a message string explaining what's still wrong. */
+/**
+ * Returns `true` when solved, otherwise `{ message, marks }`: `message`
+ * addresses the specific mistake, `marks` are the elements to outline.
+ */
 function validateLevel(level, section) {
   switch (level.type) {
     case 'classify': {
-      const chosen = level.items.map((_, i) => {
-        const btn = section.querySelector(`[data-classify-row="${i}"] .bin-btn.selected`);
+      const rows = level.items.map((_, i) => section.querySelector(`[data-classify-row="${i}"]`));
+      const chosen = rows.map((row) => {
+        const btn = row.querySelector('.bin-btn.selected');
         return btn ? Number(btn.dataset.bin) : undefined;
       });
-      if (chosen.some((c) => c === undefined)) return '每一件事都要選一個分類喔！';
-      const n = countClassifyMistakes(level.items, chosen);
-      return n === 0 ? true : level.wrongMessage.replace('{n}', n);
+      const unanswered = rows.filter((_, i) => chosen[i] === undefined);
+      if (unanswered.length) return { message: '每一件事都要選一個分類喔！', marks: unanswered };
+      const wrong = findClassifyMistakes(level.items, chosen);
+      if (!wrong.length) return true;
+      return { message: firstPlusRest(level.items[wrong[0]].hint, wrong.length), marks: wrong.map((i) => rows[i]) };
     }
     case 'choice-multi': {
       const chosen = [...section.querySelectorAll('[data-choice-option].selected')].map((b) => b.dataset.value);
-      return checkChoiceMulti(chosen, level.answers) ? true : level.wrongMessage;
+      if (checkChoiceMulti(chosen, level.answers)) return true;
+      const wrong = findMultiMistakes(level.options, level.answers, chosen);
+      return {
+        message: firstPlusRest(level.optionHints[wrong[0]], wrong.length),
+        marks: wrong.map((opt) => section.querySelector(`[data-choice-option][data-value="${opt}"]`)),
+      };
     }
     case 'order': {
       const sequence = [...section.querySelectorAll('[data-order-slots] [data-order-item]')].map((b) => b.dataset.orderItem);
       const message = checkOrder(level.items.map((it) => it.id), level.rules, sequence);
-      return message ?? true;
+      return message ? { message, marks: [] } : true;
     }
     case 'trace': {
-      const answers = level.rows.map((_, i) => {
-        const row = section.querySelector(`[data-trace-row="${i}"]`);
-        return { hint: row.querySelector('[data-trace-hint]').value, count: row.querySelector('[data-trace-count]').value };
-      });
+      const rows = level.rows.map((_, i) => section.querySelector(`[data-trace-row="${i}"]`));
+      const answers = rows.map((row) => ({
+        hint: row.querySelector('[data-trace-hint]').value,
+        count: row.querySelector('[data-trace-count]').value,
+      }));
       const wrong = findWrongTraceRows(level.rows, answers);
-      return wrong.length === 0 ? true : wrongListMessage(wrong, '列');
+      if (!wrong.length) return true;
+      const first = wrong[0] - 1;
+      return {
+        message: firstPlusRest(`第 ${wrong[0]} 列：${traceHint(level.rows[first], level.secret, answers[first])}`, wrong.length),
+        marks: wrong.map((n) => rows[n - 1]),
+      };
     }
     case 'quiz': {
-      const wrong = findWrongQuestions(level.questions, readQuizAnswers(section, level));
-      return wrong.length === 0 ? true : wrongListMessage(wrong, '題');
+      const answers = readQuizAnswers(section, level);
+      const wrong = findWrongQuestions(level.questions, answers);
+      if (!wrong.length) return true;
+      // Quiz questions are independent and few, so every wrong one gets its own line.
+      return {
+        message: wrong.map((n) => `第 ${n} 題：${quizHint(level.questions[n - 1], answers[n - 1])}`).join('\n'),
+        marks: wrong.map((n) => section.querySelector(`[data-question="${n - 1}"]`)),
+      };
     }
     default:
-      return false;
+      return { message: '再想想看，這個答案不太對喔！', marks: [] };
   }
 }
 
@@ -124,6 +151,7 @@ function handleSubmit(index) {
 
   const result = validateLevel(level, section);
   section.classList.remove('shake');
+  section.querySelectorAll('.is-wrong').forEach((el) => el.classList.remove('is-wrong'));
 
   if (result === true) {
     section.dataset.solved = 'true';
@@ -147,7 +175,8 @@ function handleSubmit(index) {
       render(nextIndex);
     }, 500);
   } else {
-    feedback.textContent = typeof result === 'string' ? result : '再想想看，這個答案不太對喔！';
+    feedback.textContent = result.message;
+    result.marks.forEach((el) => el?.classList.add('is-wrong'));
     feedback.classList.remove('correct');
     feedback.classList.add('wrong');
     void section.offsetWidth;

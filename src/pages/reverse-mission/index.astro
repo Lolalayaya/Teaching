@@ -2,7 +2,9 @@
 import '../../styles/global.css';
 import config from '../../content/reverse-mission.config.json';
 
-const STEPS = config.levels;
+// Each level type has its own fields, so the JSON's inferred union type has
+// no common shape to narrow on — treat levels as loosely typed here.
+const STEPS: any[] = config.levels;
 const TOTAL_FRAGMENT_LENGTH = STEPS.reduce((sum, l) => sum + (l.fragment ? l.fragment.length : 0), 0);
 const base = import.meta.env.BASE_URL;
 ---
@@ -29,8 +31,7 @@ const base = import.meta.env.BASE_URL;
 
       <section class="panel intro-panel" data-intro-screen>
         <h1>反轉行動・解碼任務</h1>
-        <p class="intro-text">第九、十週都是你在找數字、電腦給提示。這次角色反過來：電腦出題，玩家來猜。</p>
-        <p class="intro-text">在動手寫程式之前，先用四個階段把這個遊戲想清楚：拆解與抽象化、設計演算法、追蹤與除錯、效率分析與找規律。完成全部8關、集滿密碼片段，就能解出最後一句話。</p>
+        <p class="intro-text">這次換電腦出題、你來猜。寫程式前，先闖8關把遊戲想清楚。</p>
         <button type="button" class="primary-btn" data-start-btn>開始任務</button>
       </section>
 
@@ -642,6 +643,14 @@ const base = import.meta.env.BASE_URL;
     min-height: 1.4em;
     font-size: 0.95rem;
     line-height: 1.6;
+    white-space: pre-line;
+  }
+
+  /* Outlines the specific rows/options/questions the feedback is talking about. */
+  .answer-area :global(.is-wrong) {
+    outline: 2px solid var(--color-wrong);
+    outline-offset: 2px;
+    border-radius: var(--radius-input);
   }
 
   .feedback.correct {

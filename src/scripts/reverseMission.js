@@ -58,12 +58,39 @@ export function checkNumber(input, answer) {
   return checkText(cleaned, String(answer));
 }
 
+/** Classify level: `chosen` maps item index → chosen bin index. Returns indices in the wrong bin. */
+export function findClassifyMistakes(items, chosen) {
+  return items.flatMap((item, i) => (chosen[i] === item.bin ? [] : [i]));
+}
+
 /**
- * Classify level: `chosen` maps item index → chosen bin index (or undefined).
- * Returns how many items are unanswered or in the wrong bin.
+ * Multi-select level: the options that are wrong — a distractor that was
+ * picked, or a required option that was left out — in option order, so the
+ * feedback can explain the first one specifically.
  */
-export function countClassifyMistakes(items, chosen) {
-  return items.reduce((n, item, i) => (chosen[i] === item.bin ? n : n + 1), 0);
+export function findMultiMistakes(options, answers, selected) {
+  return options.filter((opt) => answers.includes(opt) !== selected.includes(opt));
+}
+
+/**
+ * The hint for one wrong quiz answer: the chosen option's own hint when it
+ * has one (so the feedback addresses that specific misconception), else the
+ * question's general hint.
+ */
+export function quizHint(question, answer) {
+  if (question.kind === 'choice' && !answer) return '還沒選答案。';
+  if (question.kind === 'number' && !String(answer ?? '').trim()) return '還沒填答案。';
+  return question.hints?.[answer] ?? question.hint ?? '再想想看。';
+}
+
+/** The hint for one wrong trace row, derived from the row itself rather than spelling out the answer. */
+export function traceHint(row, secret, answer) {
+  if (!checkChoice(answer.hint ?? '', row.hint)) {
+    if (row.guess > secret) return `${row.guess} 比答案 ${secret} 大，電腦會說什麼？`;
+    if (row.guess < secret) return `${row.guess} 比答案 ${secret} 小，電腦會說什麼？`;
+    return `猜中了：兩個「如果」都不成立，電腦還會說提示嗎？`;
+  }
+  return '每猜一次，「次數」加1。';
 }
 
 /**
