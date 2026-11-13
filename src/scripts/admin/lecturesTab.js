@@ -5,6 +5,7 @@ import { buildUnitTitle, nextUnitNumber, arabicToChineseWeek } from './titleAsse
 import { initEmbedsField } from './embedsField.js';
 import { renderGradeCheckboxes, getSelectedGrades, renderClassGrid, getSelectedClasses } from './classGrid.js';
 import { findCurrentConflicts } from './currentConflicts.js';
+import { initBodyToolbar } from './bodyToolbar.js';
 
 const DIR = 'src/content/lectures';
 const KNOWN_UNLOCK_KEYS = ['teaching-site:escape-room-completed', 'teaching-site:punctuation-screenshot-completed'];
@@ -72,9 +73,12 @@ export function initLecturesTab() {
         <input type="text" data-unlock-key-custom hidden placeholder="teaching-site:..." />
         <label>鎖住時顯示的訊息（選填） <input type="text" data-unlock-message /></label>
       </details>
-      <label>內文（markdown）
-        <textarea data-body rows="14"></textarea>
-      </label>
+      <label for="lecture-body">內文（markdown）</label>
+      <div class="body-toolbar">
+        <span>套用格式（先選取文字再按）：</span>
+        <span data-body-toolbar></span>
+      </div>
+      <textarea id="lecture-body" data-body rows="14"></textarea>
       <p>即時預覽：</p>
       <div data-body-preview class="preview-body"></div>
       <p data-current-warning hidden class="status"></p>
@@ -92,6 +96,7 @@ export function initLecturesTab() {
   const filenameInput = form.querySelector('[data-filename]');
   const bodyInput = form.querySelector('[data-body]');
   const bodyPreview = form.querySelector('[data-body-preview]');
+  initBodyToolbar(form.querySelector('[data-body-toolbar]'), bodyInput);
   const gradeContainer = form.querySelector('[data-grade-checkboxes]');
   const classContainer = form.querySelector('[data-class-grid]');
   const embedsContainer = form.querySelector('[data-embeds-container]');
