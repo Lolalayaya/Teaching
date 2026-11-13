@@ -123,9 +123,12 @@ embeds:
 1. **執行結果截圖**：先按綠旗、再按s，等角色說出 980 875 860 790 650 之後，用第二週教過的截圖方法，把**整個舞台區**截下來（要看得到說話泡泡和左上角的清單）。存成PNG或JPG都可以。
 2. **專案檔**：用Scratch選單「檔案→匯出到你的電腦」把專案下載下來（副檔名`.sb3`），依照第二週教過的檔名格式重新命名。
 
-準備好之後，點下面連結前往繳交：
+準備好之後，按下面的按鈕前往繳交：
 
-**[前往「列隊行動任務繳交」→](https://scratchy-jy4i.onrender.com/submit/cmvg8jlws0000av1shrpjolt8)**
+<div class="submit-box">
+<a class="submit-button" href="https://scratchy-jy4i.onrender.com/submit/cmvg8jlws0000av1shrpjolt8" target="_blank" rel="noopener">前往「列隊行動任務繳交」→</a>
+<p>會另開新分頁，打開後頁面最上方會寫<strong>「W8選擇排序」</strong>，看到這個標題就代表到了對的地方。</p>
+</div>
 
 填上班級座號姓名、上傳`.sb3`檔案和截圖，送出後系統會立刻自動檢查，馬上顯示一個建議分數給你參考——**正式成績要等老師確認公布才算數**，建議分數只是讓你知道大概做得如何。
 
