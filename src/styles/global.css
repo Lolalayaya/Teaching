@@ -1196,13 +1196,20 @@ button.search-card:disabled {
 
 /* 講義裡「前往繳交」的固定樣式（易用性測試：8年級任務3只有48%真的點進Scratchy，
    很多人把講義上的檔名當成作業標題）。每週同一個外觀，並預告打開後會看到的標題。 */
-.submit-box {
+/* update-note：講義開頭的「網站更新說明」（易用性測試後的「你說→我改」），沿用同一個框樣式 */
+.submit-box,
+.update-note {
   margin: 1.5rem 0;
   padding: 1rem 1.25rem;
   border: 1px solid var(--color-border);
   border-left: 4px solid var(--color-accent);
   border-radius: var(--radius-card);
   background: var(--color-paper-2);
+}
+
+.update-note p,
+.update-note ul {
+  margin: 0.4rem 0;
 }
 
 .submit-box p {
