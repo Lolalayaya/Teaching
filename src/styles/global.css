@@ -1260,3 +1260,54 @@ a.submit-button:active {
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
+
+/* 講義裡「要抄的那一句／那組數字」的固定樣式（易用性測試：7年級任務1只有一半的人
+   只抄出例句，任務2有26人抄成問題下面的說明）。例句、資料跟說明文字要看得出差別。 */
+.example-quote {
+  display: block;
+  margin: 0.6rem 0;
+  padding: 0.55rem 0.9rem;
+  border-left: 4px solid var(--color-accent);
+  border-radius: 0 var(--radius-input) var(--radius-input) 0;
+  background: var(--color-accent-tint);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.example-quote .example-label {
+  display: inline-block;
+  margin-right: 0.6rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-fill);
+  color: var(--color-on-accent-fill);
+  font-size: 0.8rem;
+  font-weight: 700;
+  vertical-align: 0.1em;
+}
+
+.explain {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+/* 講義的週次標籤（見 src/scripts/weekLabel.js）：列表卡片、首頁置頂卡片、講義頁頂端都用同一個樣式 */
+.week-badge {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: var(--radius-input);
+  background: var(--color-accent-fill);
+  color: var(--color-on-accent-fill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  vertical-align: 0.08em;
+  white-space: nowrap;
+}
+
+.week-badge-lg {
+  font-size: 1rem;
+  padding: 0.2rem 0.75rem;
+}

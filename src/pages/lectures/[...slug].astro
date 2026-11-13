@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Embed from '../../components/Embed.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { splitWeek } from '../../scripts/weekLabel.js';
 
 export async function getStaticPaths() {
   const lectures = await getCollection('lectures');
@@ -17,6 +18,7 @@ interface Props {
 
 const { lecture } = Astro.props;
 const { Content } = await render(lecture);
+const { week, rest } = splitWeek(lecture.data.title);
 const unlock = lecture.data.unlock;
 const isUnpublished = lecture.data.published === false;
 // `classes` here means "only these classes should see this yet" (e.g. a
@@ -30,8 +32,11 @@ const hasAudienceGate = !isUnpublished && audienceClasses.length > 0;
 ---
 
 <BaseLayout title={lecture.data.title} description={lecture.data.summary}>
-  <p class="meta">{lecture.data.unit}</p>
-  <h1>{lecture.data.title}</h1>
+  <p class="meta">
+    {week && <span class="week-badge week-badge-lg">{week}</span>}
+    {lecture.data.unit}
+  </p>
+  <h1>{rest}</h1>
 
   {isUnpublished ? (
     <div data-publish-gate>

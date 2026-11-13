@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { splitWeek } from '../scripts/weekLabel.js';
 
 const base = import.meta.env.BASE_URL;
 
@@ -30,7 +31,8 @@ const currentItems = lectures
           : null;
     return {
       href: `${base}lectures/${lecture.id}/`,
-      title: `${lecture.data.unit} · ${lecture.data.title}`,
+      week: splitWeek(lecture.data.title).week,
+      title: splitWeek(lecture.data.title).rest,
       summary: lecture.data.summary,
       grades: lecture.data.grades,
       classes: lecture.data.classes,
@@ -63,7 +65,10 @@ const currentItems = lectures
             data-unlock-after={item.unlock?.after?.toISOString() ?? ''}
             data-unlock-key={item.unlock?.storageKey ?? ''}
           >
-            <a href={item.href}>{item.title}</a>
+            <a href={item.href}>
+              {item.week && <span class="week-badge">{item.week}</span>}
+              {item.title}
+            </a>
             {item.restrictedTo && (
               <p class="meta"><span class="tag">僅：{item.restrictedTo.join('、')} 班</span></p>
             )}
@@ -86,7 +91,10 @@ const currentItems = lectures
         data-unlock-after={lecture.data.unlock?.after?.toISOString() ?? ''}
         data-unlock-key={lecture.data.unlock?.storageKey ?? ''}
       >
-        <a href={`${base}lectures/${lecture.id}/`}>{lecture.data.unit} · {lecture.data.title}</a>
+        <a href={`${base}lectures/${lecture.id}/`}>
+          {splitWeek(lecture.data.title).week && <span class="week-badge">{splitWeek(lecture.data.title).week}</span>}
+          {splitWeek(lecture.data.title).rest}
+        </a>
         {lecture.data.summary && <p class="meta">{lecture.data.summary}</p>}
       </li>
     ))}
