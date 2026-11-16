@@ -6,9 +6,8 @@ date: 2026-10-19
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '803', '804', '805', '806', '807', '808']
-currentFor: ['807']
 published: true
-current: true
+current: false
 tags: ["演算法", "排序", "選擇排序法", "巢狀迴圈", "交換"]
 summary: 把上週用分數卡做的選擇排序寫成Scratch程式：先學會用「暫存」交換兩個位置，再把打擂台改成記住最大值的位置，最後用迴圈裡面再包一個迴圈，讓程式自動把整份排行榜排好。
 embeds:

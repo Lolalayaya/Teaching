@@ -5,8 +5,8 @@ order: 20
 date: 2026-10-26
 semester: 115-1
 grades: ['8']
-classes: ['801', '802', '803', '804', '805', '806', '808']
-currentFor: ['803']
+classes: ['801', '802', '803', '804', '805', '806', '807', '808']
+currentFor: ['807']
 published: true
 current: true
 tags: ["演算法", "搜尋", "循序搜尋", "二分搜尋", "猜數字"]

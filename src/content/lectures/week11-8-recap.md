@@ -9,7 +9,7 @@ unlock:
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '804', '805', '806', '808']
-published: false
+published: true
 tags: ["複習", "運算思維", "猜數字", "二分搜尋"]
 summary: 反轉行動8關的答案整理。下週寫Scratch時，照第3關的程式做就對了。
 ---

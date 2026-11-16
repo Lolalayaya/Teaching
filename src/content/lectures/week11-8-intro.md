@@ -6,8 +6,8 @@ date: 2026-11-09
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '804', '805', '806', '808']
-published: false
-current: false
+published: true
+current: true
 tags: ["運算思維", "演算法", "二分搜尋", "猜數字", "除錯"]
 summary: 期末專題要做猜數字遊戲。寫程式前，先闖8關把遊戲想清楚，再把前面沒交的作業補完。
 ---
