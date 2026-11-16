@@ -253,6 +253,133 @@ function initRace(section) {
   });
 }
 
+// --- Order level: drag (or click) blocks into the loop --------------------------
+
+const DRAG_THRESHOLD = 6;
+
+/**
+ * Blocks live either in the pool (bare buttons) or in the loop body (each
+ * wrapped in an <li> so the list numbers them). Dragging uses pointer events
+ * rather than HTML5 drag-and-drop so it also works on touch screens; a press
+ * that never moves past the threshold falls through to the click fallback
+ * (click in pool → append to loop, click in loop → back to pool).
+ */
+function initOrder(section) {
+  const slots = section.querySelector('[data-order-slots]');
+  const pool = section.querySelector('[data-order-pool]');
+  if (!slots || !pool) return;
+  const emptyHint = slots.querySelector('[data-order-empty]');
+
+  const syncEmpty = () => {
+    emptyHint.hidden = slots.querySelector('[data-order-item]') !== null;
+  };
+
+  /** Moves `btn` into `container` before `beforeNode` (null = at the end), fixing up <li> wrappers. */
+  const place = (btn, container, beforeNode = null) => {
+    const oldLi = btn.parentElement?.tagName === 'LI' ? btn.parentElement : null;
+    if (container === slots) {
+      const li = document.createElement('li');
+      li.append(btn);
+      slots.insertBefore(li, beforeNode);
+    } else {
+      pool.insertBefore(btn, beforeNode);
+    }
+    if (oldLi && oldLi !== beforeNode) oldLi.remove();
+    syncEmpty();
+  };
+
+  const makePlaceholder = (container, height) => {
+    const el = document.createElement(container === slots ? 'li' : 'div');
+    el.className = 'order-placeholder';
+    el.style.height = `${height}px`;
+    return el;
+  };
+
+  const inside = (rect, x, y, pad) => x >= rect.left - pad && x <= rect.right + pad && y >= rect.top - pad && y <= rect.bottom + pad;
+
+  /** The node to insert before so the dragged block lands where the pointer is (null = end). */
+  const insertionPoint = (container, y, placeholder) => {
+    const nodes = [...container.children].filter((el) => el !== placeholder && el !== emptyHint && !el.hidden);
+    return nodes.find((el) => {
+      const r = el.getBoundingClientRect();
+      return y < r.top + r.height / 2;
+    }) ?? null;
+  };
+
+  let drag = null;
+
+  section.querySelectorAll('[data-order-item]').forEach((btn) => {
+    btn.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      drag = { btn, startX: e.clientX, startY: e.clientY, active: false };
+      btn.setPointerCapture(e.pointerId);
+    });
+
+    btn.addEventListener('pointermove', (e) => {
+      if (!drag || drag.btn !== btn) return;
+      if (!drag.active) {
+        if (Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < DRAG_THRESHOLD) return;
+        const rect = btn.getBoundingClientRect();
+        const from = btn.closest('[data-order-slots]') ? slots : pool;
+        drag.active = true;
+        drag.offsetX = drag.startX - rect.left;
+        drag.offsetY = drag.startY - rect.top;
+        drag.height = rect.height;
+        drag.container = from;
+        drag.placeholder = makePlaceholder(from, rect.height);
+        (from === slots ? btn.parentElement : btn).before(drag.placeholder);
+        if (from === slots) btn.parentElement.hidden = true;
+        btn.style.width = `${rect.width}px`;
+        btn.classList.add('dragging');
+      }
+      btn.style.left = `${e.clientX - drag.offsetX}px`;
+      btn.style.top = `${e.clientY - drag.offsetY}px`;
+
+      const target = inside(slots.getBoundingClientRect(), e.clientX, e.clientY, 24)
+        ? slots
+        : inside(pool.getBoundingClientRect(), e.clientX, e.clientY, 24)
+          ? pool
+          : drag.container;
+      if (target !== drag.container) {
+        drag.placeholder.remove();
+        drag.placeholder = makePlaceholder(target, drag.height);
+        drag.container = target;
+      }
+      const before = insertionPoint(target, e.clientY, drag.placeholder);
+      if (drag.placeholder.nextSibling !== before || drag.placeholder.parentElement !== target) {
+        target.insertBefore(drag.placeholder, before);
+      }
+      if (target === slots) emptyHint.hidden = true;
+    });
+
+    const endDrag = (cancelled) => {
+      if (!drag || drag.btn !== btn) return;
+      const { active, placeholder, container } = drag;
+      if (active) {
+        btn.classList.remove('dragging');
+        btn.style.left = btn.style.top = btn.style.width = '';
+        const hiddenLi = btn.parentElement?.tagName === 'LI' ? btn.parentElement : null;
+        if (hiddenLi) hiddenLi.hidden = false;
+        if (!cancelled) place(btn, container, placeholder);
+        placeholder.remove();
+        syncEmpty();
+        // Swallow the click the browser fires right after this pointerup.
+        btn.dataset.justDragged = '1';
+        setTimeout(() => delete btn.dataset.justDragged, 0);
+      }
+      drag = null;
+    };
+    btn.addEventListener('pointerup', () => endDrag(false));
+    btn.addEventListener('pointercancel', () => endDrag(true));
+
+    btn.addEventListener('click', () => {
+      if (btn.dataset.justDragged) return;
+      if (btn.closest('[data-order-slots]')) place(btn, pool);
+      else place(btn, slots);
+    });
+  });
+}
+
 // --- Wiring ---------------------------------------------------------------------
 
 levelSections.forEach((section, index) => {
@@ -283,29 +410,7 @@ levelSections.forEach((section, index) => {
     });
   });
 
-  // Order: clicking a block moves it between the pool and the end of the loop body.
-  const slots = section.querySelector('[data-order-slots]');
-  const pool = section.querySelector('[data-order-pool]');
-  if (slots && pool) {
-    const emptyHint = slots.querySelector('[data-order-empty]');
-    const syncEmpty = () => {
-      emptyHint.hidden = slots.querySelector('[data-order-item]') !== null;
-    };
-    section.querySelectorAll('[data-order-item]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (btn.closest('[data-order-slots]')) {
-          const li = btn.parentElement;
-          pool.append(btn);
-          li.remove();
-        } else {
-          const li = document.createElement('li');
-          li.append(btn);
-          slots.append(li);
-        }
-        syncEmpty();
-      });
-    });
-  }
+  initOrder(section);
 
   section.querySelectorAll('input[type="text"]:not([data-race-input])').forEach((input) => {
     input.addEventListener('keydown', (e) => {

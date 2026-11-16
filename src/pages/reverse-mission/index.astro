@@ -2,9 +2,34 @@
 import '../../styles/global.css';
 import config from '../../content/reverse-mission.config.json';
 
-// Each level type has its own fields, so the JSON's inferred union type has
-// no common shape to narrow on — treat levels as loosely typed here.
-const STEPS: any[] = config.levels;
+// Each level type uses its own subset of these fields, so the JSON's inferred
+// union has no common shape to narrow on. Declaring every field as present is
+// a white lie for the template's sake — each branch below only reads the
+// fields its own `type` actually has.
+type Question = {
+  prompt: string;
+  kind: string;
+  code: string;
+  options: string[];
+};
+type Level = {
+  stage: string;
+  title: string;
+  prompt: string;
+  type: string;
+  bins: string[];
+  items: { text: string; id: string }[];
+  options: string[];
+  codeBefore: string;
+  codeAfter: string;
+  rows: { guess: number }[];
+  hintOptions: string[];
+  widget: string;
+  table: { head: string[]; rows: string[][] };
+  questions: Question[];
+  fragment: string;
+};
+const STEPS = config.levels as unknown as Level[];
 const TOTAL_FRAGMENT_LENGTH = STEPS.reduce((sum, l) => sum + (l.fragment ? l.fragment.length : 0), 0);
 const base = import.meta.env.BASE_URL;
 ---
@@ -69,7 +94,7 @@ const base = import.meta.env.BASE_URL;
               <div class="order-area">
                 <pre class="code-block">{level.codeBefore}</pre>
                 <ol class="order-slots" data-order-slots>
-                  <li class="order-empty" data-order-empty>（點選下面的積木，排進迴圈裡）</li>
+                  <li class="order-empty" data-order-empty>（把下面的積木拖到這裡）</li>
                 </ol>
                 <pre class="code-block">{level.codeAfter}</pre>
                 <p class="pool-label">可以使用的積木</p>
@@ -421,8 +446,26 @@ const base = import.meta.env.BASE_URL;
     transition: transform 140ms var(--ease-out);
   }
 
-  .block-btn:active {
-    transform: scale(0.98);
+  .block-btn {
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .block-btn.dragging {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    cursor: grabbing;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+    transform: rotate(-1deg);
+  }
+
+  .order-area :global(.order-placeholder) {
+    list-style: none;
+    border: 2px dashed var(--color-accent);
+    border-radius: var(--radius-input);
+    background: color-mix(in oklch, var(--color-accent) 10%, transparent);
   }
 
   /* Tables ------------------------------------------------------------------ */
