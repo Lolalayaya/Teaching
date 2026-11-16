@@ -97,7 +97,10 @@ const base = import.meta.env.BASE_URL;
                   <li class="order-empty" data-order-empty>（把下面的積木拖到這裡）</li>
                 </ol>
                 <pre class="code-block">{level.codeAfter}</pre>
-                <p class="pool-label">可以使用的積木</p>
+                <div class="pool-head">
+                  <p class="pool-label">可以使用的積木</p>
+                  <button type="button" class="order-reset-btn" data-order-reset>↺ 重新排</button>
+                </div>
                 <div class="order-pool" data-order-pool>
                   {level.items.map((item) => (
                     <button type="button" class="block-btn" data-order-item={item.id}>{item.text}</button>
@@ -193,13 +196,18 @@ const base = import.meta.env.BASE_URL;
       ))}
 
       <section class="panel finale-screen" data-finale-screen hidden>
-        <div class="stamp-wrap">
-          <div class="stamp">
-            <span>任務</span>
-            <span>完成</span>
+        <div class="search-finale" data-search-finale>
+          <p class="search-caption" data-search-caption>電腦想了一個 1～100 的數字，用「猜中間」來找……</p>
+          <div class="range-track" aria-hidden="true">
+            <div class="range-live" data-range-live></div>
+            <div class="range-marker" data-range-marker hidden></div>
           </div>
-          <div class="stamp-glow"></div>
-          <div class="stamp-impact"></div>
+          <div class="range-ends" aria-hidden="true"><span>1</span><span>100</span></div>
+          <ol class="guess-log" data-guess-log aria-live="polite"></ol>
+          <div class="found" data-found hidden>
+            <span class="found-number" data-found-number></span>
+            <span class="found-badge">任務完成</span>
+          </div>
         </div>
         <div class="finale-text" data-finale-text hidden>
           <p class="finale-line">{config.finaleLine}</p>
@@ -420,10 +428,35 @@ const base = import.meta.env.BASE_URL;
     font-size: 0.9rem;
   }
 
-  .pool-label {
+  .pool-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     margin: 1rem 0 0.4rem;
+  }
+
+  .pool-label {
+    margin: 0;
     color: var(--color-muted);
     font-size: 0.85rem;
+  }
+
+  .order-reset-btn {
+    border: 1px solid var(--color-border);
+    background: var(--color-paper);
+    color: var(--color-muted);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.85rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 140ms var(--ease-out), border-color 140ms var(--ease-out);
+  }
+
+  .order-reset-btn:hover {
+    color: var(--color-ink);
+    border-color: var(--color-accent);
   }
 
   .order-pool {
@@ -722,15 +755,13 @@ const base = import.meta.env.BASE_URL;
     80% { transform: translateX(4px); }
   }
 
-  /* Finale (same stamp effect as the 特務闖關 page) ------------------------ */
+  /* Finale: a binary-search replay on a 1–100 number line ------------------ */
 
   .finale-screen[hidden] {
     display: none;
   }
 
   .finale-screen {
-    position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -739,72 +770,119 @@ const base = import.meta.env.BASE_URL;
     justify-content: center;
   }
 
-  .stamp-wrap {
-    position: relative;
-    width: 160px;
-    height: 160px;
+  .search-finale {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
   }
 
-  .stamp {
+  .search-caption {
+    margin: 0 0 0.5rem;
+    color: var(--color-muted);
+    text-align: center;
+  }
+
+  .range-track {
     position: relative;
-    z-index: 1;
+    height: 14px;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--color-ink) 12%, transparent);
+  }
+
+  /* The part of the line where the answer can still be — shrinks each guess. */
+  .range-live {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 4px solid var(--color-accent);
-    color: var(--color-accent-hover);
+    border-radius: 999px;
+    background: var(--color-accent);
+    transition: left 380ms var(--ease-out), width 380ms var(--ease-out);
+  }
+
+  .range-marker {
+    position: absolute;
+    top: -7px;
+    width: 4px;
+    height: 28px;
+    margin-left: -2px;
+    border-radius: 2px;
+    background: var(--color-ink);
+    transition: left 300ms var(--ease-out);
+  }
+
+  .range-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .guess-log {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2rem;
+  }
+
+  .guess-log :global(li) {
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+    animation: chip-in 260ms var(--mission-ease-bounce) both;
+  }
+
+  .guess-log :global(li.hit) {
+    border-color: var(--color-correct);
+    color: var(--color-correct);
+    font-weight: 700;
+  }
+
+  @keyframes chip-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.9); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .found[hidden] {
+    display: none;
+  }
+
+  .found {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.15rem;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    animation: found-pop 520ms var(--mission-ease-bounce) both;
+  }
+
+  .found-number {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-correct);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .found-badge {
+    font-size: 1.4rem;
     font-weight: 700;
-    font-size: 1.3rem;
-    letter-spacing: 0.1em;
-    opacity: 0;
-    transform: rotate(-2deg) scale(5);
+    letter-spacing: 0.15em;
+    color: var(--color-accent-hover);
   }
 
-  .finale-screen.stamped .stamp {
-    animation: stamp-slam 480ms cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards;
-  }
-
-  @keyframes stamp-slam {
-    0% { opacity: 0; transform: rotate(-2deg) scale(5); }
-    10% { opacity: 0.6; transform: rotate(-2deg) scale(5); }
-    100% { opacity: 1; transform: rotate(-8deg) scale(1); }
-  }
-
-  .stamp-impact {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 3px solid var(--color-accent);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .finale-screen.stamped .stamp-impact {
-    animation: stamp-ring 460ms var(--ease-out) 480ms both;
-  }
-
-  @keyframes stamp-ring {
-    0% { opacity: 0; transform: scale(0.8); }
-    15% { opacity: 0.9; transform: scale(0.95); }
-    100% { opacity: 0; transform: scale(1.6); }
-  }
-
-  .stamp-glow {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in oklch, var(--color-accent) 55%, transparent) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 700ms var(--ease-out);
-  }
-
-  .finale-screen.stamped .stamp-glow {
-    opacity: 1;
+  @keyframes found-pop {
+    0% { opacity: 0; transform: scale(0.4); }
+    100% { opacity: 1; transform: scale(1); }
   }
 
   .finale-text {
@@ -844,14 +922,14 @@ const base = import.meta.env.BASE_URL;
       animation: none;
     }
 
-    .finale-screen.stamped .stamp {
+    .found,
+    .guess-log :global(li) {
       animation: none;
-      opacity: 1;
-      transform: rotate(-8deg) scale(1);
     }
 
-    .stamp-impact {
-      display: none;
+    .range-live,
+    .range-marker {
+      transition: none;
     }
   }
 </style>

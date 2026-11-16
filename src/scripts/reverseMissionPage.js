@@ -308,6 +308,16 @@ function initOrder(section) {
 
   let drag = null;
 
+  // 重新排: every block back into the pool, in its original order. Only this
+  // level's arrangement is touched — overall progress is untouched.
+  const originalOrder = [...pool.querySelectorAll('[data-order-item]')];
+  section.querySelector('[data-order-reset]')?.addEventListener('click', () => {
+    originalOrder.forEach((btn) => place(btn, pool));
+    const feedback = section.querySelector('[data-feedback]');
+    feedback.textContent = '';
+    feedback.classList.remove('correct', 'wrong');
+  });
+
   section.querySelectorAll('[data-order-item]').forEach((btn) => {
     btn.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
@@ -445,20 +455,79 @@ function playCelebrationChime() {
 
 document.querySelector('[data-play-audio-btn]').addEventListener('click', playCelebrationChime);
 
+const FINALE_STEP_MS = 650;
+
+/** Position on the 1–100 line as a percentage (1 → 0%, 100 → 100%). */
+const linePercent = (n) => ((n - 1) / 99) * 100;
+
+/**
+ * Replays a binary search for a random number on the 1–100 line — the same
+ * strategy the last two levels were about — then pops the found number and
+ * the 任務完成 badge the teacher checks for.
+ */
 function revealFinale() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finaleTextEl = document.querySelector('[data-finale-text]');
   const recapLink = document.querySelector('[data-recap-link]');
   const audioBtn = document.querySelector('[data-play-audio-btn]');
+  const caption = document.querySelector('[data-search-caption]');
+  const live = document.querySelector('[data-range-live]');
+  const marker = document.querySelector('[data-range-marker]');
+  const log = document.querySelector('[data-guess-log]');
+  const found = document.querySelector('[data-found]');
+  const foundNumber = document.querySelector('[data-found-number]');
 
-  finaleScreen.classList.add('stamped');
-  const show = () => {
+  const secret = 1 + Math.floor(Math.random() * 100);
+  const guesses = playBinary(secret);
+  let lo = 1;
+  let hi = 100;
+
+  const setRange = () => {
+    live.style.left = `${linePercent(lo)}%`;
+    live.style.width = `${Math.max(linePercent(hi) - linePercent(lo), 1.2)}%`;
+  };
+
+  const step = (g) => {
+    marker.hidden = false;
+    marker.style.left = `${linePercent(g)}%`;
+    const chip = document.createElement('li');
+    if (g === secret) {
+      chip.className = 'hit';
+      chip.textContent = `${g} 猜中！`;
+      lo = hi = g;
+    } else if (g > secret) {
+      chip.textContent = `${g} 太大`;
+      hi = g - 1;
+    } else {
+      chip.textContent = `${g} 太小`;
+      lo = g + 1;
+    }
+    log.append(chip);
+    setRange();
+  };
+
+  const finish = () => {
+    caption.textContent =
+      guesses.length === 7
+        ? '猜了 7 次找到了：1～100 用猜中間，最多就是 7 次。'
+        : `只猜了 ${guesses.length} 次就找到了！1～100 用猜中間，最多只要 7 次。`;
+    foundNumber.textContent = secret;
+    found.hidden = false;
     finaleTextEl.hidden = false;
     recapLink.hidden = false;
     audioBtn.hidden = false;
   };
-  if (reduceMotion) show();
-  else setTimeout(show, 550);
+
+  log.replaceChildren();
+  setRange();
+
+  if (reduceMotion) {
+    guesses.forEach(step);
+    finish();
+    return;
+  }
+  guesses.forEach((g, i) => setTimeout(() => step(g), 400 + i * FINALE_STEP_MS));
+  setTimeout(finish, 400 + guesses.length * FINALE_STEP_MS + 150);
 }
 
 // --- Initial load -----------------------------------------------------------------
