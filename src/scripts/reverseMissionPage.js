@@ -460,36 +460,51 @@ const FINALE_STEP_MS = 650;
 /** Position on the 1–100 line as a percentage (1 → 0%, 100 → 100%). */
 const linePercent = (n) => ((n - 1) / 99) * 100;
 
-/**
- * Replays a binary search for a random number on the 1–100 line — the same
- * strategy the last two levels were about — then pops the found number and
- * the 任務完成 badge the teacher checks for.
- */
-function revealFinale() {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finaleTextEl = document.querySelector('[data-finale-text]');
-  const recapLink = document.querySelector('[data-recap-link]');
-  const audioBtn = document.querySelector('[data-play-audio-btn]');
-  const caption = document.querySelector('[data-search-caption]');
-  const live = document.querySelector('[data-range-live]');
-  const marker = document.querySelector('[data-range-marker]');
-  const log = document.querySelector('[data-guess-log]');
-  const found = document.querySelector('[data-found]');
-  const foundNumber = document.querySelector('[data-found-number]');
+const finaleEls = {
+  text: document.querySelector('[data-finale-text]'),
+  recapLink: document.querySelector('[data-recap-link]'),
+  audioBtn: document.querySelector('[data-play-audio-btn]'),
+  caption: document.querySelector('[data-search-caption]'),
+  live: document.querySelector('[data-range-live]'),
+  marker: document.querySelector('[data-range-marker]'),
+  log: document.querySelector('[data-guess-log]'),
+  found: document.querySelector('[data-found]'),
+  foundNumber: document.querySelector('[data-found-number]'),
+  skipBtn: document.querySelector('[data-finale-skip]'),
+  replayBtn: document.querySelector('[data-finale-replay]'),
+};
+const FINALE_CAPTION = finaleEls.caption.textContent;
 
+/** One run of the finale search; `skip()` jumps it straight to the found state. */
+let finaleRun = null;
+
+/**
+ * Plays a binary search for a fresh random number on the 1–100 line — the
+ * same strategy the last two levels were about — then pops the found number
+ * and the 任務完成 badge the teacher checks for. Calling it again (重播)
+ * cancels whatever run is in progress and starts over with a new number.
+ */
+function runFinaleSearch() {
+  finaleRun?.cancel();
+  const el = finaleEls;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const secret = 1 + Math.floor(Math.random() * 100);
   const guesses = playBinary(secret);
+  const timers = [];
+  let next = 0;
   let lo = 1;
   let hi = 100;
 
   const setRange = () => {
-    live.style.left = `${linePercent(lo)}%`;
-    live.style.width = `${Math.max(linePercent(hi) - linePercent(lo), 1.2)}%`;
+    el.live.style.left = `${linePercent(lo)}%`;
+    el.live.style.width = `${Math.max(linePercent(hi) - linePercent(lo), 1.2)}%`;
   };
 
-  const step = (g) => {
-    marker.hidden = false;
-    marker.style.left = `${linePercent(g)}%`;
+  const step = () => {
+    const g = guesses[next];
+    next += 1;
+    el.marker.hidden = false;
+    el.marker.style.left = `${linePercent(g)}%`;
     const chip = document.createElement('li');
     if (g === secret) {
       chip.className = 'hit';
@@ -502,32 +517,54 @@ function revealFinale() {
       chip.textContent = `${g} 太小`;
       lo = g + 1;
     }
-    log.append(chip);
+    el.log.append(chip);
     setRange();
   };
 
   const finish = () => {
-    caption.textContent =
+    el.caption.textContent =
       guesses.length === 7
         ? '猜了 7 次找到了：1～100 用猜中間，最多就是 7 次。'
         : `只猜了 ${guesses.length} 次就找到了！1～100 用猜中間，最多只要 7 次。`;
-    foundNumber.textContent = secret;
-    found.hidden = false;
-    finaleTextEl.hidden = false;
-    recapLink.hidden = false;
-    audioBtn.hidden = false;
+    el.foundNumber.textContent = secret;
+    el.found.hidden = false;
+    el.skipBtn.hidden = true;
+    el.replayBtn.hidden = false;
+    el.text.hidden = false;
+    el.recapLink.hidden = false;
+    el.audioBtn.hidden = false;
   };
 
-  log.replaceChildren();
+  const cancel = () => timers.forEach(clearTimeout);
+  const skip = () => {
+    cancel();
+    while (next < guesses.length) step();
+    finish();
+  };
+  finaleRun = { cancel, skip };
+
+  // Reset the stage for this run.
+  el.caption.textContent = FINALE_CAPTION;
+  el.log.replaceChildren();
+  el.found.hidden = true;
+  el.marker.hidden = true;
+  el.skipBtn.hidden = false;
+  el.replayBtn.hidden = true;
   setRange();
 
   if (reduceMotion) {
-    guesses.forEach(step);
-    finish();
+    skip();
     return;
   }
-  guesses.forEach((g, i) => setTimeout(() => step(g), 400 + i * FINALE_STEP_MS));
-  setTimeout(finish, 400 + guesses.length * FINALE_STEP_MS + 150);
+  guesses.forEach((_, i) => timers.push(setTimeout(step, 400 + i * FINALE_STEP_MS)));
+  timers.push(setTimeout(finish, 400 + guesses.length * FINALE_STEP_MS + 150));
+}
+
+finaleEls.skipBtn.addEventListener('click', () => finaleRun?.skip());
+finaleEls.replayBtn.addEventListener('click', runFinaleSearch);
+
+function revealFinale() {
+  runFinaleSearch();
 }
 
 // --- Initial load -----------------------------------------------------------------

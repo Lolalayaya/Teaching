@@ -208,6 +208,10 @@ const base = import.meta.env.BASE_URL;
             <span class="found-number" data-found-number></span>
             <span class="found-badge">任務完成</span>
           </div>
+          <div class="finale-controls">
+            <button type="button" class="order-reset-btn" data-finale-skip>跳過動畫 ⏭</button>
+            <button type="button" class="order-reset-btn" data-finale-replay hidden>↺ 重播</button>
+          </div>
         </div>
         <div class="finale-text" data-finale-text hidden>
           <p class="finale-line">{config.finaleLine}</p>
@@ -852,8 +856,15 @@ const base = import.meta.env.BASE_URL;
     to { opacity: 1; transform: none; }
   }
 
-  .found[hidden] {
+  .found[hidden],
+  .finale-controls [hidden] {
     display: none;
+  }
+
+  .finale-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.25rem;
   }
 
   .found {
