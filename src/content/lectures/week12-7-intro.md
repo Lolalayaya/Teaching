@@ -6,8 +6,8 @@ date: 2026-11-16
 semester: 115-1
 grades: ['7']
 classes: ['703', '705']
-published: false
-current: false
+published: true
+current: true
 tags: ["資料處理應用專題", "Canva", "宣傳單", "版面設計", "合理使用"]
 summary: 把第十週寫的「我們發現」做成一張Canva宣傳單：一個大數字、一句提醒、一張圖表，加上資料來源，讓人看3秒就懂。
 embeds:

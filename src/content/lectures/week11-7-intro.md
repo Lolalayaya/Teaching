@@ -6,7 +6,7 @@ date: 2026-11-09
 semester: 115-1
 grades: ['7']
 classes: ['701', '702', '703', '704', '705', '706', '709', '710']
-currentFor: ['703', '705']
+currentFor: ['701', '702', '704', '706', '709', '710']
 published: true
 current: true
 tags: ["資料處理應用專題", "Google試算表", "Google文件", "完成作業"]
