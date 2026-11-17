@@ -2,7 +2,7 @@
  * 第十二週・宣導行動 繳交表單（七年級） —— Google Apps Script，自動建立Google表單並自動批改
  *
  * 學生把第十週的「我們發現」做成個人Canva宣傳單（見 week12-7-intro.md）。
- * 宣傳單本身是段考2的成績，由老師照講義第五節的檢查表看Canva連結評分；
+ * 宣傳單本身算段考3的成績，由老師照講義第六節的檢查表看Canva連結評分；
  * 這份表單只收連結和兩個文字欄位，給分如下：
  *   1. 班級座號姓名（60分）
  *   2. Canva檢視連結（15分）：用正規表示法擋格式，填得進去就給分
@@ -87,7 +87,7 @@ function createForm() {
 }
 
 /** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades() 才能重新打開這份表單 */
-var FORM_EDIT_URL = 'PLACEHOLDER_W12_FORM_EDIT_URL';
+var FORM_EDIT_URL = 'https://docs.google.com/forms/d/1C0ajwGehgmDv0FFczlw1sWWKNpbJc7NQNan6EQptyPQ/edit';
 
 var LINK_TITLE = 'Canva宣傳單的檢視連結';
 var NUMBER_TITLE = '宣傳單上的大數字';
@@ -108,12 +108,15 @@ var AI_SPEC = {
 };
 
 var SELF_CHECK_CHOICES = [
+  '範本上方括號 [ ] 和「X」的地方都換成自己的內容，插圖和圖表也換成自己的',
   '大數字是全張最大的字，而且跟比較表上的一樣',
   '提醒是告訴大家要做什麼，不是把數字再說一次',
   '有圖表，看得出我們班和比較對象誰比較高',
+  '「為什麼危險？」寫了三點',
   '最下面有資料來源',
   '圖片來自Canva素材庫；用AI生成的有標示',
   '字體不超過2種、顏色不超過3種',
+  '東西都有對齊，四周有留白',
   '隔壁同學看3秒，說得出這張在提醒什麼',
 ];
 
