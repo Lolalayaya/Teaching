@@ -1,7 +1,7 @@
 ---
 title: 第十四週 任務檔案 014・編劇任務｜資料處理應用專題故事大綱
 unit: 第十四單元
-order: 27
+order: 28
 date: 2026-11-30
 semester: 115-1
 grades: ['7']
