@@ -5,8 +5,8 @@ order: 26
 date: 2026-11-16
 semester: 115-1
 grades: ['7']
-classes: ['703', '705']
-currentFor: ['705']
+classes: ['701', '702', '703', '704', '705', '706', '709', '710']
+currentFor: ['701', '702', '704', '705', '706', '709', '710']
 published: true
 current: true
 tags: ["資料處理應用專題", "Canva", "宣傳單", "版面設計", "合理使用"]

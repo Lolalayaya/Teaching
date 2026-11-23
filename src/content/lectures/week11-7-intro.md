@@ -6,9 +6,8 @@ date: 2026-11-09
 semester: 115-1
 grades: ['7']
 classes: ['701', '702', '703', '704', '705', '706', '709', '710']
-currentFor: ['701', '702', '704', '706', '709', '710']
 published: true
-current: true
+current: false
 tags: ["資料處理應用專題", "Google試算表", "Google文件", "完成作業"]
 summary: 這堂課用來補完第九週、第十週的試算表、資料筆記和繳交表單，全部做完的同學可以先想宣傳單要放什麼。
 ---

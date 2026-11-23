@@ -6,9 +6,8 @@ date: 2026-11-02
 semester: 115-1
 grades: ['8']
 classes: ['801', '802', '803', '804', '805', '806', '808']
-currentFor: ['803']
 published: true
-current: true
+current: false
 tags: ["演算法", "搜尋", "循序搜尋", "二分搜尋", "重複直到"]
 summary: 把上週翻牌找分數的兩種方法寫成Scratch程式：學會「重複直到」，讓迴圈找到就停；再用左、右、中間三個變數寫出二分搜尋，比一比兩種方法各要比較幾次。
 embeds:

@@ -5,7 +5,8 @@ order: 24
 date: 2026-11-09
 semester: 115-1
 grades: ['8']
-classes: ['801', '802', '804', '805', '806', '808']
+classes: ['801', '802', '803', '804', '805', '806', '808']
+currentFor: ['803', '805']
 published: true
 current: true
 tags: ["運算思維", "演算法", "二分搜尋", "猜數字", "除錯"]
