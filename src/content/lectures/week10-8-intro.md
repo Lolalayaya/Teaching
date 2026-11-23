@@ -174,6 +174,8 @@ embeds:
 
    <img class="howto-img" src="../../materials/scratch-howto/see-inside.png" alt="Scratch專案頁右上角的紫色按鈕「切換到程式頁面」" loading="lazy">
 
+   <img class="howto-img" src="../../materials/scratch-howto/remix.png" alt="切換到程式頁面後，畫面上方綠色的「改編」按鈕" loading="lazy">
+
 4. 找到「當按下 a 鍵」，把「重複直到」的條件填好
 5. 按綠旗、再按a，對照檢查點1
 6. 在「當按下 b 鍵」下面照第四節做出二分搜尋

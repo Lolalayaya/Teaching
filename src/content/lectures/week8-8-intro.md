@@ -141,6 +141,8 @@ embeds:
 
    <img class="howto-img" src="../../materials/scratch-howto/see-inside.png" alt="Scratch專案頁右上角的紫色按鈕「切換到程式頁面」" loading="lazy">
 
+   <img class="howto-img" src="../../materials/scratch-howto/remix.png" alt="切換到程式頁面後，畫面上方綠色的「改編」按鈕" loading="lazy">
+
 4. 找到「當按下 s 鍵」積木，先照第四節做出第1輪
 5. 按綠旗、再按s，對照檢查點1
 6. 照第五節包上外層迴圈，按綠旗、再按s，對照檢查點2

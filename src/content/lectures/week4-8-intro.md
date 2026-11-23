@@ -95,6 +95,8 @@ embeds:
 
    <img class="howto-img" src="../../materials/scratch-howto/see-inside.png" alt="Scratch專案頁右上角的紫色按鈕「切換到程式頁面」" loading="lazy">
 
+   <img class="howto-img" src="../../materials/scratch-howto/remix.png" alt="切換到程式頁面後，畫面上方綠色的「改編」按鈕" loading="lazy">
+
 4. 找到「當按下 r 鍵」積木，底下接「替換」：把「排行榜」清單5筆分數換成 990、920、800、785、670（數字要照抄，不能自己改）
 5. 找到「當按下 i 鍵」積木，底下接「插入」：把新分數870插入「排行榜」清單第3項（數字一樣要照抄）
 6. 依序按 r 鍵、i 鍵測試，按綠旗確認「存取」示範還能正常跑

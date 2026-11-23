@@ -17,7 +17,10 @@ title: 排行榜行動・詳細步驟說明
 
    <img class="howto-img" src="../materials/scratch-howto/see-inside.png" alt="Scratch專案頁右上角的紫色按鈕「切換到程式頁面」" loading="lazy">
 
-4. **這時候還不是你自己的專案**，你改的東西沒辦法存檔。要在畫面右上角找一個像「循環箭頭」的小按鈕，滑鼠移過去會顯示「改編」或「Remix」，點下去。
+4. **這時候還不是你自己的專案**，你改的東西沒辦法存檔。要在畫面上方找綠色的「**改編**」按鈕（英文介面是Remix），就在「切換到專案頁面」左邊，點下去。
+
+   <img class="howto-img" src="../materials/scratch-howto/remix.png" alt="切換到程式頁面後，畫面上方綠色的「改編」按鈕" loading="lazy">
+
 5. 點下去之後，網址列的專案編號會變成一組新的數字——這代表現在是你自己的專案了，改的東西才存得住。之後隨時可以按 Ctrl+S 或選單「檔案→立即儲存」存檔。
 
 ## 第二步：看懂專案裡已經有什麼

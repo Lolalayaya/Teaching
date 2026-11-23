@@ -83,6 +83,8 @@ Scratch的「重複＿次」積木，可以讓裡面包住的積木自動跑好�
 
    <img class="howto-img" src="../../materials/scratch-howto/see-inside.png" alt="Scratch專案頁右上角的紫色按鈕「切換到程式頁面」" loading="lazy">
 
+   <img class="howto-img" src="../../materials/scratch-howto/remix.png" alt="切換到程式頁面後，畫面上方綠色的「改編」按鈕" loading="lazy">
+
 4. 找到「當按下 s 鍵」積木，底下依照第三節表格接上積木組（設定最大值初始值→重複4次→每次i加1、比較、必要時更新最大值→最後說出結果）
 5. 按s鍵測試，確認說出的是「最大值是：990」（用「說出」不要用「說出...持續...秒」，不然泡泡會自動消失）
 6. 「檔案→下載到你的電腦」下載`.sb3`檔案，依格式重新命名（`班級_座號_姓名_MMDD迴圈.sb3`）
