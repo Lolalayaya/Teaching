@@ -6,13 +6,14 @@ date: 2026-11-23
 semester: 115-1
 grades: ['7']
 classes: ['703']
-published: false
+published: true
+current: true
 tags: ["資料處理應用專題", "Canva", "宣傳單", "互評", "合理使用"]
 summary: 先把宣傳單做完繳交，再和同學交換看，用3秒測試互相給一個建議，照建議修改自己的宣傳單。
 embeds:
   - type: google-form
     title: 第十三週互評與修改表單
-    url: https://docs.google.com/forms/d/e/PLACEHOLDER_W13_7_FORM_ID/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSf_K_VkKSxUtp6lpwQKOHRVZz26DE-f6Ch2f4irvXc-J676vw/viewform?embedded=true
 ---
 
 ## 學習目標

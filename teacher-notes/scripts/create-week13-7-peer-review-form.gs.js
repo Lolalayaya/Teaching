@@ -107,7 +107,7 @@ function createForm() {
 }
 
 /** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades() 才能重新打開這份表單 */
-var FORM_EDIT_URL = 'PLACEHOLDER_W13_7_FORM_EDIT_URL';
+var FORM_EDIT_URL = 'https://docs.google.com/forms/d/1-l7hosCgLKcZaYJ7BjgwyWhgkNc4Ge2ZCePUYnN9yLk/edit';
 
 var TARGET_SEAT_TITLE = '你幫哪一位同學看宣傳單？請填他的座號';
 var THREE_SEC_TITLE = '3秒測試：看3秒後，你覺得這張宣傳單在提醒什麼？';
