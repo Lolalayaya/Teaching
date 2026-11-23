@@ -8,13 +8,12 @@
  *   第一部分：我幫同學看
  *   2. 被評者座號（不計分，backfillGrades() 用來把建議對到被評的人）
  *   3. 3秒測試：看3秒後覺得它在提醒什麼（5分）：有寫就給分
- *   4. 對方做到的項目（複選，不計分）
- *   5. 一個優點（不計分，必填）
- *   6. 一個建議（10分）：去掉標點後6個字以上、不是「很好／沒有」之類的給10分；其他給5分，老師點開看
+ *   4. 一個優點（不計分，必填）
+ *   5. 一個建議（10分）：去掉標點後6個字以上、不是「很好／沒有」之類的給10分；其他給5分，老師點開看
  *   第二部分：我的宣傳單
- *   7. 修改紀錄（10分）：去掉標點後6個字以上給10分；其他給5分
+ *   6. 修改紀錄（10分）：去掉標點後6個字以上給10分；其他給5分
  *   第三部分：情境題
- *   8~10. 三題選擇題，各5分（測驗模式自動批改）
+ *   7~9. 三題選擇題，各5分（測驗模式自動批改）
  *   60 + 5 + 10 + 10 + 15 = 100分
  *
  * 使用方式：
@@ -64,12 +63,6 @@ function createForm() {
     .setRequired(true);
 
   form
-    .addCheckboxItem()
-    .setTitle(CHECK_TITLE)
-    .setHelpText('照對方宣傳單的實際情況勾選，沒做到的不要勾。')
-    .setChoiceValues(CHECK_CHOICES);
-
-  form
     .addTextItem()
     .setTitle(GOOD_TITLE)
     .setHelpText('例如：大數字很大，一眼就看到')
@@ -87,7 +80,7 @@ function createForm() {
   form
     .addParagraphTextItem()
     .setTitle(REVISE_TITLE)
-    .setHelpText('例如：同學說提醒不明顯，我把提醒放大、加了粉紅色色塊。沒有照建議改的話，寫為什麼。')
+    .setHelpText('寫一句就可以，例如：我把提醒放大、加了色塊。沒有照建議改的話，寫為什麼。')
     .setPoints(10)
     .setRequired(true);
 
@@ -118,21 +111,10 @@ var FORM_EDIT_URL = 'PLACEHOLDER_W13_7_FORM_EDIT_URL';
 
 var TARGET_SEAT_TITLE = '你幫哪一位同學看宣傳單？請填他的座號';
 var THREE_SEC_TITLE = '3秒測試：看3秒後，你覺得這張宣傳單在提醒什麼？';
-var CHECK_TITLE = '對方的宣傳單做到了哪些？（可複選）';
 var GOOD_TITLE = '一個優點';
 var SUGGEST_TITLE = '一個建議';
 var REVISE_TITLE = '你的宣傳單改了什麼？是根據哪一條建議？';
 var SEAT_PATTERN = '^\\s*(0[1-9]|1[0-9]|2[0-7])\\s*$';
-
-var CHECK_CHOICES = [
-  '大數字是全張最大的字',
-  '提醒是叫大家去做一件事，而且有獨立出來',
-  '有圖表，看得出誰比較高',
-  '最下面有資料來源',
-  '顏色不超過3種、字體不超過2種',
-  '東西有對齊，四周有留白',
-  '我看3秒，說得出這張在提醒什麼',
-];
 
 var SCENARIOS = [
   {
