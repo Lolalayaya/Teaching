@@ -27,8 +27,9 @@
  * 1.「回覆」分頁：「收集電子郵件地址」選「已驗證」；「傳送回覆者回覆副本」選「一律」。
  * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選。
  *
- * 上課結束後，手動重跑一次 backfillGrades()（可重複執行，不會出錯）。執行紀錄會印出：
- *   - 建議或修改紀錄只拿5分的人（老師點開看）
+ * 上課結束後，手動重跑一次 backfillGrades()（可重複執行，不會出錯）。它只批改上次執行之後
+ * 才送出的回覆（要全部重新批改時執行 regradeAll()）。執行紀錄會印出：
+ *   - 這批新回覆裡，建議或修改紀錄只拿5分的人（老師點開看）
  *   - 每個人收到的建議（依被評者排序），批改宣傳單時可以對照有沒有照建議改
  *   - 沒有被任何人評到的人（表單只記得到有交表單的評分者，請假或沒交的不會出現）
  */
@@ -238,29 +239,73 @@ function autoGrade(e) {
   }
 }
 
-/** 重新批改所有回覆：建議每次上完課手動重跑一次（重複執行也不會出錯）。 */
+/* ===== 只批改新回覆 =====
+ * backfillGrades() 會記住批改到哪一份，下次只批改之後才送出的回覆，回覆越多也不會越跑越久。
+ * 進度存在這個 Apps Script 專案的「專案設定 → 指令碼屬性」（lastGradedAt）。
+ * 改了批改規則，或想全部重新批改一次時，改執行 regradeAll()。 */
+var LAST_GRADED_KEY = 'lastGradedAt';
+
+/** 上次批改之後才送出的回覆；還沒有進度紀錄（第一次執行）就是全部回覆 */
+function getNewResponses(form) {
+  var saved = PropertiesService.getScriptProperties().getProperty(LAST_GRADED_KEY);
+  if (!saved) return form.getResponses();
+  var since = Number(saved);
+  return form.getResponses(new Date(since)).filter(function (response) {
+    return response.getTimestamp().getTime() > since;
+  });
+}
+
+/** 成績送出後記下進度。retry 是這次沒批好、下次要再批的回覆，
+ *  進度會停在最早一份 retry 之前，下次執行時從那份開始重批。 */
+function saveProgress(responses, retry) {
+  if (responses.length === 0) return;
+  var times = function (list) {
+    return list.map(function (response) {
+      return response.getTimestamp().getTime();
+    });
+  };
+  var mark = retry.length > 0 ? Math.min.apply(null, times(retry)) - 1 : Math.max.apply(null, times(responses));
+  PropertiesService.getScriptProperties().setProperty(LAST_GRADED_KEY, String(mark));
+}
+
+/** 清掉進度，從第一份開始全部重新批改 */
+function regradeAll() {
+  PropertiesService.getScriptProperties().deleteProperty(LAST_GRADED_KEY);
+  backfillGrades();
+}
+
+/** 批改上次之後的新回覆：建議每次上完課手動重跑一次（重複執行也不會出錯）。
+ *  只有新回覆會送出成績；「每個人收到的建議」要對照全班，所以還是會讀全部回覆（只讀不送出）。 */
 function backfillGrades() {
   var form = FormApp.openByUrl(FORM_EDIT_URL);
+  var responses = getNewResponses(form);
   var graded = [];
-  var results = [];
+  var newResults = [];
 
-  form.getResponses().forEach(function (response) {
+  responses.forEach(function (response) {
     var out = gradeResponse(form, response);
     graded.push(out.graded);
-    results.push(out.result);
+    newResults.push(out.result);
   });
 
-  form.submitGrades(graded);
-  Logger.log('共批改 ' + graded.length + ' 份');
+  if (graded.length > 0) form.submitGrades(graded);
+  saveProgress(responses, []);
+  Logger.log('這次批改 ' + graded.length + ' 份新回覆');
 
-  results.sort(function (a, b) {
+  newResults.sort(function (a, b) {
     return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
   });
 
-  Logger.log('===== 需要點開看的回覆 =====');
-  results.forEach(function (r) {
+  Logger.log('===== 需要點開看的回覆（這批新回覆） =====');
+  newResults.forEach(function (r) {
     if (r.suggestScore < 10) Logger.log(r.id + '　⚠️建議只拿' + r.suggestScore + '分：' + r.suggest);
     if (r.reviseScore < 10) Logger.log(r.id + '　⚠️修改紀錄只拿' + r.reviseScore + '分：' + r.revise);
+  });
+
+  // 下面的對照表要看全班，所以讀全部回覆的答案
+  // （gradeResponse 只在記憶體裡算分，沒有呼叫 submitGrades 就不會送出成績）
+  var results = form.getResponses().map(function (response) {
+    return gradeResponse(form, response).result;
   });
 
   // 被評者 = 評分者的班級 + 填的座號；同班有交表單的人才找得到姓名

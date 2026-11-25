@@ -32,8 +32,9 @@
  * 1.「回覆」分頁：「收集電子郵件地址」選「已驗證」；「傳送回覆者回覆副本」選「一律」。
  * 2.「測驗」分頁：「成績發布」選「提交後立即公布」；「回覆者可以看到」三個都勾選。
  *
- * 上課結束後，手動重跑一次 backfillGrades()（可重複執行，不會出錯）。執行紀錄會印出
- * 每一格的答對人數和答錯的人。
+ * 上課結束後，手動重跑一次 backfillGrades()（可重複執行，不會出錯）。它只批改上次執行之後
+ * 才送出的回覆，執行紀錄會印出這批回覆每一格的答對人數和答錯的人。
+ * 改了答案總表或批改規則、要全部重新批改時，執行 regradeAll()。
  */
 function createForm() {
   var form = FormApp.create('W10-7-比對行動・繳交表單');
@@ -319,7 +320,7 @@ function checkQuestion(q, g, row, grade, texts) {
 
 /**
  * 批改一份回覆。回傳 { graded, result }，result.correct 依 NUMBER_ITEMS 順序記錄每格對錯，
- * 給 backfillGrades() 統計用。找不到該班答案時，「我們班」先給0分，等答案總表補上後重跑就會重算。
+ * 給 backfillGrades() 統計用。找不到該班答案時，「我們班」先給0分，等答案總表補上後重跑就會重算（這種回覆不會被記進批改進度）。
  */
 function gradeResponse(form, response, key) {
   var items = form.getItems();
@@ -392,18 +393,62 @@ function autoGrade(e) {
   }
 }
 
-/** 重新批改所有回覆：建議每次上完課手動重跑一次（重複執行也不會出錯），
- *  執行紀錄會印出每格答對人數、答錯的人，以及「我們發現」沒拿滿分的人。 */
+/* ===== 只批改新回覆 =====
+ * backfillGrades() 會記住批改到哪一份，下次只批改之後才送出的回覆，回覆越多也不會越跑越久。
+ * 進度存在這個 Apps Script 專案的「專案設定 → 指令碼屬性」（lastGradedAt）。
+ * 改了批改規則、答案總表，或想全部重新批改一次時，改執行 regradeAll()。 */
+var LAST_GRADED_KEY = 'lastGradedAt';
+
+/** 上次批改之後才送出的回覆；還沒有進度紀錄（第一次執行）就是全部回覆 */
+function getNewResponses(form) {
+  var saved = PropertiesService.getScriptProperties().getProperty(LAST_GRADED_KEY);
+  if (!saved) return form.getResponses();
+  var since = Number(saved);
+  return form.getResponses(new Date(since)).filter(function (response) {
+    return response.getTimestamp().getTime() > since;
+  });
+}
+
+/** 成績送出後記下進度。retry 是這次沒批好、下次要再批的回覆（例如出錯、答案總表還沒有這班），
+ *  進度會停在最早一份 retry 之前，下次執行時從那份開始重批。 */
+function saveProgress(responses, retry) {
+  if (responses.length === 0) return;
+  var times = function (list) {
+    return list.map(function (response) {
+      return response.getTimestamp().getTime();
+    });
+  };
+  var mark = retry.length > 0 ? Math.min.apply(null, times(retry)) - 1 : Math.max.apply(null, times(responses));
+  PropertiesService.getScriptProperties().setProperty(LAST_GRADED_KEY, String(mark));
+}
+
+/** 清掉進度，從第一份開始全部重新批改 */
+function regradeAll() {
+  PropertiesService.getScriptProperties().deleteProperty(LAST_GRADED_KEY);
+  backfillGrades();
+}
+
+/** 批改上次之後的新回覆：建議每次上完課手動重跑一次（重複執行也不會出錯），
+ *  執行紀錄會印出這批回覆每格答對人數、答錯的人，以及「我們發現」沒拿滿分的人。 */
 function backfillGrades() {
   var form = FormApp.openByUrl(FORM_EDIT_URL);
+  var responses = getNewResponses(form);
+  if (responses.length === 0) {
+    Logger.log('沒有新的回覆');
+    return;
+  }
   var key = readAnswerKey();
   var graded = [];
+  var retry = [];
   var correctCounts = NUMBER_ITEMS.map(function () { return 0; });
 
-  form.getResponses().forEach(function (response) {
+  responses.forEach(function (response) {
     var out = gradeResponse(form, response, key);
     graded.push(out.graded);
-    if (out.result.missingKey) Logger.log(out.result.id + '：答案總表沒有這班，「我們班」先給0分');
+    if (out.result.missingKey) {
+      Logger.log(out.result.id + '：答案總表沒有這班，「我們班」先給0分，答案補上後重跑會再批');
+      retry.push(response);
+    }
     var wrong = [];
     out.result.correct.forEach(function (ok, i) {
       if (ok) correctCounts[i]++;
@@ -414,7 +459,8 @@ function backfillGrades() {
   });
 
   form.submitGrades(graded);
-  Logger.log('共批改 ' + graded.length + ' 份');
+  saveProgress(responses, retry);
+  Logger.log('這次批改 ' + graded.length + ' 份新回覆' + (retry.length > 0 ? '，其中 ' + retry.length + ' 份下次會再批' : ''));
   NUMBER_ITEMS.forEach(function (spec, i) {
     Logger.log(spec.title + '：答對 ' + correctCounts[i] + ' 人');
   });
