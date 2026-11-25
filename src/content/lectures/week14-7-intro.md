@@ -7,7 +7,7 @@ semester: 115-1
 grades: ['7']
 classes: ['703']
 published: true
-current: true
+current: false
 tags: ["資訊安全", "個資保護", "資訊科技合理使用原則", "資料處理應用專題", "故事大綱", "Google文件"]
 summary: 認識四格漫畫的起承轉合故事結構，並把前面蒐集、分析出的資料發現寫進故事，在第七週的資料筆記Google文件裡共編完成四格漫畫故事大綱。
 ---
