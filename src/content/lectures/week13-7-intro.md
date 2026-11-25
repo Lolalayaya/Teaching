@@ -39,17 +39,29 @@ embeds:
 
 這一段有**25分鐘**，先把宣傳單做完、繳交。
 
+**第一步：打開上次做的宣傳單**
+
 <div class="submit-box">
-<a class="submit-button" href="https://canva.link/t8v9dfm4yxgb7ct" target="_blank" rel="noopener">打開宣傳單範本 →</a>
-<p><strong>上次沒有建立自己副本的同學，從這個按鈕重新打開。</strong>點左上角「檔案」→「建立副本」，再把檔名改成「W12宣傳單_班級_座號_姓名」。不要在Canva首頁自己找範本。</p>
+<a class="submit-button" href="https://www.canva.com/projects" target="_blank" rel="noopener">打開我的Canva專案 →</a>
+<p><strong>上次的宣傳單在這裡。</strong>用<strong>學校的Google帳號</strong>登入後，會看到你做過的所有設計，點開檔名是「宣傳單範本 上課用 的副本」的那一份。</p>
 </div>
 
-**先確認你打開的是自己的副本：** 左上角的檔名要是「W12宣傳單_班級_座號_姓名」。
+**找不到這個檔案？** 代表上次沒有建立自己的副本，或是在Canva首頁自己找了別的範本。從下面的按鈕重新打開範本，點左上角「檔案」→「建立副本」，再把上次寫的內容搬過來：
 
-- 找不到上次的檔案：在Canva首頁的「**專案**」裡找
-- 上次是在Canva首頁自己找的範本，或檔名不是自己的：回到<a href="../week12-7-intro/">第十二週講義</a>第四節，從範本按鈕重新打開、按「檔案」→「建立副本」、改檔名，再把上次寫的內容搬過來
+<div class="submit-box">
+<a class="submit-button" href="https://canva.link/t8v9dfm4yxgb7ct" target="_blank" rel="noopener">打開宣傳單範本 →</a>
+<p><strong>只有找不到自己副本的同學才需要按這個。</strong>不要在Canva首頁自己找範本。</p>
+</div>
 
-接著照第十二週講義第五節的步驟做，做完到第七節繳交。
+**第二步：改檔名**
+
+大家的檔名現在都是「宣傳單範本 上課用 的副本」，老師分不出是誰的。點左上角的檔名，改成「**W12宣傳單_<span data-class-code>7XX</span>_座號_姓名**」，例如「W12宣傳單_703_05_王小明」，按 `Enter` 確定。
+
+改好之後，下次在Canva專案裡找這個名字就可以了。
+
+**第三步：繼續做**
+
+照第十二週講義第五節的步驟做，做完到第七節繳交。
 
 - **先把內容放齊**：大數字、標題、提醒、資料來源最重要，先做這幾個，最後再調顏色和字體
 - **試算表還沒做完的同學**：圖表的位置先空著，其他區塊做完後，再回去完成第十週的比較表和圖表，最後貼上
