@@ -14,7 +14,7 @@ summary: 把第十週寫的「我們發現」做成一張Canva宣傳單：一個
 embeds:
   - type: google-form
     title: 第十二週繳交表單
-    url: https://docs.google.com/forms/d/e/1FAIpQLScIl_rm76g3D3b_Bgi4tHACut1VgiKTFhdxOFjkVgwh-At3ig/viewform?embedded=true
+    url: https://docs.google.com/forms/d/e/1FAIpQLSezwixSebW1-LEVSr7islMlC37bLwuZT3VYBeqFkhJquSs2pQ/viewform?embedded=true
 ---
 
 <div class="submit-box">

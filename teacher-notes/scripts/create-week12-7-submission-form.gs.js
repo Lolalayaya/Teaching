@@ -88,7 +88,7 @@ function createForm() {
 }
 
 /** 執行過一次 createForm() 之後，把印出的「編輯用網址」貼在這裡，backfillGrades() 才能重新打開這份表單 */
-var FORM_EDIT_URL = 'https://docs.google.com/forms/d/1C0ajwGehgmDv0FFczlw1sWWKNpbJc7NQNan6EQptyPQ/edit';
+var FORM_EDIT_URL = 'https://docs.google.com/forms/d/1ae_EKLDixn1fuxdBgyVZc_f-m8Uw6uIbgFBt8vfFtbM/edit';
 
 var LINK_TITLE = 'Canva宣傳單的檢視連結';
 var NUMBER_TITLE = '宣傳單上的大數字';
